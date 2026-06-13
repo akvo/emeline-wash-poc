@@ -1,0 +1,344 @@
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .toc {
+    font-family: 'Assistant', system-ui, sans-serif;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #e4e7e6;
+    overflow: hidden;
+  }
+
+  .toc-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 16px 10px;
+    border-bottom: 2px solid #03AD8C;
+  }
+  .akvo-wordmark {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: #202024;
+  }
+  .akvo-wordmark span { color: #03AD8C; }
+  .toc-title {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 12px;
+    color: #666;
+    font-weight: 400;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    margin-left: 6px;
+    padding-left: 10px;
+    border-left: 1px solid #ddd;
+  }
+
+  /* Column headers */
+  .col-headers {
+    display: grid;
+    grid-template-columns: 1.1fr 22px 1.1fr 22px 1fr 22px 0.8fr;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e4e7e6;
+    padding: 0 10px;
+  }
+  .col-h {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 7px 6px 6px;
+    text-align: center;
+  }
+  .col-h.problem  { color: #b91c1c; }
+  .col-h.approach { color: #027a64; }
+  .col-h.outcome  { color: #404898; }
+  .col-h.impact   { color: #2d3464; }
+
+  /* Pathway block = main row + assumptions row */
+  .pathway-block {
+    border-bottom: 1px solid #eff1f0;
+  }
+  .pathway-block:last-of-type { border-bottom: none; }
+
+  /* Main row */
+  .pathway {
+    display: grid;
+    grid-template-columns: 1.1fr 22px 1.1fr 22px 1fr 22px 0.8fr;
+    align-items: stretch;
+    padding: 7px 10px 5px;
+    cursor: pointer;
+    transition: background .1s;
+  }
+  .pathway:hover { background: #f8fffe; }
+  .pathway.active { background: #f0fdf9; }
+
+  .cell {
+    padding: 7px 8px;
+    border-radius: 5px;
+    font-size: 10.5px;
+    font-weight: 600;
+    line-height: 1.4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .ifthen {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 8.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    display: block;
+    margin-bottom: 2px;
+    opacity: .65;
+  }
+  .cell.problem  { background: #fef2f1; color: #7f1d1d; border-left: 3px solid #EA5547; }
+  .cell.approach { background: #e8f8f5; color: #014f42; border-left: 3px solid #03AD8C; }
+  .cell.outcome  { background: #eef0fb; color: #2d3464; border-left: 3px solid #6470c0; }
+  .cell.impact   { background: #404898; color: #fff; font-size: 10px; }
+  .pathway:hover .cell.impact,
+  .pathway.active .cell.impact { background: #2d3464; }
+
+  .arrow-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #b0bec5;
+    font-size: 15px;
+  }
+
+  /* Assumptions sub-row */
+  .assumptions-row {
+    padding: 4px 10px 8px;
+    background: transparent;
+  }
+  .assumptions-inner {
+    background: #f9fafb;
+    border-left: 3px solid #d1d5db;
+    border-radius: 0 5px 5px 0;
+    padding: 5px 10px 5px 9px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+  }
+  .assumptions-label {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .09em;
+    color: #9ca3af;
+    width: 100%;
+    margin-bottom: 2px;
+  }
+  .assumption-tag {
+    font-size: 10.5px;
+    color: #4b5563;
+    font-style: italic;
+    line-height: 1.4;
+    padding-left: 10px;
+    position: relative;
+    flex: 1 1 220px;
+  }
+  .assumption-tag::before {
+    content: '◦';
+    position: absolute;
+    left: 0;
+    color: #9ca3af;
+    font-style: normal;
+  }
+
+  /* Detail strip */
+  .detail-strip {
+    background: #f8fffe;
+    border-top: 2px solid #e4e7e6;
+    padding: 10px 14px 11px;
+    min-height: 52px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .detail-bar { width: 4px; border-radius: 2px; background: #03AD8C; flex-shrink: 0; align-self: stretch; min-height: 32px; }
+  .detail-text strong {
+    display: block;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: #202024;
+    margin-bottom: 3px;
+  }
+  .detail-text p { font-size: 11px; line-height: 1.6; color: #374151; }
+  .hint { color: #9ca3af; font-style: italic; }
+</style>
+
+<div class="toc">
+
+  <div class="toc-header">
+    <div class="akvo-wordmark">Akvo<span>.</span></div>
+    <div class="toc-title">Theory of Change</div>
+  </div>
+
+  <div class="col-headers">
+    <div class="col-h problem">Root Cause</div>
+    <div></div>
+    <div class="col-h approach">Akvo's Response</div>
+    <div></div>
+    <div class="col-h outcome">Outcome</div>
+    <div></div>
+    <div class="col-h impact">Impact</div>
+  </div>
+
+  <!-- ── P1 ── -->
+  <div class="pathway-block">
+    <div class="pathway"
+      data-bar="#c0392b"
+      data-title="P1 — Unusable data systems"
+      data-detail="WHO WASH Strategy 2026–2035: 'Many countries still lack coherent indicator sets, comprehensive financial information, and the institutional capacity to collect, assure, analyse and use systems data.' Akvo builds infrastructure and capacity so data actually gets used — not just collected.">
+      <div class="cell problem"><div><span class="ifthen">If</span>Countries lack coherent data systems &amp; institutional capacity</div></div>
+      <div class="arrow-cell">→</div>
+      <div class="cell approach"><div><span class="ifthen">Akvo builds</span>Government-owned data infrastructure (systems, not tools)</div></div>
+      <div class="arrow-cell">→</div>
+      <div class="cell outcome"><div><span class="ifthen">Then</span>Functioning, maintained national WASH data systems</div></div>
+      <div class="arrow-cell">→</div>
+      <div class="cell impact">Safe water &amp; sanitation for all · SDG 6</div>
+    </div>
+    <div class="assumptions-row">
+      <div class="assumptions-inner">
+        <div class="assumptions-label">Assumptions</div>
+        <div class="assumption-tag">Government counterparts have sufficient political will &amp; mandate to engage in system design</div>
+        <div class="assumption-tag">Project timelines are long enough for genuine capacity transfer, not just deployment</div>
+        <div class="assumption-tag">Institutional roles for data collection exist or can be formally established</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── P2 ── -->
+  <div class="pathway-block">
+    <div class="pathway"
+      data-bar="#d84136"
+      data-title="P2 — Broken investment feedback loop"
+      data-detail="Investments are made without knowing where gaps are greatest. Budgets go unspent — not for lack of need, but because ministries lack the capacity to demonstrate results. Donors run parallel reporting systems that burden governments. Akvo closes this loop by producing decision-ready data.">
+      <div class="cell problem"><div><span class="ifthen">If</span>No feedback loop between spending &amp; results</div></div>
+      <div class="arrow-cell">→</div>
+      <div class="cell approach"><div><span class="ifthen">Akvo builds</span>Comparable, decision-ready evidence (evidence for decisions)</div></div>
+      <div class="arrow-cell">→</div>
+      <div class="cell outcome"><div><span class="ifthen">Then</span>Investment targeted where the gap is greatest</div></div>
+      <div class="arrow-cell">→</div>
+      <div class="cell impact">Sustained, evidence-based investment</div>
+    </div>
+    <div class="assumptions-row">
+      <div class="assumptions-inner">
+        <div class="assumptions-label">Assumptions</div>
+        <div class="assumption-tag">Decision-makers are willing and able to act on data evidence</div>
+        <div class="assumption-tag">Data quality is sufficient to be credible to donors and national planners</div>
+        <div class="assumption-tag">Donors accept nationally-owned systems rather than maintaining parallel reporting</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── P3 ── -->
+  <div class="pathway-block">
+    <div class="pathway"
+      data-bar="#EA5547"
+      data-title="P3 — Technology treated as the solution"
+      data-detail="The sector has a graveyard of well-funded platforms abandoned within two years of project closure. Nexleaf / SSIR 2026: 'Some solutions reach scale, but few last. Equipment goes dark. Dashboards fade. Paper charts return.' The reason is almost always governance failure, not technical failure.">
+      <div class="cell problem"><div><span class="ifthen">If</span>Platforms collapse after donor exit (tech ≠ governance)</div></div>
+      <div class="arrow-cell">→</div>
+      <div class="cell approach"><div><span class="ifthen">Akvo builds</span>Institutional arrangements — roles, QA/QC, data-sharing (governance)</div></div>
+      <div class="arrow-cell">→</div>
+      <div class="cell outcome"><div><span class="ifthen">Then</span>Systems that function &amp; adapt beyond project closure</div></div>
+      <div class="arrow-cell">→</div>
+      <div class="cell impact">Climate-resilient WASH systems</div>
+    </div>
+    <div class="assumptions-row">
+      <div class="assumptions-inner">
+        <div class="assumptions-label">Assumptions</div>
+        <div class="assumption-tag">Governance arrangements are established before technology is deployed, not after</div>
+        <div class="assumption-tag">There is institutional stake — not just permission — from the government to maintain quality</div>
+        <div class="assumption-tag">Maintenance funding is planned and ring-fenced beyond the project lifecycle</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── P4 ── -->
+  <div class="pathway-block">
+    <div class="pathway"
+      data-bar="#d4602a"
+      data-title="P4 — Partnership mistaken for ownership"
+      data-detail="A ministry may allow a solution to be deployed without it being integrated into daily workflows. Partnership operates as permission. Ownership means the country retains decision-making authority, controls data, can adapt tools without external approval, and has workflows that rely on the system. Without that, scale is superficial.">
+      <div class="cell problem"><div><span class="ifthen">If</span>Governments are recipients, not owners of data systems</div></div>
+      <div class="arrow-cell">→</div>
+      <div class="cell approach"><div><span class="ifthen">Akvo builds</span>Government-led ops, domestic budget integration (ownership)</div></div>
+      <div class="arrow-cell">→</div>
+      <div class="cell outcome"><div><span class="ifthen">Then</span>Countries operate &amp; fund systems independently</div></div>
+      <div class="arrow-cell">→</div>
+      <div class="cell impact">Safe water &amp; sanitation for all · SDG 6</div>
+    </div>
+    <div class="assumptions-row">
+      <div class="assumptions-inner">
+        <div class="assumptions-label">Assumptions</div>
+        <div class="assumption-tag">Domestic budget space exists or can be created for data system maintenance</div>
+        <div class="assumption-tag">Leadership continuity is sufficient to preserve institutional knowledge across transitions</div>
+        <div class="assumption-tag">Akvo is willing to cede control — including data ownership — to the government counterpart</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── P5 ── -->
+  <div class="pathway-block">
+    <div class="pathway"
+      data-bar="#b07010"
+      data-title="P5 — $1 trillion/year financing gap"
+      data-detail="Over $1 trillion per year is needed to meet SDG 6; current spending is ~$164 billion. 93% comes from public budgets alone. Water is invisible in national accounting. World Bank Dakar (2026): In Senegal, $800M concessional financing is leveraging $1.5B in private capital precisely because data systems made the investment case legible.">
+      <div class="cell problem"><div><span class="ifthen">If</span>Water is invisible in national accounts ($1T/yr gap)</div></div>
+      <div class="arrow-cell">→</div>
+      <div class="cell approach"><div><span class="ifthen">Akvo builds</span>WHO/WB/UN-aligned data — making the investment case legible</div></div>
+      <div class="arrow-cell">→</div>
+      <div class="cell outcome"><div><span class="ifthen">Then</span>Mobilised public &amp; private capital for WASH</div></div>
+      <div class="arrow-cell">→</div>
+      <div class="cell impact">Sustained, evidence-based investment</div>
+    </div>
+    <div class="assumptions-row">
+      <div class="assumptions-inner">
+        <div class="assumptions-label">Assumptions</div>
+        <div class="assumption-tag">Data quality and comparability meet the standards required by international financiers</div>
+        <div class="assumption-tag">National governments commit to using data outputs in budget planning and reporting</div>
+        <div class="assumption-tag">Political and macroeconomic context is stable enough to attract private capital</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detail strip -->
+  <div class="detail-strip">
+    <div class="detail-bar" id="dp-bar"></div>
+    <div class="detail-text">
+      <strong id="dp-t"><span class="hint">Click any row to read the evidence behind it →</span></strong>
+      <p id="dp-b" class="hint">5 causal pathways · assumptions shown beneath each row · click for source evidence</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+document.querySelectorAll('.pathway').forEach(function(row) {
+  row.addEventListener('click', function() {
+    document.querySelectorAll('.pathway').forEach(function(r) { r.classList.remove('active'); });
+    row.classList.add('active');
+    var color = row.getAttribute('data-bar') || '#03AD8C';
+    document.getElementById('dp-bar').style.background = color;
+    var t = document.getElementById('dp-t');
+    t.innerHTML = row.getAttribute('data-title');
+    t.style.color = color;
+    t.className = '';
+    var b = document.getElementById('dp-b');
+    b.textContent = row.getAttribute('data-detail');
+    b.className = '';
+  });
+});
+</script>

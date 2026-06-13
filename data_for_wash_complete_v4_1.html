@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data for WASH · Theory of Change &amp; Maturity Framework</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════ */
+:root {
+  --akvo:        #4851A4;
+  --akvo-dark:   #3B4289;
+  --akvo-deep:   #2B2E6B;
+  --bg:          #EBECEE;
+  --bg-tint:     #F2F2F4;
+  --card:        #FFFFFF;
+  --ink:         #1E1E28;
+  --ink-soft:    #4A4A57;
+  --ink-muted:   #8A8A96;
+  --rule:        rgba(30,30,40,0.09);
+  --rule-mid:    rgba(30,30,40,0.18);
+
+  --policy:      #3D5A80;  --policy-deep:#253A5A;
+  --system:      #3A3580;  --system-deep:#23205A;
+  --service:     #3D7F84;  --service-deep:#1E5055;
+  --community:   #A0431E;  --comm-deep:#6C2D10;
+  --water:       #1B6B3A;  --water-deep:#104025;
+  --compile:     #5C3D6B;  --compile-deep:#3A2244;
+
+  --assumption:  #B37516;
+  --assume-bg:   rgba(240,169,42,0.16);
+  --assume-line: #B37516;
+  --glow-line:   #B37516;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: "Mulish", -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══ DOCUMENT NAV ═══ */
+.doc-nav {
+  position: sticky; top: 0; z-index: 100;
+  height: 52px;
+  background: var(--akvo);
+  display: flex; align-items: center;
+  padding: 0 32px;
+  gap: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+.doc-nav-brand {
+  display: flex; align-items: center; gap: 12px;
+  margin-right: 32px;
+}
+.doc-mark {
+  width: 28px; height: 28px;
+  background: #fff; color: var(--akvo);
+  font-weight: 900; font-size: 17px; line-height: 1;
+  display: grid; place-items: center;
+  border-radius: 3px;
+  letter-spacing: -0.02em;
+}
+.doc-brand-name {
+  font-weight: 800; font-size: 13px; color: #fff;
+  letter-spacing: 0.01em;
+}
+.doc-nav-tabs {
+  display: flex; gap: 0; height: 52px;
+}
+.doc-tab {
+  height: 52px;
+  padding: 0 20px;
+  font-family: "Mulish", sans-serif;
+  font-weight: 700; font-size: 12px;
+  letter-spacing: 0.02em;
+  color: rgba(255,255,255,0.72);
+  background: transparent; border: none;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 150ms ease, border-color 150ms ease;
+  text-decoration: none;
+  display: inline-flex; align-items: center;
+}
+.doc-tab:hover { color: #fff; }
+.doc-tab.active { color: #fff; border-bottom-color: #fff; }
+
+.doc-nav-right {
+  margin-left: auto;
+  display: flex; gap: 8px; align-items: center;
+}
+.nav-btn {
+  font-family: "Mulish", sans-serif;
+  font-weight: 700; font-size: 11.5px;
+  padding: 7px 13px;
+  background: transparent; color: #fff;
+  border: 1.5px solid rgba(255,255,255,0.75);
+  cursor: pointer; border-radius: 3px;
+  display: inline-flex; align-items: center; gap: 7px;
+  transition: background 150ms ease, color 150ms ease;
+  text-decoration: none;
+}
+.nav-btn:hover { background: #fff; color: var(--akvo); }
+.nav-btn::after { content: attr(data-icon); font-size: 12px; }
+
+/* ═══ SECTION SHELLS ═══ */
+.doc-section {
+  min-height: calc(100vh - 52px);
+  display: flex; flex-direction: column;
+}
+.section-header {
+  padding: 20px 32px 0;
+  display: flex; align-items: baseline; gap: 16px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--card);
+}
+.section-num {
+  font-size: 10px; font-weight: 800;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--ink-muted);
+  font-family: "IBM Plex Mono", monospace;
+}
+.section-title {
+  font-size: 20px; font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  padding-bottom: 16px;
+}
+.section-sub {
+  font-size: 13px; font-weight: 400; font-style: italic;
+  color: var(--ink-soft);
+  padding-bottom: 16px;
+  margin-left: auto;
+}
+.section-body {
+  flex: 1;
+  display: flex; align-items: stretch;
+  padding: 20px 28px 40px;
+  gap: 48px;
+  background: var(--bg);
+}
+
+/* ═══ TOC PANELS ═══ */
+.panel {
+  position: relative;
+  display: flex; flex-direction: column;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+}
+.panel-left  { flex: 0 0 38%; }
+.panel-right { flex: 1 1 auto; min-width: 0; }
+
+.panel-head {
+  display: flex; align-items: center;
+  padding: 0; border-bottom: 1px solid var(--rule);
+}
+.panel-stamp {
+  display: inline-flex; align-items: baseline; gap: 8px;
+  background: var(--akvo); color: #fff;
+  padding: 10px 14px 9px;
+  font-weight: 900; font-size: 13px;
+}
+.panel-stamp .num { font-weight: 800; font-size: 10px; letter-spacing: 0.16em; opacity: 0.82; text-transform: uppercase; }
+.panel-sub-head { font-weight: 400; font-style: italic; font-size: 12px; color: var(--ink-soft); padding: 10px 14px; border-left: 1px solid var(--rule); }
+.panel-meta { margin-left: auto; padding: 10px 14px; font-family: "IBM Plex Mono", monospace; font-size: 9.5px; color: var(--ink-muted); letter-spacing: 0.14em; text-transform: uppercase; }
+
+.panel-body { flex: 1 1 auto; display: flex; align-items: center; justify-content: center; padding: 14px 16px; min-height: 0; }
+.diagram { width: 100%; max-height: 100%; height: auto; display: block; overflow: visible; }
+
+/* ═══ TOC SVG TOKENS ═══ */
+.col-label  { fill: var(--ink-muted); font-family: "Mulish", sans-serif; font-size: 9.5px; font-weight: 800; letter-spacing: 0.14em; }
+.col-divider{ stroke: var(--rule-mid); stroke-width: 0.5; }
+.row-arrow, .flow-arrow { stroke: var(--ink-muted); stroke-width: 1.2; fill: none; }
+.feed-arrow { stroke-width: 1; fill: none; stroke-dasharray: 3 2; }
+
+.rect-prob   { fill: var(--card);      stroke: var(--ink-muted);    stroke-width: 1; transition: stroke-width 300ms ease, filter 300ms ease; }
+.rect-act    { fill: var(--akvo);      stroke: var(--akvo-deep);    stroke-width: 1; transition: stroke-width 300ms ease, filter 300ms ease; }
+.rect-compile{ fill: var(--compile);   stroke: var(--compile-deep); stroke-width: 1; }
+.rect-policy { fill: var(--policy);    stroke: var(--policy-deep);  stroke-width: 1; transition: stroke-width 300ms ease, filter 300ms ease; }
+.rect-system { fill: var(--system);    stroke: var(--system-deep);  stroke-width: 1; transition: stroke-width 300ms ease, filter 300ms ease; }
+.rect-service{ fill: var(--service);   stroke: var(--service-deep); stroke-width: 1; transition: stroke-width 300ms ease, filter 300ms ease; }
+.rect-comm   { fill: var(--community); stroke: var(--comm-deep);    stroke-width: 1; transition: stroke-width 300ms ease, filter 300ms ease; }
+.rect-water  { fill: var(--water);     stroke: var(--water-deep);   stroke-width: 1; transition: stroke-width 300ms ease, filter 300ms ease; }
+.rect-impact { fill: rgba(72,81,164,0.08); stroke: rgba(72,81,164,0.35); stroke-width: 1; }
+.rect-assume { fill: var(--assume-bg); stroke: var(--assume-line);  stroke-width: 0.9; }
+.rect-use    { fill: rgba(61,90,128,0.10); stroke: rgba(61,90,128,0.35); stroke-width: 0.8; stroke-dasharray: 3 2; }
+
+.t-prob   { fill: var(--ink-soft);       font-family:"Mulish",sans-serif; font-size:10.5px; font-weight:800; }
+.t-sub-p  { fill: var(--ink-muted);      font-family:"IBM Plex Mono",monospace; font-size:8.5px; font-weight:500; }
+.t-act    { fill: #fff;                  font-family:"Mulish",sans-serif; font-size:10.5px; font-weight:800; }
+.t-sub-a  { fill: rgba(255,255,255,.82); font-family:"IBM Plex Mono",monospace; font-size:8.5px; font-weight:500; }
+.t-col    { fill: #fff;                  font-family:"Mulish",sans-serif; font-size:10.5px; font-weight:800; }
+.t-sub-c  { fill: rgba(255,255,255,.80); font-family:"IBM Plex Mono",monospace; font-size:8px; font-weight:500; }
+.t-impact { fill: var(--akvo-deep);      font-family:"Mulish",sans-serif; font-size:9.5px; font-weight:800; }
+.t-assume { fill: var(--assumption);     font-family:"IBM Plex Mono",monospace; font-size:8px; font-weight:500; }
+.t-use    { fill: var(--policy);         font-family:"IBM Plex Mono",monospace; font-size:8px; font-weight:600; }
+.row-idx  { fill: var(--ink-muted);      font-family:"Mulish",sans-serif; font-weight:900; font-size:10px; letter-spacing:.02em; }
+.legend-text { fill: var(--ink-soft);   font-family:"Mulish",sans-serif; font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; }
+
+.layer-row { cursor: pointer; transition: opacity 200ms ease; }
+.layer-row:hover .rect-prob { stroke-width: 1.6; }
+.layer-row:hover .row-idx   { fill: var(--akvo); }
+.layer-row, .arch-box       { transition: opacity 200ms ease; }
+
+.stage-toc[data-active="true"] .dimmable:not(.is-active) { opacity: 0.13; pointer-events: none; transition: opacity 200ms ease; }
+
+.layer-row.is-active .rect-prob { stroke-width: 2; filter: drop-shadow(0 0 4px rgba(72,81,164,.45)); }
+.layer-row.is-active .rect-act  { stroke-width: 2; }
+.layer-row.is-active .row-idx   { fill: var(--akvo); }
+.arch-box.is-active rect        { stroke-width: 2; filter: drop-shadow(0 0 5px rgba(72,81,164,.55)); }
+
+/* ═══ TOC CONNECTOR ═══ */
+.connector-layer  { position: absolute; inset: 0; pointer-events: none; z-index: 5; overflow: visible; }
+.connector-path   { fill: none; stroke: url(#toc-gradient); stroke-width: 2; stroke-linecap: round; opacity: 0; }
+.connector-path.drawn { opacity: 1; }
+.connector-origin,.connector-ring { opacity: 0; transition: opacity 200ms ease; }
+.connector-origin.drawn,.connector-ring.drawn { opacity: 1; }
+.connector-origin { fill: var(--akvo); }
+.connector-ring   { fill: none; stroke: var(--akvo); stroke-width: 1; }
+
+.toc-callout {
+  position: absolute; z-index: 6; pointer-events: none;
+  opacity: 0; transform: translate(-50%, -6px);
+  transition: opacity 260ms ease, transform 260ms ease;
+  font-family: "Mulish", sans-serif;
+}
+.toc-callout.visible { opacity: 1; transform: translate(-50%, 0); }
+.callout-leader { position: absolute; left: 50%; bottom: 100%; width: 1.5px; height: 12px; background: var(--akvo); transform: translateX(-0.75px); }
+.callout-body   { display: inline-flex; align-items: stretch; background: var(--card); border: 1px solid var(--akvo); box-shadow: 0 4px 12px -6px rgba(30,30,40,.22); white-space: nowrap; }
+.callout-tag    { background: var(--akvo); color: #fff; font-weight: 900; font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; padding: 7px 10px; display: inline-flex; align-items: center; }
+.callout-text   { padding: 7px 12px; color: var(--ink); font-size: 11px; font-weight: 500; display: inline-flex; align-items: center; }
+.callout-text .mono-hi { font-family: "IBM Plex Mono", monospace; font-weight: 600; font-size: 10.5px; color: var(--akvo); background: rgba(72,81,164,.10); padding: 1px 5px; margin: 0 1px; }
+
+.toc-hint {
+  position: absolute; left: 50%; bottom: 8px; transform: translateX(-50%);
+  font-size: 10.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-muted); background: var(--bg); padding: 3px 10px;
+  display: inline-flex; align-items: center; gap: 8px; z-index: 4; transition: opacity 200ms ease;
+}
+.toc-hint em { font-style: normal; color: var(--akvo); font-weight: 800; }
+.toc-hint::before,.toc-hint::after { content:""; width:20px; height:1px; background:var(--rule-mid); }
+.stage-toc[data-active="true"] .toc-hint { opacity: 0; }
+
+/* ═══ GLOSSARY DRAWER (shared) ═══ */
+.scrim { position: fixed; inset: 52px 0 0 0; background: rgba(30,30,40,.28); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); opacity: 0; pointer-events: none; transition: opacity 260ms ease; z-index: 200; }
+.scrim.is-open { opacity: 1; pointer-events: auto; }
+.glossary { position: fixed; top: 52px; right: 0; bottom: 0; width: min(520px,92vw); background: var(--card); border-left: 1px solid var(--rule-mid); transform: translateX(100%); transition: transform 320ms cubic-bezier(.4,0,.2,1); z-index: 210; display: flex; flex-direction: column; box-shadow: -12px 0 32px -8px rgba(30,30,40,.18); }
+.glossary.is-open { transform: translateX(0); }
+.gloss-head { display: flex; align-items: stretch; border-bottom: 1px solid var(--rule); background: var(--bg-tint); }
+.gloss-stamp { background: var(--akvo); color: #fff; padding: 14px 18px 12px; display: flex; flex-direction: column; gap: 3px; min-width: 150px; }
+.gloss-stamp .num  { font-weight: 800; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; opacity: .82; }
+.gloss-stamp .word { font-weight: 900; font-size: 18px; letter-spacing: -.01em; line-height: 1; }
+.gloss-head-text { padding: 14px 16px; font-weight: 400; font-style: italic; font-size: 12.5px; color: var(--ink-soft); flex: 1; align-self: center; line-height: 1.3; }
+.gloss-close { align-self: stretch; width: 40px; background: transparent; border: none; border-left: 1px solid var(--rule); color: var(--ink-soft); cursor: pointer; font-size: 20px; transition: background 150ms ease, color 150ms ease; }
+.gloss-close:hover { background: var(--akvo); color: #fff; }
+.gloss-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 4px 24px 28px; scrollbar-width: thin; scrollbar-color: var(--ink-muted) transparent; }
+.gloss-group { font-weight: 800; font-size: 9.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--akvo); display: flex; align-items: center; gap: 10px; margin: 22px 0 5px; }
+.gloss-group::before { content:""; width:10px; height:10px; background:var(--akvo); flex-shrink:0; }
+.gloss-group::after  { content:""; flex:1; height:1px; background:var(--rule); }
+.gloss-group:first-child { margin-top: 14px; }
+.gloss-entry { padding: 11px 0; border-bottom: 1px solid var(--rule); display: grid; grid-template-columns: 1fr auto; column-gap: 10px; row-gap: 6px; }
+.gloss-entry:last-child { border-bottom: none; }
+.gloss-term { font-weight: 800; font-size: 14px; letter-spacing: -.005em; color: var(--ink); line-height: 1.15; }
+.gloss-term .mono { font-family:"IBM Plex Mono",monospace; font-weight:600; font-size:12px; color:var(--akvo); background:rgba(72,81,164,.09); padding:1px 5px; }
+.gloss-tag { font-weight: 800; font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase; color: #fff; background: var(--akvo); padding: 3px 6px 2px; align-self: start; margin-top: 1px; white-space: nowrap; }
+.gloss-tag.tag-layer    { background: var(--akvo-deep); }
+.gloss-tag.tag-concept  { background: var(--system); }
+.gloss-tag.tag-evidence { background: var(--water-deep); }
+.gloss-tag.tag-assume   { background: var(--glow-line); }
+.gloss-tag.tag-compile  { background: var(--compile-deep); }
+.gloss-def { grid-column: 1 / -1; font-weight: 400; font-size: 13px; line-height: 1.55; color: var(--ink-soft); }
+.gloss-def .k { font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--ink); background:rgba(30,30,40,.06); padding:0 4px; }
+.gloss-def em { font-style: italic; color: var(--ink); }
+.gloss-foot { padding: 10px 18px; border-top: 1px solid var(--rule); background: var(--bg-tint); display: flex; justify-content: space-between; align-items: center; font-size: 10.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-muted); }
+.gloss-foot .a-mark { display:grid; place-items:center; width:20px; height:20px; background:var(--akvo); color:#fff; font-weight:900; font-size:12px; line-height:1; border-radius:2px; }
+
+/* ═══ MATURITY SECTION ═══ */
+/* ═══ MATURITY SECTION v4 ═══ */
+.maturity-section { background: var(--bg); padding: 28px 32px 48px; }
+.mat-legend { display: flex; gap: 16px; margin-bottom: 14px; flex-wrap: wrap; }
+.mat-leg    { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--ink-soft); }
+.mat-dot    { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+.dot-found  { background: #3A3580; }
+.dot-enable { background: #1B6B3A; }
+.dot-own    { background: #A0431E; }
+.dot-res    { background: var(--assume-bg); border: 1px dashed var(--assume-line); }
+
+/* view toggle */
+.mat-view-toggle { display:flex; gap:6px; margin-bottom:14px; flex-wrap:wrap; align-items:center; }
+.mat-vtog-lbl    { font-size:10px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-muted); margin-right:4px; }
+.mvbtn {
+  font-family:"Mulish",sans-serif; font-size:11px; font-weight:700;
+  padding:5px 12px; border:0.5px solid var(--rule-mid); border-radius:3px;
+  background:transparent; color:var(--ink-soft); cursor:pointer; transition:all 150ms;
+}
+.mvbtn:hover { background:var(--bg-tint); }
+.mvbtn.on    { background:var(--akvo); color:#fff; border-color:var(--akvo); }
+
+/* column heads & rows — dynamic grid driven by JS data-view attribute */
+.mat-col-heads { display:grid; gap:7px; margin-bottom:4px; padding:0 3px; }
+.mat-col-head  { font-size:9.5px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-muted); }
+.mat-stair     { display:flex; flex-direction:column; gap:5px; }
+.mat-level     { display:grid; gap:7px; align-items:stretch; cursor:pointer; border-radius:5px; padding:3px; transition:background 150ms ease; }
+.mat-level:hover   { background:rgba(30,30,40,.04); }
+.mat-level.is-open { background:rgba(72,81,164,.05); }
+
+/* grid templates per view */
+[data-mview="full"]    .mat-col-heads,
+[data-mview="full"]    .mat-level { grid-template-columns:148px 1fr 1fr 1fr 1fr; }
+[data-mview="classic"] .mat-col-heads,
+[data-mview="classic"] .mat-level { grid-template-columns:148px 1fr 1fr 185px; }
+[data-mview="ownership"].mat-col-heads,
+[data-mview="ownership"].mat-level { grid-template-columns:148px 1fr 1fr; }
+
+/* badge */
+.mat-badge     { border-radius:4px; padding:10px 11px; display:flex; flex-direction:column; justify-content:center; min-height:66px; }
+.mat-badge-num { font-size:10px; font-weight:500; opacity:.7; font-family:"IBM Plex Mono",monospace; letter-spacing:.1em; }
+.mat-badge-name{ font-size:13px; font-weight:800; line-height:1.2; margin-top:4px; }
+.mat-badge-tag { font-size:9.5px; opacity:.65; margin-top:3px; font-family:"IBM Plex Mono",monospace; }
+
+/* standard cell */
+.mat-cell       { border-radius:4px; padding:8px 9px; display:flex; flex-direction:column; justify-content:center; min-height:66px; }
+.mat-cell-label { font-size:9.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; opacity:.65; margin-bottom:3px; }
+.mat-cell-items { font-size:11px; line-height:1.45; }
+.mat-cell-items span { display:block; }
+.mat-cell-items span::before { content:"· "; opacity:.45; }
+
+/* gate pill */
+.mat-gate { display:inline-flex; align-items:center; gap:4px; font-size:9.5px; font-family:"IBM Plex Mono",monospace; font-weight:600; padding:2px 7px; border-radius:3px; margin-top:5px; background:rgba(72,81,164,.10); color:#2B2E6B; border:0.5px solid rgba(72,81,164,.28); line-height:1.4; }
+
+/* priority cell (classic view) */
+.mat-priority      { border-radius:4px; padding:8px 9px; display:flex; flex-direction:column; justify-content:center; min-height:66px; border:0.5px dashed var(--rule-mid); }
+.mat-pri-label     { font-size:9.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; opacity:.6; margin-bottom:3px; }
+.mat-pri-text      { font-size:11px; line-height:1.4; color:var(--ink-soft); }
+
+/* ownership cell */
+.mat-own-cell  { border-radius:4px; padding:8px 9px; min-height:66px; display:flex; flex-direction:column; justify-content:center; }
+.mat-own-shift { font-size:9.5px; font-family:"IBM Plex Mono",monospace; font-weight:700; margin-bottom:3px; color:#8B3010; }
+.mat-own-text  { font-size:11px; line-height:1.4; color:var(--ink-soft); }
+
+/* resilience cell */
+.mat-res-cell  { border-radius:4px; padding:8px 9px; min-height:66px; border:0.5px dashed var(--rule-mid); display:flex; flex-direction:column; justify-content:center; }
+.mat-res-risk  { font-size:9.5px; font-family:"IBM Plex Mono",monospace; font-weight:700; margin-bottom:3px; color:var(--assumption); }
+.mat-res-text  { font-size:11px; line-height:1.4; color:var(--ink-soft); }
+
+/* hidden cells per view */
+[data-mview="classic"] .own-cell,
+[data-mview="classic"] .res-cell   { display:none; }
+[data-mview="ownership"] .found-cell,
+[data-mview="ownership"] .enable-cell,
+[data-mview="ownership"] .pri-cell  { display:none; }
+[data-mview="full"] .pri-cell       { display:none; }
+
+/* detail panel */
+.mat-detail { display:none; grid-column:1/-1; border-radius:4px; padding:14px 15px; margin-top:3px; border:0.5px solid var(--rule-mid); background:var(--card); }
+.mat-level.is-open .mat-detail { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+.mat-detail-section h4 { font-size:10.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 5px; }
+.mat-detail-section p  { font-size:12.5px; line-height:1.55; color:var(--ink-soft); margin:0 0 6px; }
+.mat-detail-section ul { margin:0; padding-left:14px; }
+.mat-detail-section li { font-size:12.5px; line-height:1.55; color:var(--ink-soft); margin-bottom:3px; }
+.mat-example-tag { display:inline-block; font-size:10px; font-family:"IBM Plex Mono",monospace; background:var(--bg-tint); border:0.5px solid var(--rule-mid); border-radius:3px; padding:2px 7px; margin-bottom:5px; color:var(--ink-muted); }
+
+/* regression warning bar */
+.mat-reg-warn { font-size:11px; font-family:"IBM Plex Mono",monospace; color:var(--ink-muted); border-top:0.5px dashed var(--rule-mid); margin-top:12px; padding-top:10px; display:flex; gap:8px; align-items:flex-start; line-height:1.55; }
+.mat-rw-lbl   { font-weight:700; color:var(--assumption); flex-shrink:0; white-space:nowrap; }
+.mat-hint { font-size:10.5px; color:var(--ink-muted); text-align:center; margin-top:12px; font-family:"IBM Plex Mono",monospace; }
+
+/* level badge colours */
+.lvl-1 .mat-badge{background:#F1EFE8;} .lvl-1 .mat-badge-num,.lvl-1 .mat-badge-name,.lvl-1 .mat-badge-tag{color:#444441;}
+.lvl-2 .mat-badge{background:#DEDCEE;} .lvl-2 .mat-badge-num,.lvl-2 .mat-badge-name,.lvl-2 .mat-badge-tag{color:#23205A;}
+.lvl-3 .mat-badge{background:#AFA9EC;} .lvl-3 .mat-badge-num,.lvl-3 .mat-badge-name,.lvl-3 .mat-badge-tag{color:#26215C;}
+.lvl-4 .mat-badge{background:#5DCAA5;} .lvl-4 .mat-badge-num,.lvl-4 .mat-badge-name,.lvl-4 .mat-badge-tag{color:#04342C;}
+.lvl-5 .mat-badge{background:#1D9E75;} .lvl-5 .mat-badge-num,.lvl-5 .mat-badge-name,.lvl-5 .mat-badge-tag{color:#E1F5EE;}
+.lvl-6 .mat-badge{background:#085041;} .lvl-6 .mat-badge-num,.lvl-6 .mat-badge-name,.lvl-6 .mat-badge-tag{color:#9FE1CB;}
+
+/* found / enable cell fills */
+.lvl-1 .found-cell{background:rgba(58,53,128,.07);} .lvl-1 .enable-cell{background:rgba(27,107,58,.05);border:0.5px dashed var(--rule);}
+.lvl-2 .found-cell{background:rgba(58,53,128,.12);} .lvl-2 .enable-cell{background:rgba(27,107,58,.06);border:0.5px dashed var(--rule);}
+.lvl-3 .found-cell{background:rgba(58,53,128,.18);} .lvl-3 .enable-cell{background:rgba(27,107,58,.10);}
+.lvl-4 .found-cell{background:rgba(58,53,128,.22);} .lvl-4 .enable-cell{background:rgba(27,107,58,.18);}
+.lvl-5 .found-cell{background:rgba(58,53,128,.28);} .lvl-5 .enable-cell{background:rgba(27,107,58,.24);}
+.lvl-6 .found-cell{background:rgba(58,53,128,.35);} .lvl-6 .enable-cell{background:rgba(27,107,58,.32);}
+
+/* own cell fills */
+.lvl-1 .own-cell{background:rgba(160,67,30,.04);border:0.5px dashed var(--rule);}
+.lvl-2 .own-cell{background:rgba(160,67,30,.07);border:0.5px dashed var(--rule);}
+.lvl-3 .own-cell{background:rgba(160,67,30,.10);}
+.lvl-4 .own-cell{background:rgba(160,67,30,.14);}
+.lvl-5 .own-cell{background:rgba(160,67,30,.20);}
+.lvl-6 .own-cell{background:rgba(160,67,30,.28);}
+
+/* text colours inside cells */
+.found-cell  .mat-cell-label{color:#3A3580;} .enable-cell .mat-cell-label{color:#1B6B3A;}
+.lvl-5 .found-cell .mat-cell-label,.lvl-6 .found-cell .mat-cell-label{color:#AFA9EC;}
+.lvl-5 .enable-cell .mat-cell-label,.lvl-6 .enable-cell .mat-cell-label{color:#9FE1CB;}
+.lvl-1 .found-cell .mat-cell-items,.lvl-2 .found-cell .mat-cell-items,.lvl-3 .found-cell .mat-cell-items,.lvl-4 .found-cell .mat-cell-items{color:#23205A;}
+.lvl-1 .enable-cell .mat-cell-items,.lvl-2 .enable-cell .mat-cell-items,.lvl-3 .enable-cell .mat-cell-items,.lvl-4 .enable-cell .mat-cell-items{color:#104025;}
+.lvl-5 .found-cell .mat-cell-items,.lvl-6 .found-cell .mat-cell-items{color:#DEDCEE;}
+.lvl-5 .enable-cell .mat-cell-items,.lvl-6 .enable-cell .mat-cell-items{color:#D4EBD9;}
+.lvl-1 .own-cell .mat-own-text,.lvl-2 .own-cell .mat-own-text{color:#8B4420;}
+.lvl-5 .own-cell .mat-own-text,.lvl-6 .own-cell .mat-own-text{color:#F1D5C8;}
+
+/* ═══ FOOTER ═══ */
+.doc-footer {
+  background: var(--akvo-deep);
+  color: rgba(255,255,255,.65);
+  padding: 20px 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 11px; font-family:"IBM Plex Mono",monospace; letter-spacing:.08em;
+}
+.doc-footer strong { color: rgba(255,255,255,.9); font-weight:600; }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width:1100px) {
+  .section-body { gap:28px; padding:14px 16px 32px; }
+  .panel-left { flex: 0 0 42%; }
+}
+@media (max-width:800px) {
+  .section-body { flex-direction:column; }
+  .panel-left,.panel-right { flex:none; min-height:400px; }
+  .doc-nav-tabs { display:none; }
+  .mat-col-heads,[data-mview] .mat-level { grid-template-columns:110px 1fr; }
+  .mat-priority,.mat-detail,.mat-own-cell,.mat-res-cell { grid-column:1/-1; }
+  .mat-level.is-open .mat-detail { grid-template-columns:1fr; }
+}
+
+/* ═══ GLAAS CLASSIFICATION SECTION ═══ */
+.glaas-section { background:var(--bg); padding:28px 32px 56px; }
+.glaas-title   { font-size:18px; font-weight:800; letter-spacing:-0.01em; color:var(--ink); margin-bottom:4px; }
+.glaas-sub     { font-size:12.5px; color:var(--ink-soft); font-style:italic; margin-bottom:18px; }
+.src-bar  { background:var(--bg-tint); border:0.5px solid var(--rule-mid); border-radius:4px; padding:10px 14px; margin-bottom:16px; font-size:11.5px; color:var(--ink-soft); display:flex; align-items:flex-start; gap:10px; flex-wrap:wrap; line-height:1.5; }
+.src-tag  { font-family:"IBM Plex Mono",monospace; font-size:10px; background:rgba(27,107,58,.12); color:#104025; border:0.5px solid rgba(27,107,58,.3); border-radius:3px; padding:2px 7px; white-space:nowrap; flex-shrink:0; margin-top:1px; }
+.warn-tag { font-family:"IBM Plex Mono",monospace; font-size:10px; background:rgba(180,115,22,.12); color:#633806; border:0.5px solid rgba(180,115,22,.3); border-radius:3px; padding:2px 7px; white-space:nowrap; flex-shrink:0; margin-top:1px; }
+.glaas-controls { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; align-items:center; }
+.ctrl-lbl { font-size:10px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-muted); }
+.gf-btn { font-family:"Mulish",sans-serif; font-size:11.5px; font-weight:700; padding:5px 11px; border:0.5px solid var(--rule-mid); border-radius:3px; background:transparent; color:var(--ink-soft); cursor:pointer; transition:all 150ms; }
+.gf-btn:hover { background:var(--bg-tint); }
+.gf-btn.on { background:var(--akvo); color:#fff; border-color:var(--akvo); }
+.glaas-summary { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; margin-bottom:18px; }
+.gsum-card { border-radius:4px; padding:10px 8px; text-align:center; cursor:pointer; transition:opacity 150ms; }
+.gsum-card:hover { opacity:.82; }
+.gsum-n   { font-size:22px; font-weight:800; line-height:1; }
+.gsum-lbl { font-size:9.5px; margin-top:3px; font-family:"IBM Plex Mono",monospace; letter-spacing:.06em; text-transform:uppercase; }
+.gsum-sub { font-size:9px; margin-top:2px; }
+.glaas-tbl-wrap { overflow-x:auto; border:0.5px solid var(--rule-mid); border-radius:4px; }
+.glaas-tbl { width:100%; border-collapse:collapse; font-size:12px; }
+.glaas-tbl th { text-align:left; padding:8px 11px; font-size:9.5px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-muted); border-bottom:0.5px solid var(--rule-mid); background:var(--bg-tint); white-space:nowrap; }
+.glaas-tbl td { padding:8px 11px; border-bottom:0.5px solid var(--rule); vertical-align:middle; line-height:1.4; }
+.glaas-tbl tr:last-child td { border-bottom:none; }
+.glaas-tbl tr:hover td { background:var(--bg-tint); }
+.glaas-tbl tr.agg-row td { background:rgba(72,81,164,.04); font-style:italic; }
+.glpill { display:inline-flex; align-items:center; font-size:10.5px; font-weight:700; padding:3px 8px; border-radius:3px; white-space:nowrap; }
+.glp1{background:#F1EFE8;color:#444441;} .glp2{background:#DEDCEE;color:#23205A;} .glp3{background:#AFA9EC;color:#26215C;}
+.glp4{background:#5DCAA5;color:#04342C;} .glp5{background:#1D9E75;color:#E1F5EE;} .glp6{background:#085041;color:#9FE1CB;}
+.rbadge { font-size:10px; font-family:"IBM Plex Mono",monospace; padding:2px 6px; border-radius:3px; background:var(--bg-tint); border:0.5px solid var(--rule-mid); color:var(--ink-muted); white-space:nowrap; }
+.conf-dot { display:inline-block; width:7px; height:7px; border-radius:50%; margin-right:4px; }
+.c-hi{background:#1D9E75;} .c-mid{background:#EF9F27;} .c-lo{background:#E24B4A;}
+.sig-pos{color:#1D9E75;font-weight:700;} .sig-neg{color:#A32D2D;font-weight:700;}
+.glaas-key { display:flex; gap:18px; flex-wrap:wrap; margin-top:14px; padding-top:12px; border-top:0.5px solid var(--rule); }
+.glaas-key-item { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--ink-soft); }
+.glaas-note { font-size:10.5px; color:var(--ink-muted); margin-top:14px; line-height:1.55; font-family:"IBM Plex Mono",monospace; }
+.glaas-note strong { color:var(--ink-soft); font-weight:600; }
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav class="doc-nav" role="navigation" aria-label="Document sections">
+  <div class="doc-nav-brand">
+    <div class="doc-mark" aria-hidden="true">A</div>
+    <span class="doc-brand-name">Data for WASH</span>
+  </div>
+  <div class="doc-nav-tabs">
+    <a href="#toc" class="doc-tab active" onclick="setTab(this)">Ⅰ · Theory of Change</a>
+    <a href="#maturity" class="doc-tab" onclick="setTab(this)">Ⅱ · Maturity framework</a>
+    <a href="#concepts" class="doc-tab" onclick="setTab(this)">Ⅲ · Concepts &amp; evidence</a>
+    <a href="#glaas" class="doc-tab" onclick="setTab(this)">Ⅳ · GLAAS 2025 classification</a>
+  </div>
+  <div class="doc-nav-right">
+    <button class="nav-btn" id="glossary-btn" type="button" data-icon="→" aria-expanded="false">Concepts</button>
+    <button class="nav-btn" id="reset-btn" type="button" data-icon="↻">Clear</button>
+  </div>
+</nav>
+
+<!-- ═══ SECTION 1 · THEORY OF CHANGE ═══ -->
+<section id="toc" class="doc-section">
+  <div class="section-header">
+    <span class="section-num">Section Ⅰ</span>
+    <h1 class="section-title">Theory of Change · Data for WASH</h1>
+    <span class="section-sub">Five system layers · grounded in UNICEF/IRC (2023) · Harris &amp; Pearce (2021) · GLAAS (2019)</span>
+  </div>
+
+  <div class="section-body stage-toc" id="stage-toc" data-active="false" style="position:relative;">
+
+    <!-- LEFT: PROBLEM · ACTIVITIES -->
+    <div class="panel panel-left">
+      <div class="panel-head">
+        <div class="panel-stamp"><span class="num">Ⅰ·a</span> Problem · Activities</div>
+        <div class="panel-sub-head">Where data fails — and what the programme does about it.</div>
+        <div class="panel-meta">5 layers</div>
+      </div>
+      <div class="panel-body">
+      <svg class="diagram" viewBox="0 0 680 530" role="img" aria-label="Five problem and activity pairs by system layer">
+        <defs>
+          <marker id="ch-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+        <g class="dimmable">
+          <text class="col-label" x="148" y="14" text-anchor="middle" dominant-baseline="central">PROBLEM</text>
+          <text class="col-label" x="480" y="14" text-anchor="middle" dominant-baseline="central">PROGRAMME ACTIVITIES</text>
+          <line class="col-divider" x1="10" y1="24" x2="665" y2="24"/>
+        </g>
+        <!-- ROW 1: Policy -->
+        <g class="layer-row dimmable" id="row-policy" data-key="policy" tabindex="0" role="button" aria-label="Policy layer">
+          <text class="row-idx" x="0" y="57" text-anchor="start">01</text>
+          <rect class="rect-prob" x="10" y="32" width="268" height="50" rx="2"/>
+          <text class="t-prob" x="144" y="50" text-anchor="middle" dominant-baseline="central">No shared standards or mandate</text>
+          <text class="t-sub-p" x="144" y="66" text-anchor="middle" dominant-baseline="central">conflicting sector &amp; national targets</text>
+          <line class="row-arrow" x1="278" y1="57" x2="292" y2="57" marker-end="url(#ch-arrow)"/>
+          <rect class="rect-act" x="292" y="32" width="375" height="50" rx="2"/>
+          <text class="t-act"   x="479" y="48" text-anchor="middle" dominant-baseline="central">Define governance &amp; harmonise indicators</text>
+          <text class="t-sub-a" x="479" y="64" text-anchor="middle" dominant-baseline="central">gov mandate · donor alignment · align to SDG6/JMP</text>
+        </g>
+        <!-- ROW 2: System -->
+        <g class="layer-row dimmable" id="row-system" data-key="system" tabindex="0" role="button" aria-label="System layer">
+          <text class="row-idx" x="0" y="143" text-anchor="start">02</text>
+          <rect class="rect-prob" x="10" y="118" width="268" height="50" rx="2"/>
+          <text class="t-prob" x="144" y="136" text-anchor="middle" dominant-baseline="central">Fragmented sub-systems, no compilation</text>
+          <text class="t-sub-p" x="144" y="152" text-anchor="middle" dominant-baseline="central">siloed asset / finance / coverage data</text>
+          <line class="row-arrow" x1="278" y1="143" x2="292" y2="143" marker-end="url(#ch-arrow)"/>
+          <rect class="rect-act"     x="292" y="118" width="196" height="50" rx="2"/>
+          <text class="t-act"        x="390"  y="136" text-anchor="middle" dominant-baseline="central">Deploy digital platforms</text>
+          <text class="t-sub-a"      x="390"  y="152" text-anchor="middle" dominant-baseline="central">digital public goods · tech capacity</text>
+          <line class="row-arrow" x1="488" y1="143" x2="498" y2="143" marker-end="url(#ch-arrow)"/>
+          <rect class="rect-compile" x="498" y="118" width="169" height="50" rx="2"/>
+          <text class="t-col"        x="582"  y="136" text-anchor="middle" dominant-baseline="central">Compile &amp; aggregate</text>
+          <text class="t-sub-c"      x="582"  y="152" text-anchor="middle" dominant-baseline="central">cross-system KPI compilation</text>
+        </g>
+        <!-- ROW 3: Service -->
+        <g class="layer-row dimmable" id="row-service" data-key="service" tabindex="0" role="button" aria-label="Service layer">
+          <text class="row-idx" x="0" y="229" text-anchor="start">03</text>
+          <rect class="rect-prob" x="10" y="204" width="268" height="50" rx="2"/>
+          <text class="t-prob" x="144" y="222" text-anchor="middle" dominant-baseline="central">No performance data, reactive mgmt</text>
+          <text class="t-sub-p" x="144" y="238" text-anchor="middle" dominant-baseline="central">providers report upward only</text>
+          <line class="row-arrow" x1="278" y1="229" x2="292" y2="229" marker-end="url(#ch-arrow)"/>
+          <rect class="rect-act" x="292" y="204" width="375" height="50" rx="2"/>
+          <text class="t-act"   x="479" y="222" text-anchor="middle" dominant-baseline="central">Collect &amp; report operational data</text>
+          <text class="t-sub-a" x="479" y="238" text-anchor="middle" dominant-baseline="central">trained staff · tools · compliance incentives · dashboards</text>
+        </g>
+        <!-- ROW 4: Community -->
+        <g class="layer-row dimmable" id="row-community" data-key="community" tabindex="0" role="button" aria-label="Community layer">
+          <text class="row-idx" x="0" y="315" text-anchor="start">04</text>
+          <rect class="rect-prob" x="10" y="290" width="268" height="50" rx="2"/>
+          <text class="t-prob" x="144" y="308" text-anchor="middle" dominant-baseline="central">Communities excluded from decisions</text>
+          <text class="t-sub-p" x="144" y="324" text-anchor="middle" dominant-baseline="central">no grievance channel · no demand data</text>
+          <line class="row-arrow" x1="278" y1="315" x2="292" y2="315" marker-end="url(#ch-arrow)"/>
+          <rect class="rect-act" x="292" y="290" width="375" height="50" rx="2"/>
+          <text class="t-act"   x="479" y="306" text-anchor="middle" dominant-baseline="central">Participatory monitoring + grievance systems</text>
+          <text class="t-sub-a" x="479" y="322" text-anchor="middle" dominant-baseline="central">community mobilisers · user surveys · formalised channels</text>
+        </g>
+        <!-- ROW 5: Water -->
+        <g class="layer-row dimmable" id="row-water" data-key="water" tabindex="0" role="button" aria-label="Water resource layer">
+          <text class="row-idx" x="0" y="401" text-anchor="start">05</text>
+          <rect class="rect-prob" x="10" y="376" width="268" height="50" rx="2"/>
+          <text class="t-prob" x="144" y="394" text-anchor="middle" dominant-baseline="central">No source quality or availability data</text>
+          <text class="t-sub-p" x="144" y="410" text-anchor="middle" dominant-baseline="central">no sensors · no climate risk signals</text>
+          <line class="row-arrow" x1="278" y1="401" x2="292" y2="401" marker-end="url(#ch-arrow)"/>
+          <rect class="rect-act" x="292" y="376" width="375" height="50" rx="2"/>
+          <text class="t-act"   x="479" y="394" text-anchor="middle" dominant-baseline="central">Monitor flows, rainfall &amp; groundwater</text>
+          <text class="t-sub-a" x="479" y="410" text-anchor="middle" dominant-baseline="central">hydrology sensors · remote sensing · weather integration</text>
+        </g>
+        <!-- Monitoring loop -->
+        <g class="dimmable">
+          <rect x="10" y="444" width="655" height="20" rx="2" fill="none" stroke="var(--rule-mid)" stroke-width="0.7" stroke-dasharray="4 3"/>
+          <text style="fill:var(--ink-muted);font-family:'Mulish',sans-serif;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;" x="337" y="454" text-anchor="middle" dominant-baseline="central">Monitoring feedback loop — outcomes inform activity redesign at all layers</text>
+        </g>
+        <!-- Data use typology -->
+        <g class="dimmable">
+          <rect class="rect-use" x="10" y="472" width="655" height="40" rx="2"/>
+          <text class="t-use" x="22" y="484" dominant-baseline="central">DATA USE TYPOLOGY (Kuster &amp; Batjes, 2017)</text>
+          <text class="t-use" x="22" y="502" dominant-baseline="central">▸ Policy making  ▸ Strategic mgmt  ▸ Operational mgmt  ▸ Knowledge generation  ▸ Upward / sideward / downward accountability</text>
+        </g>
+      </svg>
+      </div>
+    </div>
+
+    <!-- RIGHT: RESULTS FRAMEWORK -->
+    <div class="panel panel-right">
+      <div class="panel-head">
+        <div class="panel-stamp"><span class="num">Ⅰ·b</span> Results framework</div>
+        <div class="panel-sub-head">Outputs → outcomes → maturity shift · with evidence-grounded assumptions.</div>
+        <div class="panel-meta">SDG 6.1/6.2</div>
+      </div>
+      <div class="panel-body">
+      <svg class="diagram" viewBox="0 0 730 540" role="img" aria-label="Theory of change results framework">
+        <defs>
+          <marker id="arch-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+        <g class="dimmable">
+          <text class="col-label" x="110" y="14" text-anchor="middle" dominant-baseline="central">OUTPUT</text>
+          <text class="col-label" x="320" y="14" text-anchor="middle" dominant-baseline="central">OUTCOME</text>
+          <text class="col-label" x="520" y="14" text-anchor="middle" dominant-baseline="central">ASSUMPTION</text>
+          <text class="col-label" x="672" y="14" text-anchor="middle" dominant-baseline="central">IMPACT</text>
+          <line class="col-divider" x1="5" y1="24" x2="720" y2="24"/>
+        </g>
+        <!-- ROW 1 Policy -->
+        <g class="arch-box dimmable" id="out-policy"><rect class="rect-policy" x="5" y="34" width="210" height="64" rx="2"/><text class="t-col" x="110" y="52" text-anchor="middle" dominant-baseline="central">National WASH data system</text><text class="t-sub-c" x="110" y="67" text-anchor="middle" dominant-baseline="central">live · harmonised indicators</text><text class="t-sub-c" x="110" y="80" text-anchor="middle" dominant-baseline="central">aligned to JMP/SDG6</text></g>
+        <line class="flow-arrow dimmable" x1="215" y1="66" x2="228" y2="66" marker-end="url(#arch-arrow)"/>
+        <g class="arch-box dimmable" id="oc-policy"><rect class="rect-policy" x="228" y="34" width="210" height="64" rx="2"/><text class="t-col" x="333" y="52" text-anchor="middle" dominant-baseline="central">Evidence-based investment</text><text class="t-sub-c" x="333" y="67" text-anchor="middle" dominant-baseline="central">decisions at national level</text><text class="t-sub-c" x="333" y="80" text-anchor="middle" dominant-baseline="central">upward accountability to funders</text></g>
+        <line class="flow-arrow dimmable" x1="438" y1="66" x2="450" y2="66" marker-end="url(#arch-arrow)"/>
+        <g class="dimmable"><rect class="rect-assume" x="450" y="34" width="198" height="64" rx="2"/><text class="t-assume" x="549" y="52" text-anchor="middle" dominant-baseline="central">Political will to use data</text><text class="t-assume" x="549" y="66" text-anchor="middle" dominant-baseline="central">for decisions — persistently</text><text class="t-assume" x="549" y="80" text-anchor="middle" dominant-baseline="central">violated in ESA (H&amp;P 2021)</text></g>
+        <!-- ROW 2 System -->
+        <g class="arch-box dimmable" id="out-system"><rect class="rect-system" x="5" y="118" width="210" height="64" rx="2"/><text class="t-col" x="110" y="136" text-anchor="middle" dominant-baseline="central">Linked &amp; compiled KPI data</text><text class="t-sub-c" x="110" y="151" text-anchor="middle" dominant-baseline="central">asset · service · finance · coverage</text><text class="t-sub-c" x="110" y="164" text-anchor="middle" dominant-baseline="central">compiled across sub-systems</text></g>
+        <line class="flow-arrow dimmable" x1="215" y1="150" x2="228" y2="150" marker-end="url(#arch-arrow)"/>
+        <g class="arch-box dimmable" id="oc-system"><rect class="rect-system" x="228" y="118" width="210" height="64" rx="2"/><text class="t-col" x="333" y="136" text-anchor="middle" dominant-baseline="central">Optimised resource allocation</text><text class="t-sub-c" x="333" y="151" text-anchor="middle" dominant-baseline="central">strategic planning informed</text><text class="t-sub-c" x="333" y="164" text-anchor="middle" dominant-baseline="central">by cross-system evidence</text></g>
+        <line class="flow-arrow dimmable" x1="438" y1="150" x2="450" y2="150" marker-end="url(#arch-arrow)"/>
+        <g class="dimmable"><rect class="rect-assume" x="450" y="118" width="198" height="64" rx="2"/><text class="t-assume" x="549" y="136" text-anchor="middle" dominant-baseline="central">Systems maintained post-project</text><text class="t-assume" x="549" y="150" text-anchor="middle" dominant-baseline="central">data kept current &amp; quality-assured</text><text class="t-assume" x="549" y="164" text-anchor="middle" dominant-baseline="central">Ethiopia &amp; Ghana MIS cautionary</text></g>
+        <g class="dimmable"><path class="feed-arrow" d="M 110 118 L 110 98" stroke="rgba(58,53,128,.4)" marker-end="url(#arch-arrow)"/><text style="fill:var(--ink-muted);font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:500;" x="114" y="109" dominant-baseline="central">feeds up</text></g>
+        <!-- ROW 3 Service -->
+        <g class="arch-box dimmable" id="out-service"><rect class="rect-service" x="5" y="202" width="210" height="64" rx="2"/><text class="t-col" x="110" y="220" text-anchor="middle" dominant-baseline="central">Real-time performance</text><text class="t-sub-c" x="110" y="235" text-anchor="middle" dominant-baseline="central">dashboards &amp; fault alerts</text><text class="t-sub-c" x="110" y="248" text-anchor="middle" dominant-baseline="central">operational accountability data</text></g>
+        <line class="flow-arrow dimmable" x1="215" y1="234" x2="228" y2="234" marker-end="url(#arch-arrow)"/>
+        <g class="arch-box dimmable" id="oc-service"><rect class="rect-service" x="228" y="202" width="210" height="64" rx="2"/><text class="t-col" x="333" y="220" text-anchor="middle" dominant-baseline="central">Faster fault detection</text><text class="t-sub-c" x="333" y="235" text-anchor="middle" dominant-baseline="central">higher service continuity</text><text class="t-sub-c" x="333" y="248" text-anchor="middle" dominant-baseline="central">upward &amp; sideward accountability</text></g>
+        <line class="flow-arrow dimmable" x1="438" y1="234" x2="450" y2="234" marker-end="url(#arch-arrow)"/>
+        <g class="dimmable"><rect class="rect-assume" x="450" y="202" width="198" height="64" rx="2"/><text class="t-assume" x="549" y="220" text-anchor="middle" dominant-baseline="central">Providers act on data</text><text class="t-assume" x="549" y="234" text-anchor="middle" dominant-baseline="central">not just collect it</text><text class="t-assume" x="549" y="248" text-anchor="middle" dominant-baseline="central">incentives &amp; sanctions in place</text></g>
+        <g class="dimmable"><path class="feed-arrow" d="M 110 202 L 110 182" stroke="rgba(61,127,132,.4)" marker-end="url(#arch-arrow)"/><text style="fill:var(--ink-muted);font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:500;" x="114" y="193" dominant-baseline="central">feeds up</text></g>
+        <!-- ROW 4 Community -->
+        <g class="arch-box dimmable" id="out-community"><rect class="rect-comm" x="5" y="286" width="210" height="64" rx="2"/><text class="t-col" x="110" y="304" text-anchor="middle" dominant-baseline="central">Water access + grievance data</text><text class="t-sub-c" x="110" y="319" text-anchor="middle" dominant-baseline="central">user surveys · demand signals</text><text class="t-sub-c" x="110" y="332" text-anchor="middle" dominant-baseline="central">formalised complaint records</text></g>
+        <line class="flow-arrow dimmable" x1="215" y1="318" x2="228" y2="318" marker-end="url(#arch-arrow)"/>
+        <g class="arch-box dimmable" id="oc-community"><rect class="rect-comm" x="228" y="286" width="210" height="64" rx="2"/><text class="t-col" x="333" y="304" text-anchor="middle" dominant-baseline="central">Communities hold providers</text><text class="t-sub-c" x="333" y="319" text-anchor="middle" dominant-baseline="central">accountable with consequences</text><text class="t-sub-c" x="333" y="332" text-anchor="middle" dominant-baseline="central">downward accountability loop</text></g>
+        <line class="flow-arrow dimmable" x1="438" y1="318" x2="450" y2="318" marker-end="url(#arch-arrow)"/>
+        <g class="dimmable"><rect class="rect-assume" x="450" y="286" width="198" height="64" rx="2"/><text class="t-assume" x="549" y="304" text-anchor="middle" dominant-baseline="central">Grievance mechanisms exist</text><text class="t-assume" x="549" y="318" text-anchor="middle" dominant-baseline="central">&amp; have regulatory consequences</text><text class="t-assume" x="549" y="332" text-anchor="middle" dominant-baseline="central">not transparency-only</text></g>
+        <g class="dimmable"><path class="feed-arrow" d="M 110 286 L 110 266" stroke="rgba(160,67,30,.4)" marker-end="url(#arch-arrow)"/><text style="fill:var(--ink-muted);font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:500;" x="114" y="277" dominant-baseline="central">feeds up</text></g>
+        <!-- ROW 5 Water -->
+        <g class="arch-box dimmable" id="out-water"><rect class="rect-water" x="5" y="370" width="210" height="64" rx="2"/><text class="t-col" x="110" y="388" text-anchor="middle" dominant-baseline="central">Source availability, quality</text><text class="t-sub-c" x="110" y="403" text-anchor="middle" dominant-baseline="central">&amp; climate risk data</text><text class="t-sub-c" x="110" y="416" text-anchor="middle" dominant-baseline="central">integrated into national systems</text></g>
+        <line class="flow-arrow dimmable" x1="215" y1="402" x2="228" y2="402" marker-end="url(#arch-arrow)"/>
+        <g class="arch-box dimmable" id="oc-water"><rect class="rect-water" x="228" y="370" width="210" height="64" rx="2"/><text class="t-col" x="333" y="388" text-anchor="middle" dominant-baseline="central">Climate-resilient WASH planning</text><text class="t-sub-c" x="333" y="403" text-anchor="middle" dominant-baseline="central">&amp; early warning</text><text class="t-sub-c" x="333" y="416" text-anchor="middle" dominant-baseline="central">national policy shaped</text></g>
+        <line class="flow-arrow dimmable" x1="438" y1="402" x2="450" y2="402" marker-end="url(#arch-arrow)"/>
+        <g class="dimmable"><rect class="rect-assume" x="450" y="370" width="198" height="64" rx="2"/><text class="t-assume" x="549" y="388" text-anchor="middle" dominant-baseline="central">Climate data quality-assured</text><text class="t-assume" x="549" y="402" text-anchor="middle" dominant-baseline="central">&amp; integrated into national plans</text><text class="t-assume" x="549" y="416" text-anchor="middle" dominant-baseline="central">not siloed in sector ministries</text></g>
+        <g class="dimmable"><path class="feed-arrow" d="M 110 370 L 110 350" stroke="rgba(27,107,58,.4)" marker-end="url(#arch-arrow)"/><text style="fill:var(--ink-muted);font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:500;" x="114" y="361" dominant-baseline="central">feeds up</text></g>
+        <!-- Impact -->
+        <g class="dimmable" id="impact-box">
+          <rect class="rect-impact" x="650" y="34" width="68" height="400" rx="2"/>
+          <text class="t-impact" x="684" y="210" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 684 234)">Countries advance 1–2 maturity levels</text>
+          <text style="fill:var(--akvo);font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:500;" x="684" y="310" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 684 310)">[country] · [population] · [yr 1–5]</text>
+        </g>
+        <line class="flow-arrow dimmable" x1="648" y1="66"  x2="650" y2="66"  marker-end="url(#arch-arrow)"/>
+        <line class="flow-arrow dimmable" x1="648" y1="150" x2="650" y2="150" marker-end="url(#arch-arrow)"/>
+        <line class="flow-arrow dimmable" x1="648" y1="234" x2="650" y2="234" marker-end="url(#arch-arrow)"/>
+        <line class="flow-arrow dimmable" x1="648" y1="318" x2="650" y2="318" marker-end="url(#arch-arrow)"/>
+        <line class="flow-arrow dimmable" x1="648" y1="402" x2="650" y2="402" marker-end="url(#arch-arrow)"/>
+        <!-- Evidence base -->
+        <g class="dimmable">
+          <rect x="5" y="446" width="713" height="20" rx="2" fill="none" stroke="var(--rule-mid)" stroke-width=".7" stroke-dasharray="4 3"/>
+          <text style="fill:var(--ink-muted);font-family:'Mulish',sans-serif;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;" x="360" y="456" text-anchor="middle" dominant-baseline="central">Monitoring feedback loop — outcomes inform activity redesign · UNICEF/IRC (2023)</text>
+        </g>
+        <g class="dimmable">
+          <rect x="5" y="474" width="713" height="40" rx="2" fill="rgba(27,107,58,.07)" stroke="rgba(27,107,58,.30)" stroke-width=".8"/>
+          <text style="fill:var(--water);font-family:'Mulish',sans-serif;font-size:8.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;" x="18" y="486" dominant-baseline="central">Evidence base</text>
+          <text style="fill:var(--ink-soft);font-family:'IBM Plex Mono',monospace;font-size:8.5px;font-weight:500;" x="18" y="504" dominant-baseline="central">UNICEF/IRC (2023) · Harris &amp; Pearce (2021) Understanding monitoring for SDG6 across ESA — 21 countries · GLAAS (2019) WHO/UN-Water</text>
+        </g>
+        <!-- Legend -->
+        <g class="dimmable">
+          <rect x="5"   y="522" width="7" height="7" fill="var(--akvo)"/>   <text class="legend-text" x="16"  y="526" dominant-baseline="central">Activity</text>
+          <rect x="75"  y="522" width="7" height="7" fill="var(--compile)"/> <text class="legend-text" x="86"  y="526" dominant-baseline="central">Compilation</text>
+          <rect x="172" y="522" width="7" height="7" fill="var(--policy)"/>  <text class="legend-text" x="183" y="526" dominant-baseline="central">Policy</text>
+          <rect x="232" y="522" width="7" height="7" fill="var(--system)"/>  <text class="legend-text" x="243" y="526" dominant-baseline="central">System</text>
+          <rect x="297" y="522" width="7" height="7" fill="var(--service)"/> <text class="legend-text" x="308" y="526" dominant-baseline="central">Service</text>
+          <rect x="362" y="522" width="7" height="7" fill="var(--community)"/><text class="legend-text" x="373" y="526" dominant-baseline="central">Community</text>
+          <rect x="455" y="522" width="7" height="7" fill="var(--water)"/>   <text class="legend-text" x="466" y="526" dominant-baseline="central">Water resource</text>
+          <rect x="568" y="522" width="7" height="7" fill="var(--assume-bg)" stroke="var(--assume-line)" stroke-width=".8"/><text class="legend-text" x="579" y="526" dominant-baseline="central">Assumption</text>
+        </g>
+      </svg>
+      </div>
+    </div>
+
+    <!-- connector overlay -->
+    <svg class="connector-layer" id="connector-layer" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="toc-gradient" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"   stop-color="#4A4A57"/>
+          <stop offset="40%"  stop-color="#5C529C"/>
+          <stop offset="100%" stop-color="#4851A4"/>
+        </linearGradient>
+        <marker id="conn-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+          <path d="M1.5 1.2L8.5 5L1.5 8.8" fill="none" stroke="#4851A4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+      <circle class="connector-ring"   id="connector-ring"   cx="0" cy="0" r="6"/>
+      <circle class="connector-origin" id="connector-origin" cx="0" cy="0" r="2.5"/>
+      <path   class="connector-path"   id="connector-path"   d="" marker-end="url(#conn-arrow)"/>
+    </svg>
+    <div class="toc-callout" id="toc-callout">
+      <span class="callout-leader"></span>
+      <div class="callout-body">
+        <span class="callout-tag"  id="callout-tag">ASSUMPTION</span>
+        <span class="callout-text" id="callout-text"></span>
+      </div>
+    </div>
+    <div class="toc-hint">Select a layer <em>1–5</em> · or click a row</div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 2 · MATURITY FRAMEWORK ═══ -->
+<section id="maturity">
+  <div class="section-header">
+    <span class="section-num">Section Ⅱ</span>
+    <h2 class="section-title">Maturity framework — national WASH monitoring systems</h2>
+    <span class="section-sub">v4 · UNICEF/IRC (2023) + Ramanathan et al. SSIR (2026) · click any level to expand</span>
+  </div>
+
+  <div class="maturity-section" id="mat-container" data-mview="classic">
+
+    <!-- Legend -->
+    <div class="mat-legend">
+      <div class="mat-leg"><div class="mat-dot dot-found"></div> Foundation — sub-systems · indicators · institutions</div>
+      <div class="mat-leg"><div class="mat-dot dot-enable"></div> Enablement — compilation · digital · data use</div>
+      <div class="mat-leg"><div class="mat-dot dot-own"></div> Ownership — who does the work (Nexleaf/SSIR 2026)</div>
+      <div class="mat-leg"><div class="mat-dot dot-res"></div> Resilience — what survives leadership change or donor exit</div>
+    </div>
+
+    <!-- View toggle -->
+    <div class="mat-view-toggle">
+      <span class="mat-vtog-lbl">View:</span>
+      <button class="mvbtn on" onclick="matView('classic',this)">Classic (Foundation + Enablement)</button>
+      <button class="mvbtn" onclick="matView('full',this)">Full (4 tracks)</button>
+      <button class="mvbtn" onclick="matView('ownership',this)">Ownership + Resilience lens</button>
+    </div>
+
+    <!-- Column heads — text set by JS -->
+    <div class="mat-col-heads" id="mat-col-heads"></div>
+
+    <!-- Stair -->
+    <div class="mat-stair" id="mat-stair"></div>
+
+    <!-- Regression warning -->
+    <div class="mat-reg-warn">
+      <span class="mat-rw-lbl">Regression risk:</span>
+      Levels 3–5 are all vulnerable to reversal on ministerial change, donor exit or fiscal shock (Ramanathan et al., SSIR 2026). Level 6 is the first level where the system is resilient to all three. A maturity score should always be dated and contextualised — a Level 4 score in year 1 of a new government is worth less than the same score in year 4 of the same administration.
+    </div>
+
+    <p class="mat-hint" id="mat-hint">Click any row to expand · v4 · Foundation + Enablement (UNICEF/IRC 2023) · Ownership track (Nexleaf/SSIR 2026) · Resilience track + gate conditions (new)</p>
+  </div>
+</section>
+
+<!-- ═══ SECTION 3 · CONCEPTS (anchor for tab) ═══ -->
+<section id="concepts" style="padding:0;">
+  <div class="section-header">
+    <span class="section-num">Section Ⅲ</span>
+    <h2 class="section-title">Concepts &amp; evidence base</h2>
+    <span class="section-sub">Open the "Concepts" panel from the top navigation bar</span>
+  </div>
+  <div style="padding:32px;background:var(--bg);min-height:200px;display:flex;align-items:center;justify-content:center;">
+    <button class="nav-btn" id="open-gloss-cta" type="button" data-icon="→" style="background:var(--akvo);color:#fff;border-color:var(--akvo);font-size:14px;padding:12px 24px;">Open concepts &amp; evidence panel</button>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="doc-footer">
+  <span><strong>Data for WASH · Theory of Change v2</strong> · Grounded in UNICEF/IRC (2023) · Harris &amp; Pearce (2021) · GLAAS (2019)</span>
+  <span>Click any layer to activate · Press <strong>G</strong> for concepts · Press <strong>Esc</strong> to clear</span>
+</footer>
+
+<!-- ═══ GLOSSARY DRAWER ═══ -->
+<div class="scrim" id="scrim" aria-hidden="true"></div>
+<aside class="glossary" id="glossary" aria-hidden="true" aria-labelledby="gloss-title" role="dialog">
+  <div class="gloss-head">
+    <div class="gloss-stamp">
+      <span class="num">Ⅲ · Appendix</span>
+      <span class="word" id="gloss-title">Concepts</span>
+    </div>
+    <div class="gloss-head-text">Key terms, evidence sources, and critical assumptions grounding this Theory of Change.</div>
+    <button class="gloss-close" id="gloss-close" type="button" aria-label="Close">×</button>
+  </div>
+  <div class="gloss-body">
+    <div class="gloss-group">System layers</div>
+    <div class="gloss-entry">
+      <div class="gloss-term">Policy layer</div><div class="gloss-tag tag-layer">Layer 01</div>
+      <div class="gloss-def">The national governance and standards environment. Now explicitly includes <em>indicator harmonisation</em> — aligning sector definitions with JMP/SDG6 standards. Misaligned indicators across sub-systems is the single most commonly documented failure in national WASH monitoring. None of the 21 ESA countries had fully harmonised indicators (Harris &amp; Pearce, 2021).</div>
+    </div>
+    <div class="gloss-entry">
+      <div class="gloss-term">System layer</div><div class="gloss-tag tag-layer">Layer 02</div>
+      <div class="gloss-def">The digital infrastructure and <em>data compilation</em> layer. The UNICEF/IRC guideline (2023) identifies this as the hardest problem: not collecting data, but deliberately compiling, aggregating, and analysing it from multiple sub-systems into a coherent national picture. Split into two explicit activities: platform deployment and cross-system KPI compilation.</div>
+    </div>
+    <div class="gloss-entry">
+      <div class="gloss-term">Community layer</div><div class="gloss-tag tag-layer">Layer 04</div>
+      <div class="gloss-def">The downward accountability layer. Includes formalised <em>grievance channels</em> and <em>user surveys</em> as specific activities. Mulgan (2011): <em>"transparency alone, with no prospect of correction, falls short of full accountability."</em> The programme must verify that regulatory or contractual consequences exist for grievances — not only a mechanism to receive them.</div>
+    </div>
+    <div class="gloss-group">New concepts in v2</div>
+    <div class="gloss-entry">
+      <div class="gloss-term">Data compilation</div><div class="gloss-tag tag-compile">New · Layer 02</div>
+      <div class="gloss-def">The deliberate process of bringing together KPI data from multiple independent sub-systems into a unified national picture. The UNICEF/IRC guideline (2023) defines this as the <em>core function</em> of the national WASH monitoring system — and the step most commonly missing even when individual sub-systems are functional.</div>
+    </div>
+    <div class="gloss-entry">
+      <div class="gloss-term">Indicator harmonisation</div><div class="gloss-tag tag-compile">New · Layer 01</div>
+      <div class="gloss-def">Alignment of indicator definitions across sub-systems so data from different sources can be meaningfully compiled and compared. Required for the system layer's compilation mechanism to function. Failure to harmonise was documented in all 21 ESA countries assessed — including systems designed specifically for national monitoring.</div>
+    </div>
+    <div class="gloss-entry">
+      <div class="gloss-term">Monitoring maturity</div><div class="gloss-tag tag-concept">Impact frame</div>
+      <div class="gloss-def">A six-level ladder from absent sub-systems to demonstrated service improvement (UNICEF/IRC, 2023, Figure 5). The impact statement in this ToC has been reframed from <em>"universal WASH access"</em> — unattributable at programme level — to <em>"countries advance 1–2 maturity levels"</em>, which is specific, measurable, and honest about causal reach within 5 years.</div>
+    </div>
+    <div class="gloss-entry">
+      <div class="gloss-term">Data use typology</div><div class="gloss-tag tag-concept">Purpose frame</div>
+      <div class="gloss-def">Kuster &amp; Batjes (2017) identify four monitoring purposes: <em>policy making, strategic management, operational management, knowledge generation.</em> The UNICEF/IRC guideline adds accountability dimensions: upward (to ministers, funders), sideward (to sector peers), downward (to citizens). Each layer of this ToC serves a different combination of these use types.</div>
+    </div>
+    <div class="gloss-group">Evidence base</div>
+    <div class="gloss-entry">
+      <div class="gloss-term">UNICEF / IRC (2023)</div><div class="gloss-tag tag-evidence">Primary</div>
+      <div class="gloss-def"><em>Guideline for Strengthening National Systems to Monitor Water, Sanitation and Hygiene Services.</em> UNICEF NYHQ and IRC International Water and Sanitation Centre. Defines the national WASH monitoring system framework, six-level maturity model, and assessment methodology. Directly grounds all five layers and the compilation activity of this ToC.</div>
+    </div>
+    <div class="gloss-entry">
+      <div class="gloss-term">Harris &amp; Pearce (2021)</div><div class="gloss-tag tag-evidence">Regional study</div>
+      <div class="gloss-def"><em>Understanding monitoring for SDG6 across Eastern and Southern Africa.</em> UNICEF WASH Technical Paper TP 17/2021. Assessment of 21 ESA countries. Key findings: none fully monitor progress against set targets; 12 of 21 have no routine hygiene data; none have fully harmonised JMP indicators; only 6 fully integrate utility data.</div>
+    </div>
+    <div class="gloss-entry">
+      <div class="gloss-term">GLAAS (2019)</div><div class="gloss-tag tag-evidence">Global survey</div>
+      <div class="gloss-def"><em>National systems to support drinking-water, sanitation and hygiene: global status report 2019.</em> WHO / UN-Water. All responding countries reported some WASH targets aligned with SDG6, but data required to assess progress are not always collected. The target for UNICEF's 2022–25 Strategic Plan is 25 countries achieving all four monitoring sub-indicators; as of 2021 no country had met all four.</div>
+    </div>
+    <div class="gloss-group">Critical assumptions</div>
+    <div class="gloss-entry">
+      <div class="gloss-term">Decision-makers use accessible data</div><div class="gloss-tag tag-assume">Cross-cutting</div>
+      <div class="gloss-def">The programme's overarching assumption. UNICEF (2023) identifies persistent mismatch between data producers and key data users, and lack of motivation and capacity to interpret data. The most frequently violated assumption in WASH monitoring globally. The programme must include specific use-enabling activities — not assume use happens automatically once data is available.</div>
+    </div>
+    <div class="gloss-entry">
+      <div class="gloss-term">Systems maintained post-project</div><div class="gloss-tag tag-assume">Sustainability</div>
+      <div class="gloss-def">Ethiopia's WASH M&amp;E MIS (developed since 2008) and Ghana's Sector Information System (since 2010) had both not resulted in functional systems as of 2023, despite significant external investment. The most successful systems were designed around existing institutional capacities. This assumption requires explicit handover plans, domestic budget lines, and government ownership from design stage.</div>
+    </div>
+    <div class="gloss-entry">
+      <div class="gloss-term">Grievance mechanisms have consequences</div><div class="gloss-tag tag-assume">Community layer</div>
+      <div class="gloss-def">A complete accountability relation requires three stages: information, discussion, and consequences (Mulgan, 2011). Grievance channels that stop at transparency do not achieve the downward accountability this layer aims for. The programme must verify the regulatory or contractual framework exists to act on grievances, not only to receive them.</div>
+    </div>
+  </div>
+  <div class="gloss-foot">
+    <span>Ⅲ · 13 entries · v2</span>
+    <span style="display:inline-flex;align-items:center;gap:8px;">Esc to close <span class="a-mark">A</span></span>
+  </div>
+</aside>
+
+<script>
+/* ═══ TAB NAV ═══ */
+function setTab(el) {
+  document.querySelectorAll('.doc-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+/* ═══ MATURITY v4 JS ═══ */
+const MDATA = [
+  { num:"01", name:"Absent", tag:"no system present", cls:"lvl-1",
+    found:["No functioning sub-systems","No agreed indicator set","No institutional mandate"],
+    enable:["No compilation mechanism","No digital platform","Data not used for decisions"],
+    pri:"Establish at least one functioning sub-system and a government mandate to coordinate monitoring",
+    own:{ shift:"Pre-procurement", text:"No system exists to own. External actors collect project-level data with no government involvement." },
+    res:{ risk:"N/A", text:"No system to lose. Risk is opportunity cost — each year without a system entrenches the paper baseline." },
+    gate:null,
+    looks:"No routine WASH data collection at national level. JMP modelled estimates are the only national picture.",
+    country:"fragile / conflict states", countryNote:"Common in fragile or post-conflict settings. A WASH inventory may have been attempted but not sustained.",
+    ssir:"No Nexleaf shift applies — the system does not yet exist.",
+    moves:["Government designates a WASH monitoring lead ministry","At least one sub-system produces routine data","A minimal indicator set is adopted nationally"]
+  },
+  { num:"02", name:"Emerging", tag:"weak sub-systems present", cls:"lvl-2",
+    found:["Some sub-systems exist but fragile","Indicators defined but not harmonised","Mandate exists, roles unclear"],
+    enable:["Ad hoc data sharing only","Spreadsheet aggregation","Data used for donor reports only"],
+    pri:"Indicator harmonisation across existing sub-systems — the most common bottleneck and prerequisite for compilation (none of 21 ESA countries had full harmonisation)",
+    own:{ shift:"Shift 1 — Procurement / permission", text:"Government procures or allows a solution through donor mechanisms but does not control it. Operations are implementer-led. This is permission, not ownership." },
+    res:{ risk:"Collapses on donor exit", text:"Zero resilience. All systems depend on external funding and staff. A leadership change or programme ending erases all progress." },
+    gate:null,
+    looks:"Multiple sub-systems exist but use different indicator definitions. Data cannot be compiled. JSRs happen but rely on incompatible datasets.",
+    country:"most LMIC WASH sectors", countryNote:"The most common level globally. None of the 21 ESA countries assessed by Harris &amp; Pearce (2021) had fully harmonised indicators.",
+    ssir:"Nexleaf Shift 2 begins here: first indirect domestic resource commitment — staff roles assigned, SIM cards funded, tool mandated. Small, but signals a psychological ownership shift.",
+    moves:["Indicator harmonisation workshop with all data owners","Agreed crosswalk to JMP/SDG6 definitions","Two sub-systems producing routine data","Clear roles for data production documented"]
+  },
+  { num:"03", name:"Consolidating", tag:"foundation established", cls:"lvl-3",
+    found:["Multiple sub-systems functioning","Indicators harmonised to JMP/SDG6","Clear institutional responsibilities"],
+    enable:["First cross-system KPI compilation","Annual sector report produced","Data used in Joint Sector Reviews"],
+    pri:"Building the data compilation process — the institutional mechanism for aggregating across sub-systems, even before a digital platform exists",
+    own:{ shift:"Shifts 2–3 — Early commitment → government as doer", text:"Ministry assigns staff, covers running costs, and begins taking over day-to-day operations: training, installation, troubleshooting. The critical Nexleaf transition: when ministry staff do the work, not contractors." },
+    res:{ risk:"Vulnerable to leadership change", text:"JSRs may not survive a ministerial change. Compilation is manual and depends on specific people. A new minister can deprioritise without formal consequence." },
+    gate:"Gate to L4: government staff — not external contractors — must be the operational doers (Nexleaf Tanzania lesson)",
+    looks:"Annual WASH sector report produced from multiple sources. Compilation largely manual. JSRs regular and government-led. Data gaps visible and documented.",
+    country:"Uganda, Ethiopia (JSR)", countryNote:"Uganda's Sector Performance Report and Ethiopia's JSR process — compilation from multiple sources, government-led, even without a functional digital system.",
+    ssir:"The Tanzania breakthrough (Nexleaf): when ministry staff installed sensors instead of Nexleaf contractors, uptake improved dramatically and a four-month rollout was completed in six weeks. The 'doer' transition is the gate condition for Level 4.",
+    moves:["Compilation becomes routine (not event-driven)","Digital platform reduces manual aggregation","Community and service provider data both included","Dedicated domestic budget line for monitoring"]
+  },
+  { num:"04", name:"Functioning", tag:"all components present", cls:"lvl-4",
+    found:["All key sub-systems routine &amp; current","Indicators fully harmonised","Strong institutional framework"],
+    enable:["Digital platform operational","Routine KPI compilation automated","Data accessible to sub-national actors"],
+    pri:"Data use capacity — JSR quality, sub-national engagement, regulatory use of performance data. The system produces data but systematic use for investment decisions is still limited.",
+    own:{ shift:"Shifts 3–4 — Government as doer + budget line", text:"Ministry leads training, installation, procurement and troubleshooting. Solution is in the national budget. BUT: budget lines can vanish with leadership change unless deeper process integration follows (Nexleaf warning)." },
+    res:{ risk:"Fragile without workflow integration", text:"Survives routine political change but is vulnerable to fiscal shock or a hostile minister. Resilience depends on whether the system is embedded in daily workflows — if it can be switched off without disrupting operations, it will be." },
+    gate:"Gate to L5: data must drive routine operational decisions — not only sector reviews",
+    looks:"National WASH MIS formally operational. Data compiled routinely via digital platform. Sector reports published. Sub-national actors can access data. Systematic use for investment still emerging.",
+    country:"Rwanda, Nepal (partial), Kenya RTMIS", countryNote:"Countries with functioning MIS where data is compiled and published routinely, but evidence of systematic use for resource allocation is still emerging. Very few countries globally have fully achieved this level.",
+    ssir:"Nexleaf warning: procurement does not equal ownership. A budget line exists (Shift 4) but without process change and daily reliance, the system remains a project. Tanzania still needed Nexleaf involvement at this stage.",
+    moves:["Domestic funding sustains system without external support","Data visibly used in budget allocation and infrastructure planning","Downward accountability mechanisms in place","Data quality audits conducted routinely"]
+  },
+  { num:"05", name:"Sustained", tag:"domestically funded &amp; used", cls:"lvl-5",
+    found:["System domestically budgeted","Data quality assured routinely","All sub-sectors covered"],
+    enable:["Data drives planning &amp; investment","Downward accountability active","Open data accessible to all actors"],
+    pri:"Demonstrating causal links between monitoring data and WASH service improvements — building the evidence base that justifies continued domestic investment",
+    own:{ shift:"Shift 5 — Integration into daily workflows", text:"The turning point (Nexleaf). Ministry embeds the system into daily operations — data drives routine meetings, informs decisions, replaces legacy systems. SOPs are written around the data. Removing it would disrupt core functions." },
+    res:{ risk:"Resilient to routine political change — vulnerable to deep fiscal shock", text:"Survives ministerial reshuffle because hundreds of staff depend on it daily. A deep fiscal crisis or president-level decision could still remove it — the system's ROI has not yet been formally documented." },
+    gate:"Gate to L6: documented evidence that data changed a specific named investment decision",
+    looks:"System domestically owned and funded. Open data. Grievance data feeds into regulation. Budget allocations linked to performance data. All WASH sub-sectors covered including hygiene and institutional WASH.",
+    country:"aspirational · Colombia (SIASAR)", countryNote:"No country in sub-Saharan Africa has fully achieved this level as of 2023. Elements exist in Colombia and some South Asian countries. Appropriate 10-year horizon for well-resourced programmes.",
+    ssir:"Nexleaf Shift 5 in Tanzania: district cold chain maintenance funds created in response to RTM data. The system changed how government operated, not just what it reported. RTM data drove SOP rewrites — the definition of workflow integration.",
+    moves:["Documented evidence that monitoring data influenced specific investment decisions","Measurable service improvements attributable in part to better data use","System resilient to government transitions and donor exit"]
+  },
+  { num:"06", name:"Demonstrating impact", tag:"evidence of service improvement", cls:"lvl-6",
+    found:["Resilient to political transitions","System self-improving","Knowledge shared internationally"],
+    enable:["Causal link to service improvement","Accountability with consequences","System feeds JMP global estimates"],
+    pri:"Knowledge exchange and adaptation — this system is a model for peer countries. Focus on institutional learning, resilience, and south-south sharing.",
+    own:{ shift:"Shift 6 — Full country ownership", text:"Government funds and procures entirely through domestic channels. Ministry manages operations, renewals and expansions without implementer involvement. Endures leadership turnover, donor exit and fiscal shocks. 'RTM is no longer the Nexleaf project — it is an essential component of vaccine management.' (Tanzania)" },
+    res:{ risk:"Resilient to all three shocks", text:"Leadership change: embedded in SOPs, new minister inherits a system operations depend on. Donor exit: domestically funded. Fiscal shock: system has documented ROI — cutting it costs more than sustaining it. First level where all three resilience tests are passed." },
+    gate:null,
+    looks:"Clear documented evidence that data changed investment decisions and those decisions improved WASH service levels. System cited in JMP estimates. Regulatory consequences follow from monitoring data — not just transparency.",
+    country:"global aspiration · Tanzania RTM (sub-system)", countryNote:"No country has achieved this for the full WASH monitoring system. Tanzania's cold chain RTM approaches this level for a specific sub-system. Colombia's SIASAR is the closest example for rural water coverage.",
+    ssir:"Nexleaf Shift 6 in Tanzania: ministry manages RTM operations, renewals and expansions without Nexleaf involvement. A rollout estimated at four months completed in six weeks entirely by ministry staff. This is the target state for WASH monitoring — no country has reached it for the full system.",
+    moves:["Continue: sustain, adapt, share peer knowledge"]
+  }
+];
+
+const MVIEWS = {
+  classic:   { heads:["Level","Foundation — sub-systems · indicators · institutions","Enablement — compilation · digital · data use","Highest-leverage investment"] },
+  full:      { heads:["Level","Foundation","Enablement","Ownership (Nexleaf/SSIR 2026)","Resilience"] },
+  ownership: { heads:["Level","Ownership — who does the work · who controls data (Nexleaf/SSIR 2026)","Resilience — what survives shock"] }
+};
+
+function matView(v, btn) {
+  document.getElementById('mat-container').setAttribute('data-mview', v);
+  document.querySelectorAll('.mvbtn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  renderMaturity(v);
+}
+
+function renderMaturity(v) {
+  document.getElementById('mat-col-heads').innerHTML =
+    MVIEWS[v].heads.map(h => `<div class="mat-col-head">${h}</div>`).join('');
+
+  document.getElementById('mat-stair').innerHTML = MDATA.map(d => {
+    let cells = '';
+    if(v === 'classic' || v === 'full') {
+      cells += `<div class="mat-cell found-cell">
+        <span class="mat-cell-label">Foundation</span>
+        <div class="mat-cell-items">${d.found.map(f=>`<span>${f}</span>`).join('')}</div>
+        ${d.gate ? `<div class="mat-gate">Gate: ${d.gate}</div>` : ''}
+      </div>
+      <div class="mat-cell enable-cell">
+        <span class="mat-cell-label">Enablement</span>
+        <div class="mat-cell-items">${d.enable.map(e=>`<span>${e}</span>`).join('')}</div>
+      </div>`;
+    }
+    if(v === 'classic') {
+      cells += `<div class="mat-priority pri-cell">
+        <span class="mat-pri-label">Invest first in</span>
+        <span class="mat-pri-text">${d.pri}</span>
+      </div>`;
+    }
+    if(v === 'full' || v === 'ownership') {
+      cells += `<div class="mat-own-cell own-cell">
+        <div class="mat-own-shift">${d.own.shift}</div>
+        <div class="mat-own-text">${d.own.text}</div>
+      </div>
+      <div class="mat-res-cell res-cell">
+        <div class="mat-res-risk">${d.res.risk}</div>
+        <div class="mat-res-text">${d.res.text}</div>
+      </div>`;
+    }
+    return `<div class="mat-level ${d.cls}" onclick="matToggle(this)">
+      <div class="mat-badge">
+        <span class="mat-badge-num">Level ${d.num}</span>
+        <span class="mat-badge-name">${d.name}</span>
+        <span class="mat-badge-tag">${d.tag}</span>
+      </div>
+      ${cells}
+      <div class="mat-detail">
+        <div class="mat-detail-section">
+          <h4>What this looks like</h4>
+          <p>${d.looks}</p>
+          <div class="mat-example-tag">${d.country}</div>
+          <p>${d.countryNote}</p>
+        </div>
+        <div class="mat-detail-section">
+          <h4>Ownership lens · Nexleaf/SSIR (2026)</h4>
+          <p>${d.ssir}</p>
+        </div>
+        <div class="mat-detail-section">
+          <h4>What moves you to the next level</h4>
+          <ul>${d.moves.map(m=>`<li>${m}</li>`).join('')}</ul>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function matToggle(el) {
+  const wasOpen = el.classList.contains('is-open');
+  document.querySelectorAll('.mat-level.is-open').forEach(l => l.classList.remove('is-open'));
+  if(!wasOpen) el.classList.add('is-open');
+}
+
+renderMaturity('classic');
+
+/* ═══ TOC CONNECTOR LOGIC ═══ */
+(() => {
+  const MAP = {
+    policy:    { targetId:'out-policy',    outcomeId:'oc-policy',    callout:{ tag:'LAYER 01 · POLICY',    text:'assumption: ', hi:'political will to use data — persistently violated in ESA' }},
+    system:    { targetId:'out-system',    outcomeId:'oc-system',    callout:{ tag:'LAYER 02 · SYSTEM',    text:'assumption: ', hi:'systems maintained & data kept current post-project' }},
+    service:   { targetId:'out-service',   outcomeId:'oc-service',   callout:{ tag:'LAYER 03 · SERVICE',   text:'assumption: ', hi:'providers act on data with real incentives & sanctions' }},
+    community: { targetId:'out-community', outcomeId:'oc-community', callout:{ tag:'LAYER 04 · COMMUNITY', text:'assumption: ', hi:'grievance mechanisms carry regulatory consequences' }},
+    water:     { targetId:'out-water',     outcomeId:'oc-water',     callout:{ tag:'LAYER 05 · WATER',     text:'assumption: ', hi:'climate data integrated into national plans, not siloed' }}
+  };
+  const KEY_ORDER = ['policy','system','service','community','water'];
+
+  const stage   = document.getElementById('stage-toc');
+  const conn    = document.getElementById('connector-layer');
+  const path    = document.getElementById('connector-path');
+  const origin  = document.getElementById('connector-origin');
+  const ring    = document.getElementById('connector-ring');
+  const grad    = document.getElementById('toc-gradient');
+  const callout = document.getElementById('toc-callout');
+  const ctag    = document.getElementById('callout-tag');
+  const ctxt    = document.getElementById('callout-text');
+  const resetBtn= document.getElementById('reset-btn');
+
+  let activeKey = null, timers = [];
+  const clrT = () => { timers.forEach(clearTimeout); timers = []; };
+  const sched = (fn,ms) => { const id=setTimeout(fn,ms); timers.push(id); };
+
+  const sizeConn = () => {
+    const r = stage.getBoundingClientRect();
+    conn.setAttribute('viewBox',`0 0 ${r.width} ${r.height}`);
+    conn.setAttribute('width',r.width); conn.setAttribute('height',r.height);
+  };
+
+  const endpoints = key => {
+    const sr  = stage.getBoundingClientRect();
+    const row = document.getElementById('row-'+key);
+    const aEl = row.querySelector('.rect-act');
+    const tEl = document.getElementById(MAP[key].targetId).querySelector('rect');
+    const r=aEl.getBoundingClientRect(), t=tEl.getBoundingClientRect();
+    return { x1:r.right-sr.left, y1:r.top+r.height/2-sr.top, x2:t.left-sr.left, y2:t.top+t.height/2-sr.top };
+  };
+
+  const drawPath = pts => {
+    const {x1,y1,x2,y2}=pts, dx=Math.max(36,(x2-x1)*.24);
+    path.setAttribute('d',`M ${x1} ${y1} C ${x1+dx} ${y1}, ${x2-dx} ${y2}, ${x2} ${y2}`);
+    grad.setAttribute('x1',x1); grad.setAttribute('y1',y1); grad.setAttribute('x2',x2); grad.setAttribute('y2',y2);
+    origin.setAttribute('cx',x1); origin.setAttribute('cy',y1); ring.setAttribute('cx',x1); ring.setAttribute('cy',y1);
+    const len=path.getTotalLength();
+    path.style.transition='none'; path.style.strokeDasharray=len; path.style.strokeDashoffset=len;
+    path.classList.add('drawn'); origin.classList.add('drawn'); ring.classList.add('drawn');
+    void path.getBoundingClientRect();
+    path.style.transition='stroke-dashoffset 420ms cubic-bezier(.4,0,.2,1)'; path.style.strokeDashoffset=0;
+  };
+
+  const posCallout = tEl => {
+    const sr=stage.getBoundingClientRect(), t=tEl.querySelector('rect').getBoundingClientRect();
+    callout.style.left=(t.left+t.width/2-sr.left)+'px'; callout.style.top=(t.bottom-sr.top+18)+'px';
+  };
+
+  const setContent = key => {
+    const c=MAP[key].callout; ctag.textContent=c.tag;
+    const safe=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
+    ctxt.innerHTML=safe(c.text)+`<span class="mono-hi">${safe(c.hi)}</span>`;
+  };
+
+  const clrHi = () => document.querySelectorAll('.is-active').forEach(e=>e.classList.remove('is-active'));
+
+  const activate = key => {
+    if(!(key in MAP)) return;
+    if(activeKey===key){deactivate();return;}
+    clrT(); const had=activeKey!==null; activeKey=key;
+    const row=document.getElementById('row-'+key), tEl=document.getElementById(MAP[key].targetId), oc=document.getElementById(MAP[key].outcomeId);
+    const doDraw=()=>{
+      clrHi(); stage.setAttribute('data-active','true');
+      row.classList.add('is-active'); tEl.classList.add('is-active'); if(oc)oc.classList.add('is-active');
+      sched(()=>drawPath(endpoints(key)),10);
+      sched(()=>{setContent(key);posCallout(tEl);callout.classList.add('visible');},360);
+    };
+    if(had){
+      path.style.transition='opacity 150ms ease'; path.style.opacity=0; origin.style.opacity=0; ring.style.opacity=0; callout.classList.remove('visible');
+      sched(()=>{path.style.transition='none';path.style.opacity=1;origin.style.opacity=1;ring.style.opacity=1;doDraw();},160);
+    } else { path.style.opacity=1;origin.style.opacity=1;ring.style.opacity=1;doDraw(); }
+  };
+
+  const deactivate = () => {
+    clrT(); activeKey=null; stage.setAttribute('data-active','false'); clrHi();
+    path.style.transition='opacity 150ms ease'; path.style.opacity=0; origin.style.opacity=0; ring.style.opacity=0; callout.classList.remove('visible');
+  };
+
+  document.querySelectorAll('.layer-row').forEach(r=>{
+    r.addEventListener('click',e=>{e.stopPropagation();activate(r.dataset.key);});
+    r.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();activate(r.dataset.key);}});
+  });
+  resetBtn.addEventListener('click',e=>{e.stopPropagation();deactivate();resetBtn.blur();});
+
+  /* ═══ GLOSSARY ═══ */
+  const glossary=document.getElementById('glossary'), glossBtn=document.getElementById('glossary-btn'),
+        glossClose=document.getElementById('gloss-close'), scrim=document.getElementById('scrim'),
+        openGlossCta=document.getElementById('open-gloss-cta');
+
+  const openG=()=>{glossary.classList.add('is-open');scrim.classList.add('is-open');glossBtn.classList.add('is-active');glossary.setAttribute('aria-hidden','false');glossBtn.setAttribute('aria-expanded','true');};
+  const closeG=()=>{glossary.classList.remove('is-open');scrim.classList.remove('is-open');glossBtn.classList.remove('is-active');glossary.setAttribute('aria-hidden','true');glossBtn.setAttribute('aria-expanded','false');};
+
+  glossBtn.addEventListener('click',e=>{e.stopPropagation();glossary.classList.contains('is-open')?closeG():openG();glossBtn.blur();});
+  if(openGlossCta) openGlossCta.addEventListener('click',e=>{e.stopPropagation();openG();});
+  glossClose.addEventListener('click',e=>{e.stopPropagation();closeG();});
+  scrim.addEventListener('click',closeG);
+
+  document.addEventListener('click',e=>{
+    if(e.target.closest('.layer-row')||e.target.closest('.nav-btn')||e.target.closest('.glossary')||e.target.closest('.mat-level')) return;
+    deactivate();
+  });
+
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape'){if(glossary.classList.contains('is-open')){closeG();return;}deactivate();return;}
+    if(e.key.toLowerCase()==='g'&&!e.metaKey&&!e.ctrlKey&&!e.altKey){const tag=(e.target&&e.target.tagName)||'';if(tag==='INPUT'||tag==='TEXTAREA')return;glossary.classList.contains('is-open')?closeG():openG();return;}
+    if(/^[1-5]$/.test(e.key)) activate(KEY_ORDER[parseInt(e.key,10)-1]);
+  });
+
+  const onResize=()=>{sizeConn();if(activeKey){drawPath(endpoints(activeKey));posCallout(document.getElementById(MAP[activeKey].targetId));}};
+  window.addEventListener('resize',onResize);
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(()=>{sizeConn();if(activeKey)onResize();});
+  sizeConn();
+})();
+</script>
+<!-- ═══ SECTION 4 · GLAAS 2025 COUNTRY CLASSIFICATION ═══ -->
+<section id="glaas">
+  <div class="section-header">
+    <span class="section-num">Section Ⅳ</span>
+    <h2 class="section-title">GLAAS 2025 · Country classification by maturity level</h2>
+    <span class="section-sub">WHO/UNICEF · 105 countries · January 2026 · click level pills to filter</span>
+  </div>
+
+  <div class="glaas-section">
+
+    <div class="src-bar">
+      <span class="src-tag">GLAAS 2025 · WHO/UNICEF · Jan 2026</span>
+      <span class="warn-tag">Indicative · not officially validated</span>
+      <span>Classification inferred from GLAAS 2025 key findings, regional analysis and country highlights. Individual country placement is indicative — no country-level scoring table is published in the report. Full dataset: <strong>cdn.who.int</strong> → glaas_2024_25_full_country_dataset_24-jan-2026.xlsx</span>
+    </div>
+
+    <div class="glaas-controls">
+      <span class="ctrl-lbl">Filter:</span>
+      <button class="gf-btn on" onclick="gFilter('all',this)">All</button>
+      <button class="gf-btn" onclick="gFilter('1',this)">L1 Absent</button>
+      <button class="gf-btn" onclick="gFilter('2',this)">L2 Emerging</button>
+      <button class="gf-btn" onclick="gFilter('3',this)">L3 Consolidating</button>
+      <button class="gf-btn" onclick="gFilter('4',this)">L4 Functioning</button>
+      <button class="gf-btn" onclick="gFilter('5',this)">L5 Sustained</button>
+      <button class="gf-btn" onclick="gFilter('6',this)">L6 Impact</button>
+    </div>
+
+    <div class="glaas-summary" id="glaas-summary"></div>
+
+    <div class="glaas-tbl-wrap">
+      <table class="glaas-tbl">
+        <thead>
+          <tr>
+            <th>Country / group</th>
+            <th>Region</th>
+            <th>Maturity level</th>
+            <th>Key signal from GLAAS 2025</th>
+            <th>Main gap</th>
+            <th>Confidence</th>
+          </tr>
+        </thead>
+        <tbody id="glaas-tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="glaas-key">
+      <div class="glaas-key-item"><span class="conf-dot c-hi"></span> High — directly cited in GLAAS 2025 text or country highlights</div>
+      <div class="glaas-key-item"><span class="conf-dot c-mid"></span> Medium — inferred from regional / income-group data</div>
+      <div class="glaas-key-item"><span class="conf-dot c-lo"></span> Low — estimated from structural characteristics only</div>
+    </div>
+
+    <p class="glaas-note"><strong>Methodology:</strong> Four GLAAS 2025 monitoring signals used: (1) national WASH MIS present and routine, (2) indicators defined and tracked against baselines, (3) JSR conducted regularly (&lt;2 years), (4) data used for decision-making (planning + resource allocation). Foundation track also considers sufficiency of human resources and domestic financing. Countries grouped where GLAAS 2025 provides regional rather than individual data. · <strong>Source:</strong> GLAAS 2025 — State of systems for drinking-water, sanitation and hygiene: global update 2025. WHO/UNICEF, 26 January 2026.</p>
+
+  </div>
+</section>
+
+<script>
+const GDATA = [
+  {name:"Colombia",region:"LAC",lvl:6,conf:"hi",signal:"SIASAR MIS operational; data used for investment decisions; open data; cited as model",gap:"Evidence of causal service improvement still partial"},
+  {name:"Nepal",region:"S Asia",lvl:6,conf:"mid",signal:"National MIS functional; JSRs regular; data used in planning & regulation; decade of investment",gap:"Domestic financing sustainability; hygiene coverage weak"},
+  {name:"Rwanda",region:"SSA-E",lvl:5,conf:"hi",signal:"MIS operational; regular JSRs; data used for resource allocation; strong institutional framework",gap:"Full domestic financing not yet confirmed; hygiene sub-sector thin"},
+  {name:"Uganda",region:"SSA-E",lvl:5,conf:"hi",signal:"Sector Performance Report compiled from multiple sources; gov-led JSRs since 2000s",gap:"Data quality assurance; utility data integration incomplete"},
+  {name:"Ethiopia",region:"SSA-E",lvl:5,conf:"mid",signal:"ONEWASH programme; gov-led JSRs; national monitoring indicators defined and tracked",gap:"MIS platform non-functional (ongoing since 2008); data in spreadsheets"},
+  {name:"Bangladesh",region:"S Asia",lvl:5,conf:"mid",signal:"National MIS with coverage + quality data; JSRs regular; data used in planning",gap:"Sanitation data use for resource allocation limited; hygiene monitoring weak"},
+  {name:"Peru",region:"LAC",lvl:5,conf:"hi",signal:"SNIP public finance system; TrackFin WASH accounts; data integrated into planning",gap:"Rural sanitation regulatory coverage thin"},
+  {name:"Brazil",region:"LAC",lvl:5,conf:"mid",signal:"SNIS national sanitation MIS operational; utility benchmarking mature; open data",gap:"Rural hygiene and institutional WASH weak; subnational capacity varies widely"},
+  {name:"South Africa",region:"SSA-S",lvl:5,conf:"hi",signal:"National survey system; DHS+census dominant; regulatory authority functional",gap:"MIS absent; relies almost exclusively on surveys; no sub-national compilation system"},
+  {name:"Kenya",region:"SSA-E",lvl:4,conf:"hi",signal:"WASH MIS operational; JSRs with gov leadership; KPIs for service providers tracked",gap:"Hygiene data absent from MIS; domestic budget insufficient; subnational data quality"},
+  {name:"Tanzania",region:"SSA-E",lvl:4,conf:"hi",signal:"National MIS; efforts to harmonise indicators; JSRs; data used in sector reviews",gap:"Indicator harmonisation incomplete with JMP; FSM and hygiene absent"},
+  {name:"Ghana",region:"SSA-W",lvl:4,conf:"hi",signal:"DiMES MIS operational; JSRs; sector report published",gap:"SIS development stalled since 2010; hygiene in only 48% of MIS"},
+  {name:"Senegal",region:"SSA-W",lvl:4,conf:"mid",signal:"PEPAM national programme with MIS; JSRs; data used for planning",gap:"Rural sanitation coverage data patchy; domestic financing gap large"},
+  {name:"Vietnam",region:"E Asia",lvl:4,conf:"mid",signal:"National MIS; indicators tracked; JSRs with development partners",gap:"FSM and hygiene data absent; downward accountability thin"},
+  {name:"India",region:"S Asia",lvl:4,conf:"mid",signal:"JJM-MIS operational at scale; real-time dashboard for rural water",gap:"Data quality concerns; self-reporting issues; hygiene weak; WASH split across ministries"},
+  {name:"Indonesia",region:"SE Asia",lvl:4,conf:"mid",signal:"NAWASIS national MIS; JSRs; service provider KPIs monitored",gap:"Subnational data quality; FSM absent; hygiene in only 48% of MIS"},
+  {name:"Mozambique",region:"SSA-E",lvl:4,conf:"mid",signal:"TrackFin WASH accounts; national MIS; JSR processes in place",gap:"Domestic financing gap >46%; human resources severely insufficient"},
+  {name:"Honduras",region:"LAC",lvl:4,conf:"mid",signal:"SIRAPS regulatory MIS; data used for regulation; service provider coverage good",gap:"Rural sanitation and hygiene absent; community layer weak"},
+  {name:"Philippines",region:"SE Asia",lvl:4,conf:"hi",signal:"Cited in GLAAS 2025 for national monitoring of WASH in schools; MIS functional",gap:"Institutional WASH split across ministries; data use for resource allocation limited"},
+  {name:"Morocco",region:"MENA",lvl:4,conf:"mid",signal:"National water information system; regulatory authority functional; JSRs",gap:"Rural sanitation data weak; hygiene monitoring absent"},
+  {name:"Cambodia",region:"SE Asia",lvl:4,conf:"hi",signal:"Cited in GLAAS 2025 for national MIS development (10-year journey); now functional",gap:"Hygiene absent; domestic funding dependent on external support"},
+  {name:"Zimbabwe",region:"SSA-E",lvl:3,conf:"hi",signal:"RWIMS MIS for rural water; JSRs; sector reports; WASH indicators partially harmonised",gap:"Hygiene absent; utility data not compiled; financing critical"},
+  {name:"Zambia",region:"SSA-E",lvl:3,conf:"mid",signal:"Utility performance reports published; sector review; some KPIs tracked",gap:"No national compilation; rural hygiene data absent; JSRs irregular"},
+  {name:"Mali",region:"SSA-W",lvl:3,conf:"mid",signal:"Some sub-systems (rural water MIS); JSRs with dev partners",gap:"No indicator harmonisation; institutional fragmentation; financing gap severe"},
+  {name:"Benin",region:"SSA-W",lvl:3,conf:"mid",signal:"WHO/UNICEF collaboration on national monitoring; JSRs; rural water sub-system",gap:"No digital compilation; hygiene and HCF data absent"},
+  {name:"Sierra Leone",region:"SSA-W",lvl:3,conf:"hi",signal:"WASH data portal (2016 inventory); JSRs; gov-led reviews",gap:"Data not updated since 2016; portal non-functional; compilation manual"},
+  {name:"Liberia",region:"SSA-W",lvl:3,conf:"hi",signal:"Cited in GLAAS 2025: WASH indicators included in national health MIS",gap:"No standalone WASH MIS; data not used for resource allocation"},
+  {name:"Nigeria",region:"SSA-W",lvl:3,conf:"hi",signal:"WASHNorm dedicated WASH survey; JSRs; some KPI monitoring at federal level",gap:"No national compilation; 36-state fragmentation; MIS absent at national level"},
+  {name:"Pakistan",region:"S Asia",lvl:3,conf:"mid",signal:"National MIS emerging; JSRs; provincial-level data collections",gap:"Fragmentation across provinces; indicators not harmonised; hygiene absent"},
+  {name:"Bolivia",region:"LAC",lvl:3,conf:"mid",signal:"SIAS-Rural MIS for rural water; national targets set; some JSRs",gap:"Urban/rural data not compiled together; hygiene absent; financing fragmented"},
+  {name:"Egypt",region:"MENA",lvl:3,conf:"mid",signal:"National water utility data compiled; regulatory authority; sector reports",gap:"Rural sanitation and hygiene absent; no community layer"},
+  {name:"Burkina Faso",region:"SSA-W",lvl:3,conf:"mid",signal:"TrackFin WASH accounts; some indicator tracking; JSRs",gap:"No MIS; indicators not harmonised; severe HR and financing gaps"},
+  {name:"Myanmar",region:"SE Asia",lvl:3,conf:"lo",signal:"Sub-systems present pre-conflict; JSRs previously conducted",gap:"Conflict severely disrupted systems; compilation absent"},
+  {name:"Haiti",region:"LAC",lvl:3,conf:"lo",signal:"Sub-systems partially present (DINEPA asset data); previous JSRs",gap:"Crisis context; data not compiled; institutional mandate fragile"},
+  {name:"Chad",region:"SSA-W",lvl:2,conf:"lo",signal:"Some sub-systems (water point mapping); government mandate present",gap:"No indicator harmonisation; no compilation; JSRs irregular; HR very limited"},
+  {name:"Niger",region:"SSA-W",lvl:2,conf:"lo",signal:"Sub-systems fragmented; national targets set but not monitored",gap:"No MIS; indicators undefined; no JSR regularity; financing gap >60%"},
+  {name:"Guinea",region:"SSA-W",lvl:2,conf:"lo",signal:"Government mandate; some sub-systems; GLAAS 2025 respondent",gap:"No harmonisation; no compilation; roles unclear; data not used for decisions"},
+  {name:"Madagascar",region:"SSA-E",lvl:2,conf:"mid",signal:"Previously cited as aligned with SDG basic WASH in HCF; some progress",gap:"No national compilation; indicators diverge from JMP; financing gap critical"},
+  {name:"DR Congo",region:"SSA-E",lvl:2,conf:"lo",signal:"Sub-systems partially exist in some provinces; government mandate weak",gap:"No national compilation; conflict affected; no budget"},
+  {name:"Afghanistan",region:"S Asia",lvl:2,conf:"lo",signal:"Sub-systems present pre-2021; some data collected by NGOs",gap:"Political transition disrupted systems; no institutional mandate; no compilation"},
+  {name:"Papua New Guinea",region:"Pacific",lvl:2,conf:"lo",signal:"Some sub-systems; national targets set; GLAAS respondent",gap:"No MIS; roles unclear; HR severely insufficient; rural data absent"},
+  {name:"Yemen",region:"MENA",lvl:2,conf:"lo",signal:"Some utility data partially tracked despite conflict",gap:"Conflict disruption; no national compilation; financing non-existent"},
+  {name:"Central African Rep.",region:"SSA-E",lvl:2,conf:"lo",signal:"GLAAS 2025 respondent; some mandate; fragile sub-systems",gap:"No harmonisation; no compilation; HR absent; all categories insufficient"},
+  {name:"South Sudan",region:"SSA-E",lvl:1,conf:"lo",signal:"Limited sub-systems exist (some NGO inventories); no national system",gap:"No mandate; no sub-systems; no indicators; conflict and crisis context"},
+  {name:"Somalia",region:"SSA-E",lvl:1,conf:"lo",signal:"SWALIM/FAO data partially covers water points; no national system",gap:"No government mandate; no sub-systems; no compilation possible"},
+  {name:"105-country aggregate",region:"Global",lvl:3,conf:"hi",signal:"75% have national monitoring indicators; 71% have MIS; 73% conduct JSRs; 68% use sanitation data in decision-making",gap:"Only 26% have sufficient HR for drinking-water; <20% sufficient funding; 64% report overlapping roles; hygiene consistently weakest"},
+];
+
+const GLVL = {
+  1:{name:"Absent",    glp:"glp1",bg:"#F1EFE8",tc:"#444441"},
+  2:{name:"Emerging",  glp:"glp2",bg:"#DEDCEE",tc:"#23205A"},
+  3:{name:"Consolidating",glp:"glp3",bg:"#AFA9EC",tc:"#26215C"},
+  4:{name:"Functioning",glp:"glp4",bg:"#5DCAA5",tc:"#04342C"},
+  5:{name:"Sustained", glp:"glp5",bg:"#1D9E75",tc:"#E1F5EE"},
+  6:{name:"Impact",    glp:"glp6",bg:"#085041",tc:"#9FE1CB"},
+};
+
+let gActive = "all";
+
+function gRenderSummary() {
+  const counts={1:0,2:0,3:0,4:0,5:0,6:0};
+  GDATA.filter(c=>!c.name.startsWith("105")).forEach(c=>counts[c.lvl]++);
+  document.getElementById("glaas-summary").innerHTML=Object.entries(counts).map(([l,n])=>{
+    const m=GLVL[l];
+    const dim=gActive!=="all"&&gActive!==l?"opacity:.3;":"";
+    return `<div class="gsum-card" style="background:${m.bg};${dim}" onclick="gFilter('${l}',null)">
+      <div class="gsum-n" style="color:${m.tc}">${n}</div>
+      <div class="gsum-lbl" style="color:${m.tc};opacity:.7">L${l}</div>
+      <div class="gsum-sub" style="color:${m.tc};opacity:.55">${m.name}</div>
+    </div>`;
+  }).join("");
+}
+
+function gRenderTable() {
+  const rows=GDATA.filter(c=>gActive==="all"||String(c.lvl)===gActive);
+  const confMap={hi:"c-hi",mid:"c-mid",lo:"c-lo"};
+  const confLbl={hi:"Direct citation",mid:"Regional inference",lo:"Structural estimate"};
+  document.getElementById("glaas-tbody").innerHTML=rows.map(c=>{
+    const m=GLVL[c.lvl], isAgg=c.name.startsWith("105");
+    return `<tr class="${isAgg?"agg-row":""}">
+      <td style="font-weight:700;color:var(--ink)">${c.name}</td>
+      <td><span class="rbadge">${c.region}</span></td>
+      <td><span class="glpill ${m.glp}">L${c.lvl} · ${m.name}</span></td>
+      <td style="font-size:11.5px;color:var(--ink-soft)"><span class="sig-pos">+</span> ${c.signal}</td>
+      <td style="font-size:11.5px;color:var(--ink-soft)"><span class="sig-neg">−</span> ${c.gap}</td>
+      <td style="white-space:nowrap;font-size:11px;color:var(--ink-soft)"><span class="conf-dot ${confMap[c.conf]}"></span>${confLbl[c.conf]}</td>
+    </tr>`;
+  }).join("");
+}
+
+function gFilter(l,btn) {
+  gActive=l;
+  document.querySelectorAll(".gf-btn").forEach(b=>b.classList.remove("on"));
+  if(btn) btn.classList.add("on");
+  else document.querySelectorAll(".gf-btn").forEach(b=>{
+    if((l==="all"&&b.textContent==="All")||(b.textContent.startsWith("L"+l))) b.classList.add("on");
+  });
+  gRenderSummary();
+  gRenderTable();
+}
+
+gRenderSummary();
+gRenderTable();
+</script>
+
+</body>
+</html>

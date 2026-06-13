@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WASH Futures Explorer — Country Page PoC</title>
+<style>
+  :root {
+    --deep: #065A82; --teal: #1C7293; --mid: #21295C; --accent: #2EC4B6;
+    --light: #EAF3F8; --dark: #1B2A38; --muted: #5B7385; --warn: #B85042; --good: #0E8074;
+    --jmp-sm: #3B6D11; --jmp-basic: #97C459; --jmp-ltd: #FAC775; --jmp-unimp: #F0997B; --jmp-surf: #E24B4A;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--light); color: var(--dark); }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 24px 20px 70px; }
+
+  .topbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand .logo { width: 34px; height: 34px; border-radius: 8px; background: var(--mid); color: var(--accent);
+    display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 17px; }
+  .brand .name { font-weight: 700; color: var(--mid); font-size: 16px; }
+  .brand .name small { display: block; font-weight: 400; color: var(--muted); font-size: 11px; }
+  .poc-badge { background: var(--accent); color: var(--mid); font-weight: 700; font-size: 10.5px;
+    letter-spacing: 1px; padding: 3px 10px; border-radius: 20px; }
+  select { font-size: 15px; padding: 8px 12px; border: 1.5px solid #C9DAE5; border-radius: 8px; background: #fff; cursor: pointer; }
+  select:focus, input:focus { outline: 2px solid var(--accent); }
+
+  .panel { background: #fff; border-radius: 14px; box-shadow: 0 2px 10px rgba(33,41,92,.08); padding: 24px 28px; margin-bottom: 18px; }
+  .step-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; color: var(--teal); text-transform: uppercase; margin-bottom: 8px; }
+
+  .hero-sentence { font-size: 15px; color: var(--muted); }
+  .hero-year { font-size: 72px; font-weight: 800; color: var(--deep); line-height: 1.05; }
+  .hero-flag { font-size: 14px; font-weight: 600; }
+  .hero-flag.bad { color: var(--warn); } .hero-flag.good { color: var(--good); }
+  .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-top: 16px; }
+  .stat { background: var(--light); border-radius: 10px; padding: 10px 14px; }
+  .stat .l { font-size: 11.5px; color: var(--muted); }
+  .stat .v { font-size: 19px; font-weight: 700; color: var(--mid); }
+
+  .legend { display: flex; gap: 16px; font-size: 12.5px; color: var(--muted); margin-bottom: 6px; flex-wrap: wrap; }
+  .legend span { display: flex; align-items: center; gap: 6px; }
+  .sw { width: 16px; height: 3px; display: inline-block; }
+  .gap-note { text-align: center; font-size: 13px; color: var(--good); font-weight: 600; margin-top: 4px; }
+
+  .slider-row { display: flex; align-items: center; gap: 14px; margin: 6px 0 4px; }
+  .slider-row label { font-size: 12.5px; color: var(--muted); white-space: nowrap; font-weight: 600; }
+  input[type=range] { flex: 1; accent-color: var(--deep); }
+  .rate-out { font-size: 16px; font-weight: 700; color: var(--deep); min-width: 100px; text-align: right; }
+  .hint { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+
+  .ladder-legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 12px; color: var(--muted); margin-top: 8px; }
+  .ladder-legend span { display: flex; align-items: center; gap: 5px; }
+  .lsw { width: 11px; height: 11px; border-radius: 2px; display: inline-block; }
+
+  .aud-toggle { display: inline-flex; border: 1.5px solid #C9DAE5; border-radius: 8px; overflow: hidden; margin-bottom: 14px; }
+  .aud-toggle button { font-size: 13.5px; padding: 8px 14px; border: none; background: #fff; cursor: pointer; color: var(--muted); }
+  .aud-toggle button.active { background: var(--deep); color: #fff; font-weight: 600; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+  .card { background: var(--light); border-radius: 10px; padding: 16px 18px; border-top: 4px solid var(--deep); display: flex; flex-direction: column; gap: 8px; }
+  .card .kicker { font-size: 10.5px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--teal); }
+  .card .big { font-size: 26px; font-weight: 800; color: var(--deep); line-height: 1.1; }
+  .card .claim { font-size: 13.5px; line-height: 1.55; }
+  .card .claim b { color: var(--mid); }
+  .export-row { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+  .btn { font-size: 13.5px; font-weight: 600; padding: 9px 18px; border-radius: 8px; border: none; cursor: pointer; background: var(--deep); color: #fff; }
+  .btn:hover { background: var(--teal); }
+  .btn.ghost { background: var(--light); color: var(--deep); }
+  .src-line { font-size: 11px; color: var(--muted); margin-top: 14px; }
+  .toast { position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%); background: var(--mid); color: #fff;
+    padding: 10px 22px; border-radius: 30px; font-size: 13.5px; opacity: 0; transition: opacity .3s; pointer-events: none; }
+  .toast.show { opacity: 1; }
+  .disclaimer { font-size: 11.5px; color: var(--muted); text-align: center; margin-top: 8px; }
+  .disclaimer b { color: var(--warn); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">≋</div>
+      <div class="name">WASH Futures Explorer<small>country page concept</small></div>
+    </div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <span class="poc-badge">PROOF OF CONCEPT</span>
+      <select id="country" aria-label="Country"></select>
+    </div>
+  </div>
+
+  <!-- STEP 1: HERO -->
+  <div class="panel">
+    <div class="step-label">Step 1 · Where are we headed?</div>
+    <p class="hero-sentence">At the current pace of progress, <b id="h-country">Ethiopia</b> reaches universal basic water access in</p>
+    <div style="display:flex; align-items:baseline; gap:18px; flex-wrap:wrap;">
+      <div class="hero-year" id="h-year">2074</div>
+      <div class="hero-flag bad" id="h-flag">44 years after the SDG deadline</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat"><div class="l">People still waiting today</div><div class="v" id="h-waiting">48M</div></div>
+      <div class="stat"><div class="l">Current progress rate</div><div class="v" id="h-rate">+1.1 pp/yr</div></div>
+      <div class="stat"><div class="l">Rate needed for 2030</div><div class="v" id="h-needed">+4.6 pp/yr</div></div>
+    </div>
+  </div>
+
+  <!-- STEP 2 + 3: TWO FUTURES + SLIDER -->
+  <div class="panel">
+    <div class="step-label">Step 2 · What could change — set your own pace</div>
+    <div class="slider-row">
+      <label for="rate">Progress rate</label>
+      <input type="range" id="rate" min="1" max="5" step="0.1" value="2">
+      <span class="rate-out" id="rateOut">2.0× current</span>
+    </div>
+    <p class="hint">Drag the slider — the second future redraws and every number on this page follows.</p>
+    <div class="legend">
+      <span><span class="sw" style="background:#888780;"></span>Business as usual</span>
+      <span><span class="sw" style="background:var(--good);"></span>Your scenario</span>
+    </div>
+    <svg id="chart" viewBox="0 0 900 260" style="width:100%; height:auto;" role="img" aria-label="Access curves: business as usual vs your scenario"></svg>
+    <div class="gap-note" id="gapNote"></div>
+    <div class="stat-row">
+      <div class="stat"><div class="l">Universal access reached</div><div class="v" id="s-year">2052</div></div>
+      <div class="stat"><div class="l">More people served by 2040</div><div class="v" id="s-served">+16M</div></div>
+      <div class="stat"><div class="l">Deaths averted by 2040</div><div class="v" id="s-deaths">60,000</div></div>
+      <div class="stat"><div class="l">Extra investment</div><div class="v" id="s-invest">$1.9B</div></div>
+    </div>
+  </div>
+
+  <!-- STEP 3: LADDER -->
+  <div class="panel">
+    <div class="step-label">Step 3 · Who climbs the service ladder</div>
+    <svg id="ladder" viewBox="0 0 900 240" style="width:100%; height:auto;" role="img" aria-label="Stacked service-ladder bars: today, 2050 business as usual, 2050 your scenario"></svg>
+    <div class="ladder-legend">
+      <span><span class="lsw" style="background:var(--jmp-sm);"></span>Safely managed</span>
+      <span><span class="lsw" style="background:var(--jmp-basic);"></span>Basic</span>
+      <span><span class="lsw" style="background:var(--jmp-ltd);"></span>Limited</span>
+      <span><span class="lsw" style="background:var(--jmp-unimp);"></span>Unimproved</span>
+      <span><span class="lsw" style="background:var(--jmp-surf);"></span>Surface water</span>
+    </div>
+  </div>
+
+  <!-- FINISH: TALKING POINTS -->
+  <div class="panel">
+    <div class="step-label">Finish · Your talking points</div>
+    <div class="aud-toggle" id="audience">
+      <button data-aud="finance" class="active">Finance ministry</button>
+      <button data-aud="health">Health ministry</button>
+      <button data-aud="advocacy">Advocates / public</button>
+    </div>
+    <div class="cards" id="cards"></div>
+    <div class="export-row">
+      <button class="btn" onclick="copyBrief()">Copy brief as text</button>
+      <button class="btn ghost" disabled title="Production feature">Download PDF one-pager</button>
+      <button class="btn ghost" disabled title="Production feature">Download social card (PNG)</button>
+    </div>
+    <div class="src-line" id="srcLine"></div>
+  </div>
+
+  <p class="disclaimer"><b>Illustrative sample data</b> — placeholders to demonstrate the concept, not real IFs output. Production computes everything from the existing pipeline deltas.</p>
+</div>
+<div class="toast" id="toast">Brief copied to clipboard ✓</div>
+
+<script>
+// ---- ILLUSTRATIVE SAMPLE DATA (not real IFs output) ----
+// access0: % with basic water today; bau: pp/yr; pop in millions; perX: deltas per +1.0x of rate by 2040
+const DATA = {
+  "Ethiopia":   { access0: 52, bau: 1.1, pop: 126, capital: "Addis Ababa", anchor: 5.2,
+                  perX: { served: 15.5, deaths: 60, gdp: 5.5, invest: 1.9 } },
+  "Kenya":      { access0: 63, bau: 1.3, pop: 55,  capital: "Nairobi", anchor: 4.7,
+                  perX: { served: 5.5, deaths: 21, gdp: 2.6, invest: 0.9 } },
+  "Madagascar": { access0: 46, bau: 0.8, pop: 30,  capital: "Antananarivo", anchor: 1.4,
+                  perX: { served: 4.5, deaths: 26, gdp: 1.2, invest: 0.55 } },
+  "Nepal":      { access0: 77, bau: 1.5, pop: 31,  capital: "Kathmandu", anchor: 1.5,
+                  perX: { served: 2.0, deaths: 6, gdp: 0.9, invest: 0.3 } },
+};
+const Y0 = 2026, SRC = "International Futures (IFs) model · WASH Futures Explorer · illustrative data";
+const $ = id => document.getElementById(id);
+let aud = "finance";
+
+const reachYear = (d, r) => Math.min(2100, Math.round(Y0 + (100 - d.access0) / (d.bau * r)));
+const access = (d, r, y) => Math.min(100, d.access0 + d.bau * r * (y - Y0));
+const fmtM = v => (v >= 10 ? Math.round(v) : v.toFixed(1)) + "M";
+
+function deltas(d, r) {
+  const x = r - 1;
+  return { served: d.perX.served * x, deaths: Math.round(d.perX.deaths * x),
+           gdp: d.perX.gdp * x, invest: d.perX.invest * x };
+}
+
+function curve(d, r, X0, X1, YB, YT, yEnd) {
+  let pts = [];
+  for (let y = Y0; y <= yEnd; y += 2) {
+    const px = X0 + (X1 - X0) * (y - Y0) / (yEnd - Y0);
+    const py = YB - (YB - YT) * (access(d, r, y) - 40) / 60;
+    pts.push((pts.length ? "L" : "M") + px.toFixed(0) + "," + Math.max(YT, py).toFixed(0));
+  }
+  return pts.join(" ");
+}
+
+function drawChart(d, r) {
+  const X0 = 50, X1 = 870, YB = 215, YT = 25, yEnd = 2060;
+  const bau = curve(d, 1, X0, X1, YB, YT, yEnd), sc = curve(d, r, X0, X1, YB, YT, yEnd);
+  const ry = reachYear(d, r);
+  const rx = ry <= yEnd ? X0 + (X1 - X0) * (ry - Y0) / (yEnd - Y0) : null;
+  let svg = `<line x1="${X0}" y1="${YB}" x2="${X1}" y2="${YB}" stroke="#C9DAE5"/>
+    <line x1="${X0}" y1="${YT}" x2="${X1}" y2="${YT}" stroke="#C9DAE5" stroke-dasharray="3 4"/>
+    <text x="${X0}" y="${YT - 6}" font-size="11" fill="#5B7385">100% — universal access</text>
+    <text x="${X0}" y="${YB + 18}" font-size="11" fill="#5B7385">${Y0}</text>
+    <text x="${(X0+X1)/2}" y="${YB + 18}" font-size="11" fill="#5B7385" text-anchor="middle">${Math.round((Y0+yEnd)/2)}</text>
+    <text x="${X1}" y="${YB + 18}" font-size="11" fill="#5B7385" text-anchor="end">${yEnd}</text>
+    <path d="${sc} L${X1},${YB} L${X0},${YB} Z" fill="#9FE1CB" opacity="0.0"/>
+    <path d="${sc}" fill="none" stroke="#0E8074" stroke-width="3"/>
+    <path d="${bau}" fill="none" stroke="#888780" stroke-width="2.5" stroke-dasharray="1 0"/>`;
+  // shaded gap: polygon between curves
+  let gap = [];
+  for (let y = Y0; y <= yEnd; y += 2) gap.push([X0 + (X1-X0)*(y-Y0)/(yEnd-Y0), YB - (YB-YT)*(Math.max(40,access(d,r,y))-40)/60]);
+  for (let y = yEnd; y >= Y0; y -= 2) gap.push([X0 + (X1-X0)*(y-Y0)/(yEnd-Y0), YB - (YB-YT)*(Math.max(40,access(d,1,y))-40)/60]);
+  svg += `<polygon points="${gap.map(p=>p[0].toFixed(0)+","+Math.max(YT,p[1]).toFixed(0)).join(" ")}" fill="#2EC4B6" opacity="0.18"/>`;
+  if (rx) svg += `<line x1="${rx}" y1="${YT}" x2="${rx}" y2="${YB}" stroke="#0E8074" stroke-dasharray="4 3"/>
+    <text x="${rx}" y="${YT + 14}" font-size="11.5" font-weight="700" fill="#0E8074" text-anchor="middle">${ry}</text>`;
+  $("chart").innerHTML = svg;
+}
+
+function drawLadder(d, r) {
+  // illustrative ladder mix as function of total access a (%)
+  const mix = a => {
+    const sm = Math.max(6, (a - 35) * 0.55), basic = Math.max(0, a - sm);
+    const rest = 100 - a, surf = rest * 0.45, unimp = rest * 0.33, ltd = rest * 0.22;
+    return [surf, unimp, ltd, basic, sm]; // bottom to top
+  };
+  const cols = [["Today", mix(d.access0)], ["2050 · business as usual", mix(access(d, 1, 2050))], ["2050 · your scenario", mix(access(d, r, 2050))]];
+  const colors = ["#E24B4A", "#F0997B", "#FAC775", "#97C459", "#3B6D11"];
+  const YB = 205, H = 175, W = 170;
+  let svg = `<line x1="60" y1="${YB}" x2="840" y2="${YB}" stroke="#C9DAE5"/>`;
+  cols.forEach((c, i) => {
+    const x = 90 + i * 270;
+    let yc = YB;
+    c[1].forEach((seg, j) => {
+      const h = seg / 100 * H; yc -= h;
+      svg += `<rect x="${x}" y="${yc.toFixed(1)}" width="${W}" height="${Math.max(0,h).toFixed(1)}" fill="${colors[j]}"/>`;
+    });
+    svg += `<text x="${x + W/2}" y="${YB + 20}" font-size="12" fill="#5B7385" text-anchor="middle">${c[0]}</text>`;
+    const aTot = c[1][3] + c[1][4];
+    svg += `<text x="${x + W/2}" y="${yc - 8}" font-size="12.5" font-weight="700" fill="#21295C" text-anchor="middle">${Math.round(aTot)}% at least basic</text>`;
+  });
+  $("ladder").innerHTML = svg;
+}
+
+const anchorTxt = (d, v) => { const n = Math.round(v / d.anchor); return n >= 2 ? `${n}× the population of ${d.capital}` : `roughly the population of ${d.capital}`; };
+
+function genPoints(c, d, r) {
+  const dl = deltas(d, r), ry = reachYear(d, r);
+  const scen = `raising progress to ${r.toFixed(1)}× the current pace`;
+  const roi = dl.invest > 0 ? (dl.gdp / dl.invest).toFixed(1) : "0";
+  const perCap = dl.invest > 0 ? (dl.invest * 1000 / d.pop / 14).toFixed(0) : "0";
+  const G = {
+    finance: [
+      { k: "Return on investment", b: "$" + roi + " per $1", t: `Each dollar invested in ${scen} returns about <b>$${roi} in cumulative GDP</b> for ${c} by 2040 — $${dl.gdp.toFixed(1)}B gained for $${dl.invest.toFixed(1)}B invested.` },
+      { k: "Time", b: ry <= 2031 ? "On track" : (ry - 2030) + " yrs late", t: `This pace brings universal basic access to <b>${ry}</b>${ry <= 2031 ? " — within reach of the SDG target." : ", versus " + reachYear(d,1) + " if nothing changes."}` },
+      { k: "The cost of waiting", b: "$" + dl.invest.toFixed(1) + "B", t: `The extra investment, <b>$${dl.invest.toFixed(1)}B over 14 years</b>, is a fraction of the $${dl.gdp.toFixed(1)}B in economic gains it unlocks — and the gap grows every year action is delayed.` } ],
+    health: [
+      { k: "Lives saved", b: dl.deaths + ",000 deaths averted", t: `${scen.charAt(0).toUpperCase() + scen.slice(1)} averts an estimated <b>${dl.deaths},000 deaths from diarrheal disease</b> in ${c} by 2040 — most of them children under five.` },
+      { k: "Prevention beats treatment", b: fmtM(dl.served) + " protected", t: `<b>${fmtM(dl.served)} more people</b> gain at least basic water — the single most effective barrier against waterborne disease outbreaks.` },
+      { k: "Health budget relief", b: "Less pressure", t: `Fewer waterborne disease cases means <b>fewer hospital admissions and lower treatment costs</b>, freeing health budget for other priorities.` } ],
+    advocacy: [
+      { k: "People", b: fmtM(dl.served) + " more people", t: `${scen.charAt(0).toUpperCase() + scen.slice(1)} means <b>${fmtM(dl.served)} more people in ${c} with safe water</b> — ${anchorTxt(d, dl.served)}.` },
+      { k: "Children", b: dl.deaths + ",000 lives", t: `That's <b>${dl.deaths},000 deaths from dirty water prevented</b> by 2040. Every one of them is preventable with known, affordable solutions.` },
+      { k: "It's affordable", b: "$" + perCap + " /person/yr", t: `The price tag is about <b>$${perCap} per person per year</b> — less than the bottled water and medical bills families pay today.` } ],
+  };
+  return G[aud === undefined ? "finance" : aud] ? G[aud] : G.finance;
+}
+
+function render() {
+  const c = $("country").value, d = DATA[c], r = parseFloat($("rate").value);
+  $("rateOut").textContent = r.toFixed(1) + "× current";
+  // hero (always BAU)
+  const ry0 = reachYear(d, 1);
+  $("h-country").textContent = c;
+  $("h-year").textContent = ry0;
+  const flag = $("h-flag");
+  if (ry0 <= 2031) { flag.textContent = "on track for the SDG deadline"; flag.className = "hero-flag good"; }
+  else { flag.textContent = (ry0 - 2030) + " years after the SDG deadline"; flag.className = "hero-flag bad"; }
+  $("h-waiting").textContent = fmtM(d.pop * (100 - d.access0) / 100);
+  $("h-rate").textContent = "+" + d.bau.toFixed(1) + " pp/yr";
+  $("h-needed").textContent = "+" + ((100 - d.access0) / (2030 - Y0)).toFixed(1) + " pp/yr";
+  // scenario stats
+  const dl = deltas(d, r), ry = reachYear(d, r);
+  $("s-year").textContent = ry;
+  $("s-served").textContent = r > 1 ? "+" + fmtM(dl.served) : "baseline";
+  $("s-deaths").textContent = r > 1 ? dl.deaths + ",000" : "baseline";
+  $("s-invest").textContent = r > 1 ? "$" + dl.invest.toFixed(1) + "B" : "$0";
+  $("gapNote").textContent = r > 1 ? `The shaded gap is ${fmtM(dl.served)} more people served and ${dl.deaths},000 deaths averted by 2040.` : "Drag the slider above 1× to open a gap between the two futures.";
+  drawChart(d, r);
+  drawLadder(d, r);
+  // talking points
+  const pts = genPoints(c, d, r);
+  $("cards").innerHTML = pts.map(p => `
+    <div class="card">
+      <div class="kicker">${p.k}</div>
+      <div class="big">${p.b}</div>
+      <div class="claim">${p.t}</div>
+    </div>`).join("");
+  $("srcLine").textContent = SRC + " · scenario: " + r.toFixed(1) + "× current pace · generated " + new Date().toLocaleDateString("en-GB", { month: "long", year: "numeric" });
+}
+
+function copyBrief() {
+  const c = $("country").value, r = parseFloat($("rate").value);
+  const pts = genPoints(c, DATA[c], r);
+  const audLabel = { finance: "Ministry of Finance", health: "Ministry of Health", advocacy: "campaigns & public" }[aud];
+  const text = `Why invest in water & sanitation — ${c}\nFor: ${audLabel} · Scenario: ${r.toFixed(1)}× current pace\n\n` +
+    pts.map(p => "• " + p.t.replace(/<\/?b>/g, "")).join("\n") +
+    `\n\nMethod: IFs model projections (Pardee Institute) vs business-as-usual baseline. Illustrative demo data.`;
+  navigator.clipboard.writeText(text).then(() => {
+    $("toast").classList.add("show");
+    setTimeout(() => $("toast").classList.remove("show"), 1800);
+  });
+}
+
+$("country").innerHTML = Object.keys(DATA).map(c => `<option>${c}</option>`).join("");
+$("country").onchange = render;
+$("rate").oninput = render;
+document.querySelectorAll("#audience button").forEach(b => b.onclick = () => {
+  document.querySelectorAll("#audience button").forEach(x => x.classList.remove("active"));
+  b.classList.add("active"); aud = b.dataset.aud; render();
+});
+render();
+</script>
+</body>
+</html>

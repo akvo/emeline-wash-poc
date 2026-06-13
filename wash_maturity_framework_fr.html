@@ -1,0 +1,269 @@
+<style>
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);}
+  .nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+  .nav button{font-size:13px;padding:5px 14px;border-radius:20px;border:0.5px solid var(--color-border-secondary);background:transparent;color:var(--color-text-secondary);cursor:pointer;transition:all .15s;}
+  .nav button.active,.nav button:hover{background:var(--color-background-secondary);color:var(--color-text-primary);border-color:var(--color-border-primary);}
+  .section{display:none;}
+  .section.show{display:block;}
+  .pilier-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px;}
+  .pilier-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px 16px;cursor:pointer;transition:border-color .15s;}
+  .pilier-card:hover{border-color:var(--color-border-primary);}
+  .pilier-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px;display:flex;align-items:center;gap:7px;}
+  .pilier-score{font-size:22px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px;}
+  .pilier-label{font-size:11px;color:var(--color-text-secondary);margin-bottom:6px;}
+  .bar-bg{height:5px;background:var(--color-border-tertiary);border-radius:3px;}
+  .bar-fill{height:5px;border-radius:3px;}
+  .detail-box{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:16px 20px;margin-bottom:16px;}
+  .dim-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary);}
+  .dim-row:last-child{border-bottom:none;}
+  .dim-name{flex:1;font-size:13px;color:var(--color-text-primary);}
+  .dot{width:13px;height:13px;border-radius:50%;border:0.5px solid var(--color-border-secondary);display:inline-block;}
+  .dot.filled{border:none;}
+  .dots-row{display:flex;gap:4px;}
+  .level-row{display:flex;gap:10px;margin-bottom:8px;align-items:flex-start;}
+  .level-badge{font-size:11px;padding:3px 10px;border-radius:12px;min-width:56px;text-align:center;font-weight:500;white-space:nowrap;}
+  .level-desc{font-size:13px;color:var(--color-text-secondary);line-height:1.5;}
+  .h1,.h2{background:#fde8e8;color:#8b1a1a;}
+  .h3{background:#fef3cd;color:#7a5200;}
+  .h4,.h5{background:#e8f5e9;color:#1a5e1a;}
+  @media(prefers-color-scheme:dark){
+    .h1,.h2{background:#5c1a1a;color:#ffb3b3;}
+    .h3{background:#4a3300;color:#ffd47a;}
+    .h4,.h5{background:#1a3d1a;color:#a3e6a3;}
+  }
+  .heat-grid{display:grid;gap:3px;margin-bottom:10px;}
+  .heat-header{text-align:center;padding:5px 4px;font-weight:500;color:var(--color-text-secondary);font-size:11px;}
+  .heat-label{padding:5px 6px;color:var(--color-text-secondary);display:flex;align-items:center;gap:6px;font-size:11px;}
+  .heat-cell{height:30px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;cursor:default;}
+  .method-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;}
+  .method-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px;}
+  .method-tag{font-size:11px;padding:2px 9px;border-radius:10px;font-weight:500;margin-bottom:8px;display:inline-block;}
+  .method-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px;}
+  .method-items{font-size:12px;color:var(--color-text-secondary);line-height:1.7;}
+  .score-input{width:48px;border:0.5px solid var(--color-border-secondary);border-radius:6px;padding:3px 6px;font-size:13px;background:var(--color-background-primary);color:var(--color-text-primary);text-align:center;}
+  .section-label{font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;}
+  .legend-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;}
+  .legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--color-text-secondary);}
+  .legend-sq{width:12px;height:12px;border-radius:2px;}
+  .score-table{width:100%;border-collapse:collapse;font-size:12px;}
+  .score-table th{text-align:center;padding:7px 10px;color:var(--color-text-secondary);font-weight:500;border-bottom:0.5px solid var(--color-border-tertiary);}
+  .score-table td{padding:7px 8px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary);text-align:center;vertical-align:middle;}
+  .score-table td.row-label{text-align:left;display:flex;align-items:center;gap:7px;}
+  .back-btn{font-size:12px;color:var(--color-text-secondary);background:none;border:none;cursor:pointer;padding:0 0 12px;display:flex;align-items:center;gap:5px;}
+</style>
+
+<h2 class="sr-only">Framework d'évaluation de la maturité des données WASH — outil interactif</h2>
+
+<div class="nav" id="main-nav">
+  <button class="active" onclick="show('overview')">Vue d'ensemble</button>
+  <button onclick="show('pilliers')">Piliers &amp; dimensions</button>
+  <button onclick="show('methodo')">Méthodologie</button>
+  <button onclick="show('scoring')">Scoring &amp; heatmap</button>
+</div>
+
+<div id="s-overview" class="section show">
+  <div class="section-label">Profil de maturité — scores par pilier</div>
+  <div class="pilier-grid" id="pilier-grid"></div>
+  <div class="detail-box">
+    <div class="section-label" style="margin-bottom:8px;">Niveaux de maturité</div>
+    <div id="levels-list"></div>
+  </div>
+</div>
+
+<div id="s-pilliers" class="section">
+  <div id="pillier-detail"></div>
+</div>
+
+<div id="s-methodo" class="section">
+  <div class="section-label">Collecte mixte et triangulée</div>
+  <div class="method-grid" id="method-grid"></div>
+  <div class="detail-box" style="margin-top:16px;">
+    <div class="section-label" style="margin-bottom:4px;">Principe directeur</div>
+    <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.6;margin:0;">
+      Ne jamais se fier uniquement aux déclarations. La triangulation entre revue documentaire, entretiens et audit terrain révèle les écarts entre procédures théoriques et pratiques réelles — point critique dans les contextes WASH du Sahel et d'Afrique de l'Ouest.
+    </p>
+  </div>
+</div>
+
+<div id="s-scoring" class="section">
+  <div class="section-label">Saisir les scores par institution</div>
+  <div id="scoring-ui" style="overflow-x:auto;margin-bottom:20px;"></div>
+  <div class="section-label">Heatmap des faiblesses critiques</div>
+  <div id="heat-grid"></div>
+  <div class="legend-row">
+    <div class="legend-item"><div class="legend-sq h1"></div>Critique (1–2)</div>
+    <div class="legend-item"><div class="legend-sq h3"></div>Intermédiaire (3)</div>
+    <div class="legend-item"><div class="legend-sq h5"></div>Avancé (4–5)</div>
+  </div>
+</div>
+
+<script>
+const COLORS = ['#3B8BD4','#1D9E75','#E8593C','#BA7517','#7F77DD','#D4537E'];
+const PILIERS = [
+  { id:'gov', label:'Gouvernance', color:COLORS[0], score:2,
+    dims:[{name:'Politiques data existantes',score:2},{name:'Rôles & responsabilités définis',score:1},{name:'Coordination inter-institutionnelle',score:2}] },
+  { id:'prod', label:'Production & collecte', color:COLORS[1], score:3,
+    dims:[{name:'Méthodes numériques (Kobo, Akvo)',score:3},{name:"Standards d'indicateurs",score:2},{name:'Fréquence de mise à jour',score:3}] },
+  { id:'qual', label:'Qualité des données', color:COLORS[2], score:2,
+    dims:[{name:'Complétude',score:2},{name:'Exactitude',score:2},{name:'Cohérence & traçabilité',score:1}] },
+  { id:'sys', label:'Systèmes & interop.', color:COLORS[3], score:3,
+    dims:[{name:'Outils SIG / MIS / dashboards',score:3},{name:'Intégration inter-systèmes',score:2},{name:'Architecture (centralisée?)',score:3}] },
+  { id:'ana', label:'Analyse & utilisation', color:COLORS[4], score:2,
+    dims:[{name:'Tableaux de bord opérationnels',score:2},{name:'Décisions basées sur les données',score:1},{name:'Boucles de rétroaction',score:2}] },
+  { id:'cul', label:'Culture data & capacités', color:COLORS[5], score:2,
+    dims:[{name:'Compétences techniques terrain',score:2},{name:'Formation continue',score:2},{name:'Appropriation par les décideurs',score:1}] }
+];
+const LEVELS = [
+  {n:1,label:'Initial',desc:'Pratiques ad hoc, aucune politique formalisée',cls:'h1'},
+  {n:2,label:'Émergent',desc:'Quelques initiatives isolées, sans coordination',cls:'h2'},
+  {n:3,label:'En développement',desc:'Processus partiellement standardisés',cls:'h3'},
+  {n:4,label:'Géré',desc:'Politiques définies, suivi actif',cls:'h4'},
+  {n:5,label:'Optimisé',desc:'Amélioration continue, usage systématique',cls:'h5'},
+];
+const METHODES = [
+  {tag:'Documentaire',color:'#3B8BD4',title:'Revue documentaire',items:['Politiques nationales WASH','Cadres M&E','Rapports sectoriels','Bases de données existantes']},
+  {tag:'Qualitatif',color:'#1D9E75',title:'Entretiens semi-structurés',items:['Acteurs techniques & décideurs','Focus sur pratiques réelles','Pas les procédures théoriques']},
+  {tag:'Participatif',color:'#7F77DD',title:'Ateliers participatifs',items:['Cartographie des flux de données','Identification des goulots','Co-validation des résultats']},
+  {tag:'Technique',color:'#BA7517',title:'Audit technique',items:["Analyse des bases de données","Tests qualité (doublons, manquants)","Revue des dashboards"]},
+  {tag:'Terrain ★',color:'#E8593C',title:'Observation terrain',items:['Collecte réelle vs protocole','Écarts pratique / théorie','Contexte opérationnel local']},
+];
+const INSTITUTIONS = ['Ministère','Agence','Communes','ONG/PTF'];
+const scores = {};
+PILIERS.forEach(p => INSTITUTIONS.forEach(inst => { scores[p.id+'_'+inst] = p.score; }));
+
+function heatCls(v) { return v<=2?(v==1?'h1':'h2'):v==3?'h3':v==4?'h4':'h5'; }
+
+function show(tab) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('show'));
+  document.getElementById('s-'+tab).classList.add('show');
+  const tabs = ['overview','pilliers','methodo','scoring'];
+  document.querySelectorAll('#main-nav button').forEach((b,i) => b.classList.toggle('active', tabs[i]===tab));
+  if(tab==='methodo') renderMethodo();
+  if(tab==='scoring') { renderScoring(); renderHeatGrid(); }
+  if(tab==='pilliers' && !document.getElementById('pillier-detail').innerHTML) renderPillierList();
+}
+
+function renderOverview() {
+  document.getElementById('pilier-grid').innerHTML = PILIERS.map(p => {
+    const pct = ((p.score-1)/4)*100;
+    const lvl = LEVELS[p.score-1];
+    return `<div class="pilier-card" onclick="showPilier('${p.id}')">
+      <div class="pilier-title"><span style="width:10px;height:10px;border-radius:50%;background:${p.color};display:inline-block;flex-shrink:0;"></span>${p.label}</div>
+      <div class="pilier-score">${p.score}<span style="font-size:13px;color:var(--color-text-secondary)">/5</span></div>
+      <div class="pilier-label">${lvl.label}</div>
+      <div class="bar-bg"><div class="bar-fill" style="width:${pct}%;background:${p.color};"></div></div>
+    </div>`;
+  }).join('');
+  document.getElementById('levels-list').innerHTML = LEVELS.map(l => `
+    <div class="level-row">
+      <div class="level-badge ${l.cls}">N${l.n} — ${l.label}</div>
+      <div class="level-desc">${l.desc}</div>
+    </div>`).join('');
+}
+
+function renderPillierList() {
+  const d = document.getElementById('pillier-detail');
+  d.innerHTML = '<div class="section-label">Sélectionner un pilier</div>' +
+    PILIERS.map(p => `<div class="pilier-card" style="margin-bottom:8px;" onclick="showPilier('${p.id}')">
+      <div class="pilier-title"><span style="width:10px;height:10px;border-radius:50%;background:${p.color};display:inline-block;flex-shrink:0;"></span>${p.label}
+        <span style="margin-left:auto;font-size:12px;color:var(--color-text-secondary);">${p.score}/5</span>
+      </div></div>`).join('');
+}
+
+function showPilier(id) {
+  show('pilliers');
+  const p = PILIERS.find(x => x.id===id);
+  const d = document.getElementById('pillier-detail');
+  d.innerHTML = `
+    <button class="back-btn" onclick="renderPillierList()">← Tous les piliers</button>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
+      <span style="width:14px;height:14px;border-radius:50%;background:${p.color};display:inline-block;flex-shrink:0;"></span>
+      <span style="font-size:16px;font-weight:500;color:var(--color-text-primary);">${p.label}</span>
+      <span style="margin-left:auto;font-size:13px;color:var(--color-text-secondary);">Score global : ${p.score}/5 — ${LEVELS[p.score-1].label}</span>
+    </div>
+    <div class="detail-box">
+      <div class="section-label" style="margin-bottom:8px;">Dimensions</div>
+      ${p.dims.map(dim => `
+        <div class="dim-row">
+          <div class="dim-name">${dim.name}</div>
+          <div class="dots-row">
+            ${[1,2,3,4,5].map(i => `<span class="dot${i<=dim.score?' filled':''}" style="${i<=dim.score?'background:'+p.color+';':''}"></span>`).join('')}
+          </div>
+          <div style="font-size:12px;color:var(--color-text-secondary);min-width:28px;text-align:right;">${dim.score}/5</div>
+        </div>`).join('')}
+    </div>
+    <div class="detail-box">
+      <div class="section-label" style="margin-bottom:4px;">Niveau actuel</div>
+      <div class="level-row">
+        <div class="level-badge ${LEVELS[p.score-1].cls}">N${p.score} — ${LEVELS[p.score-1].label}</div>
+        <div class="level-desc">${LEVELS[p.score-1].desc}</div>
+      </div>
+      ${p.score < 5 ? `<div class="level-row" style="margin-top:6px;opacity:.65;">
+        <div class="level-badge ${LEVELS[p.score].cls}">N${p.score+1} — ${LEVELS[p.score].label}</div>
+        <div class="level-desc" style="font-size:12px;">Niveau suivant : ${LEVELS[p.score].desc}</div>
+      </div>` : ''}
+    </div>`;
+}
+
+function renderMethodo() {
+  const g = document.getElementById('method-grid');
+  if(g.dataset.rendered) return;
+  g.innerHTML = METHODES.map(m => `
+    <div class="method-card">
+      <div class="method-tag" style="background:${m.color}22;color:${m.color};">${m.tag}</div>
+      <div class="method-title">${m.title}</div>
+      <div class="method-items">${m.items.map(i=>'· '+i).join('<br>')}</div>
+    </div>`).join('');
+  g.dataset.rendered = '1';
+}
+
+function renderScoring() {
+  const ui = document.getElementById('scoring-ui');
+  if(ui.dataset.rendered) return;
+  ui.innerHTML = `<table class="score-table">
+    <thead><tr>
+      <th style="text-align:left;min-width:150px;">Pilier</th>
+      ${INSTITUTIONS.map(i=>`<th>${i}</th>`).join('')}
+    </tr></thead>
+    <tbody>${PILIERS.map(p=>`
+      <tr>
+        <td><div style="display:flex;align-items:center;gap:7px;">
+          <span style="width:8px;height:8px;border-radius:50%;background:${p.color};display:inline-block;flex-shrink:0;"></span>
+          <span style="font-size:12px;">${p.label}</span>
+        </div></td>
+        ${INSTITUTIONS.map(inst=>`<td>
+          <input class="score-input" type="number" min="1" max="5" value="${scores[p.id+'_'+inst]}"
+            oninput="updateScore('${p.id}','${inst}',this.value)">
+        </td>`).join('')}
+      </tr>`).join('')}
+    </tbody>
+  </table>`;
+  ui.dataset.rendered = '1';
+}
+
+function updateScore(pid, inst, val) {
+  const v = Math.min(5, Math.max(1, parseInt(val)||1));
+  scores[pid+'_'+inst] = v;
+  renderHeatGrid();
+}
+
+function renderHeatGrid() {
+  const cols = INSTITUTIONS.length;
+  const g = document.getElementById('heat-grid');
+  g.style.gridTemplateColumns = '140px repeat('+cols+',1fr)';
+  g.innerHTML = `
+    <div class="heat-header" style="text-align:left;">Pilier</div>
+    ${INSTITUTIONS.map(i=>`<div class="heat-header">${i}</div>`).join('')}
+    ${PILIERS.map(p=>`
+      <div class="heat-label">
+        <span style="width:8px;height:8px;border-radius:50%;background:${p.color};flex-shrink:0;display:inline-block;"></span>
+        ${p.label}
+      </div>
+      ${INSTITUTIONS.map(inst=>{
+        const v = scores[p.id+'_'+inst];
+        return `<div class="heat-cell ${heatCls(v)}">${v}</div>`;
+      }).join('')}`).join('')}`;
+}
+
+renderOverview();
+</script>

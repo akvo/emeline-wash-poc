@@ -1,0 +1,316 @@
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .mm-root {
+    background: #f0f4f8;
+    padding: 20px 12px 16px;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+  }
+
+  .mm-grid {
+    display: grid;
+    grid-template-columns: 1fr 160px 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 10px;
+    align-items: start;
+  }
+
+  .mm-center-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    grid-column: 2;
+    grid-row: 1 / 4;
+  }
+
+  .mm-left-col {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    justify-content: center;
+    padding-top: 30px;
+  }
+
+  .mm-right-col {
+    grid-column: 3;
+    grid-row: 1 / 3;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    justify-content: center;
+    padding-top: 30px;
+  }
+
+  .mm-bottom-row {
+    grid-column: 1 / 4;
+    grid-row: 3;
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 4px;
+  }
+
+  /* Central node */
+  .node-root {
+    background: #1a4a6b;
+    color: #fff;
+    border-radius: 50%;
+    width: 130px;
+    height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.4;
+    padding: 12px;
+    box-shadow: 0 4px 12px rgba(26,74,107,0.35);
+    cursor: pointer;
+  }
+
+  /* Branch headers */
+  .branch {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .branch-head {
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #fff;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+    line-height: 1.35;
+  }
+
+  .branch-children {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-left: 8px;
+    border-left: 2px solid #ccc;
+    margin-left: 6px;
+  }
+
+  .branch-child {
+    border-radius: 6px;
+    padding: 6px 8px;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    opacity: 0.9;
+    line-height: 1.3;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  }
+  .branch-child:hover, .branch-head:hover, .node-root:hover { opacity: 0.82; }
+
+  /* Right side branches — children aligned left of header */
+  .branch.right .branch-children {
+    padding-left: 0;
+    padding-right: 8px;
+    border-left: none;
+    border-right: 2px solid #ccc;
+    margin-left: 0;
+    margin-right: 6px;
+    text-align: right;
+  }
+
+  /* Detail panel */
+  #detail-box {
+    margin-top: 16px;
+    background: #fff;
+    border-radius: 8px;
+    border-left: 4px solid #1a4a6b;
+    padding: 12px 14px;
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: #374151;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  #detail-box strong {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 13px;
+    color: #1a4a6b;
+  }
+</style>
+
+<div class="mm-root">
+  <div class="mm-grid">
+
+    <!-- LEFT COLUMN -->
+    <div class="mm-left-col">
+
+      <!-- CRISIS -->
+      <div class="branch">
+        <div class="branch-head" style="background:#b03a2e;"
+          data-title="Scale of the Crisis"
+          data-detail="1.4M preventable deaths/year (WHO 2025), 2.1B without safe water, continental drying already documented globally, and a $1 trillion/year financing gap vs. only $164B actual spend. 93% of spending comes from public budgets alone.">
+          🌊 Scale of the Crisis
+        </div>
+        <div class="branch-children" style="border-color:#e74c3c;">
+          <div class="branch-child" style="background:#e74c3c;"
+            data-title="1.4M deaths/yr (WHO 2025)"
+            data-detail="1.4 million people die preventable deaths each year from unsafe water, sanitation and hygiene. Despite progress since 2015, 2.1 billion still lack safely managed drinking water and 3.4 billion lack safely managed sanitation.">
+            1.4M deaths/yr · WHO 2025
+          </div>
+          <div class="branch-child" style="background:#e74c3c;"
+            data-title="Continental Drying · World Bank 2025"
+            data-detail="The World Bank's Continental Drying report uses satellite data to document a persistent, global decline in freshwater availability — disrupting jobs, livelihoods, and ecosystems. This is not a future risk. It is the present operating context.">
+            Continental Drying · WB 2025
+          </div>
+          <div class="branch-child" style="background:#e74c3c;"
+            data-title="$1T/yr financing gap"
+            data-detail="Over $1 trillion per year is needed to meet SDG 6; current spending is approximately $164 billion. 93% of what is spent comes from public budgets alone (UN Water Conference, 2026).">
+            $1T/yr gap · 93% public spend
+          </div>
+        </div>
+      </div>
+
+      <!-- ROOT CAUSE -->
+      <div class="branch">
+        <div class="branch-head" style="background:#c0500a;"
+          data-title="Root Cause: Unusable Data Systems"
+          data-detail="WHO WASH Strategy 2026–2035: 'Many countries still lack coherent indicator sets, comprehensive financial information, and the institutional capacity to collect, assure, analyse and use systems data. As a result, governance gaps persist, financing is hard to track and evidence is not consistently informing planning.'">
+          🔍 Root Cause: Unusable Data
+        </div>
+        <div class="branch-children" style="border-color:#e67e22;">
+          <div class="branch-child" style="background:#e67e22;"
+            data-title="Broken Feedback Loop"
+            data-detail="Investments are made without knowing where gaps are greatest. Budgets go unspent — not for lack of need, but because ministries lack the capacity to demonstrate results. Donors operate parallel reporting systems that burden governments rather than strengthening them.">
+            Broken feedback loop
+          </div>
+          <div class="branch-child" style="background:#e67e22;"
+            data-title="Water invisible in national accounts"
+            data-detail="Water remains invisible in national accounting, chronically underfunded relative to sectors that can show returns. World Bank Dakar speech (2026): 'Data infrastructure is not a cost — it is the mechanism that makes the investment case legible.' In Senegal, $800M concessional financing is leveraging $1.5B in private capital precisely because data systems created enabling conditions.">
+            Water invisible in nat. accounts
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CENTER COLUMN -->
+    <div class="mm-center-col">
+      <div class="node-root"
+        data-title="Why Akvo's Work Matters"
+        data-detail="The world is failing on water not because solutions are unknown, but because the data systems, governance structures, and institutional capacities needed to target investment, track progress, and hold actors accountable are chronically absent. That is precisely what Akvo builds.">
+        Why Akvo's<br>Work<br>Matters
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="mm-right-col">
+
+      <!-- TECH NOT ENOUGH -->
+      <div class="branch right">
+        <div class="branch-head" style="background:#6c3483;"
+          data-title="Technology Alone Isn't Enough"
+          data-detail="The sector has a significant graveyard of well-funded, technically functional platforms abandoned within two years of project closure. The reason is almost always the same: the technology was treated as the solution when the real problem was governance — unclear data ownership, disputed indicator definitions, unresolved data-sharing agreements, and no institutional stake in maintaining quality.">
+          💻 Tech Alone Isn't Enough
+        </div>
+        <div class="branch-children" style="border-color:#9b59b6;">
+          <div class="branch-child" style="background:#9b59b6;"
+            data-title="Platform Graveyard (Nexleaf / SSIR 2026)"
+            data-detail="'Some solutions reach scale, but few last. Equipment goes dark. Dashboards fade. Paper charts return.' — Nexleaf Analytics, Stanford Social Innovation Review 2026. Fifteen years of working with ministries of health.">
+            Platform graveyard · Nexleaf 2026
+          </div>
+          <div class="branch-child" style="background:#9b59b6;"
+            data-title="Partnership ≠ Ownership"
+            data-detail="A ministry may allow a solution to be deployed without it being integrated into daily workflows. Partnership, in practice, operates as permission. Ownership means: the country retains decision-making authority, controls data, can adapt tools without external approval, and has workflows that rely on the system to function. Without that, scale is superficial.">
+            Partnership ≠ Ownership
+          </div>
+          <div class="branch-child" style="background:#9b59b6;"
+            data-title="Why paper systems endure"
+            data-detail="Paper systems are locally repairable, predictable, and under government control. Until digital tools offer comparable sovereignty, paper remains the rational choice for risk-averse institutions.">
+            Paper endures — locally sovereign
+          </div>
+        </div>
+      </div>
+
+      <!-- WHERE AKVO FITS -->
+      <div class="branch right">
+        <div class="branch-head" style="background:#1a7a4a;"
+          data-title="Where Akvo Fits"
+          data-detail="Akvo's value is at the intersection of four things the sector consistently underinvests in: Systems not tools, Governance not just technology, Ownership not just partnership, Evidence for decisions not just reporting. This is directly aligned with WHO WASH Strategy SRA 2, the World Bank's country water compact model, and the UN system-wide call to reduce parallel reporting.">
+          🎯 Where Akvo Fits
+        </div>
+        <div class="branch-children" style="border-color:#27ae60;">
+          <div class="branch-child" style="background:#27ae60;"
+            data-title="Systems, not tools"
+            data-detail="Designing data infrastructure that is owned, maintained, and used by government counterparts beyond project closure.">
+            Systems, not tools
+          </div>
+          <div class="branch-child" style="background:#27ae60;"
+            data-title="Governance, not just technology"
+            data-detail="Building the institutional arrangements — roles, standards, QA/QC, data-sharing agreements — that determine whether any system functions in practice.">
+            Governance, not just tech
+          </div>
+          <div class="branch-child" style="background:#27ae60;"
+            data-title="Ownership, not just partnership"
+            data-detail="Working toward the point where ministries lead operations, integrate data into routine workflows, and fund systems from domestic budgets. Treating governments as the primary customer, not the beneficiary.">
+            Ownership, not partnership
+          </div>
+          <div class="branch-child" style="background:#27ae60;"
+            data-title="Evidence for decisions, not just reporting"
+            data-detail="Producing the kind of comparable, decision-ready data that the World Bank calls a prerequisite for mobilizing capital, and that WHO identifies as the 'data spine' guiding policy and investment.">
+            Evidence for decisions
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- BOTTOM ROW — Climate -->
+    <div class="mm-bottom-row">
+      <div class="branch" style="max-width:520px; width:100%;">
+        <div class="branch-head" style="background:#1a6b8a; text-align:center;"
+          data-title="Climate Lens"
+          data-detail="As continental drying accelerates, WASH monitoring systems must track service continuity under climate stress, integrate early-warning signals, and connect to national adaptation planning. WHO and UNICEF published 100 climate-resilient WASH indicators in 2026. Akvo's platforms are positioned to operationalise the shift from static infrastructure monitoring to adaptive, climate-aware data systems.">
+          🌡️ Climate Lens
+        </div>
+        <div style="display:flex; gap:6px; margin-top:4px; padding: 0 8px;">
+          <div class="branch-child" style="background:#2980b9; flex:1; text-align:center;"
+            data-title="Static → Adaptive monitoring"
+            data-detail="Akvo's platforms are positioned to operationalise the shift from static infrastructure monitoring to adaptive, climate-aware data systems that track service continuity under climate stress and integrate early-warning signals.">
+            Static → Adaptive monitoring
+          </div>
+          <div class="branch-child" style="background:#2980b9; flex:1; text-align:center;"
+            data-title="WHO / WB / UN alignment"
+            data-detail="Directly aligned with WHO WASH Strategy SRA 2 (strengthening national monitoring systems), the World Bank's country water compact model, and the UN system-wide call to reduce parallel reporting and align around national indicator sets.">
+            WHO / WB / UN alignment
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Detail panel -->
+  <div id="detail-box">
+    <strong id="dp-t">Click any node to read the detail →</strong>
+    <span id="dp-b">Five branches: Scale of the Crisis · Root Cause · Tech Not Enough · Where Akvo Fits · Climate Lens</span>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('[data-title]').forEach(function(el) {
+  el.addEventListener('click', function() {
+    var t = el.getAttribute('data-title');
+    var d = el.getAttribute('data-detail');
+    var color = window.getComputedStyle(el).backgroundColor;
+    document.getElementById('dp-t').textContent = t;
+    document.getElementById('dp-b').textContent = d;
+    document.getElementById('detail-box').style.borderLeftColor = color || '#1a4a6b';
+  });
+});
+</script>

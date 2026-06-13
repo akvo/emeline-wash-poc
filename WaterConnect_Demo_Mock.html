@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WaterConnect — Interactive Demo Mock</title>
+<style>
+  :root{
+    --akvo-teal:#03AD8C; --akvo-blue:#404898; --ink:#191919; --grey:#F2F2F2;
+    --wa-green:#075E54; --wa-light:#DCF8C6; --wa-bg:#ECE5DD;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif; background:#fafafa; color:var(--ink); display:flex; min-height:100vh;}
+
+  /* ===== Left panel ===== */
+  .side{flex:1; padding:48px 56px; max-width:620px;}
+  .logo{font-size:28px; font-weight:800; letter-spacing:-.5px;}
+  .logo span{color:var(--akvo-teal);}
+  .side h1{font-size:34px; margin:18px 0 6px; line-height:1.15;}
+  .side h1 em{color:var(--akvo-teal); font-style:normal;}
+  .tag{color:#666; font-size:15px; margin-bottom:28px;}
+  .scenarios{display:flex; flex-direction:column; gap:10px; margin-bottom:30px;}
+  .scn{display:flex; align-items:center; gap:14px; text-align:left; border:2px solid #e3e3e3; background:#fff; border-radius:12px; padding:14px 16px; cursor:pointer; font-size:15px; transition:.15s;}
+  .scn:hover{border-color:var(--akvo-teal);}
+  .scn.active{border-color:var(--akvo-teal); background:#f0fbf8;}
+  .scn .num{flex:none; width:34px; height:34px; border-radius:50%; background:var(--akvo-teal); color:#fff; font-weight:700; display:flex; align-items:center; justify-content:center;}
+  .scn b{display:block; font-size:15px;}
+  .scn small{color:#777;}
+  .points{border-top:1px solid #e5e5e5; padding-top:22px; font-size:14px; color:#444; line-height:1.5;}
+  .points h3{font-size:13px; text-transform:uppercase; letter-spacing:.08em; color:var(--akvo-teal); margin-bottom:10px;}
+  .points p{margin-bottom:10px;}
+  .points b{color:var(--ink);}
+  .mocknote{margin-top:26px; font-size:12px; color:#999;}
+
+  /* ===== Phone ===== */
+  .stage{flex:1; display:flex; align-items:center; justify-content:center; padding:30px;}
+  .phone{width:375px; height:740px; background:#000; border-radius:42px; padding:12px; box-shadow:0 24px 60px rgba(0,0,0,.28); display:flex; flex-direction:column;}
+  .screen{flex:1; border-radius:32px; overflow:hidden; display:flex; flex-direction:column; background:var(--wa-bg);}
+  .wa-head{background:var(--wa-green); color:#fff; padding:14px 14px 12px; display:flex; align-items:center; gap:10px;}
+  .avatar{width:40px; height:40px; border-radius:50%; background:var(--akvo-teal); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:18px; color:#fff;}
+  .wa-head .who b{font-size:15.5px; display:flex; align-items:center; gap:5px;}
+  .tick{display:inline-block; width:15px; height:15px; background:#25D366; border-radius:50%; color:#fff; font-size:10px; text-align:center; line-height:15px;}
+  .wa-head .who small{font-size:11.5px; opacity:.85;}
+  .chat{flex:1; overflow-y:auto; padding:14px 12px 8px; display:flex; flex-direction:column; gap:8px;}
+  .msg{max-width:82%; padding:8px 11px; border-radius:10px; font-size:13.5px; line-height:1.42; position:relative; animation:pop .25s ease; white-space:pre-line; box-shadow:0 1px 1px rgba(0,0,0,.08);}
+  @keyframes pop{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
+  .from-user{align-self:flex-end; background:var(--wa-light); border-top-right-radius:2px;}
+  .from-bot{align-self:flex-start; background:#fff; border-top-left-radius:2px;}
+  .from-human{align-self:flex-start; background:#fff; border-top-left-radius:2px; border-left:4px solid var(--akvo-blue);}
+  .from-system{align-self:center; background:#FDF3D7; font-size:12px; color:#6b5d33; text-align:center; max-width:88%; border-radius:8px;}
+  .sender{font-size:11px; font-weight:700; margin-bottom:3px;}
+  .from-bot .sender{color:var(--akvo-teal);}
+  .from-human .sender{color:var(--akvo-blue);}
+  .time{font-size:10px; color:#999; text-align:right; margin-top:3px;}
+  .photo{width:200px; height:120px; border-radius:8px; background:linear-gradient(135deg,#8a9ba8,#5c6f7d); display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px; margin-bottom:5px; text-align:center; padding:8px;}
+  .voice{display:flex; align-items:center; gap:8px; min-width:170px;}
+  .voice .play{width:28px; height:28px; border-radius:50%; background:var(--akvo-teal); color:#fff; display:flex; align-items:center; justify-content:center; font-size:11px; flex:none;}
+  .voice .bars{display:flex; align-items:center; gap:2px; flex:1;}
+  .voice .bars i{display:block; width:3px; background:#9aa; border-radius:2px;}
+  .src{display:inline-block; margin-top:7px; background:#eef9f6; color:#067a64; border:1px solid #bfe8de; font-size:10.5px; padding:2.5px 8px; border-radius:99px;}
+  .typing{align-self:flex-start; background:#fff; border-radius:10px; padding:10px 14px; display:flex; gap:4px; box-shadow:0 1px 1px rgba(0,0,0,.08);}
+  .typing i{width:7px; height:7px; border-radius:50%; background:#bbb; animation:blink 1.2s infinite;}
+  .typing i:nth-child(2){animation-delay:.2s;} .typing i:nth-child(3){animation-delay:.4s;}
+  @keyframes blink{0%,80%,100%{opacity:.25;} 40%{opacity:1;}}
+  .controls{background:#F0F0F0; padding:10px 12px; display:flex; gap:8px;}
+  .controls button{flex:1; border:none; border-radius:99px; padding:11px; font-size:14px; font-weight:700; cursor:pointer;}
+  #nextBtn{background:var(--akvo-teal); color:#fff;}
+  #nextBtn:disabled{background:#c8c8c8; cursor:default;}
+  #resetBtn{flex:0 0 90px; background:#fff; color:#555; border:1px solid #ddd; font-weight:600;}
+  @media (max-width:900px){ body{flex-direction:column;} .side{max-width:none; padding:28px;} }
+</style>
+</head>
+<body>
+
+<div class="side">
+  <div class="logo">Akvo<span>.</span></div>
+  <h1>WaterConnect <em>demo</em></h1>
+  <p class="tag">Expert support in the pocket of every frontline water worker — mock-up for funder &amp; partner conversations. Pick a scenario, then tap <b>Next</b> on the phone to step through the conversation.</p>
+
+  <div class="scenarios" id="scenarioList"></div>
+
+  <div class="points">
+    <h3>What to point out while demoing</h3>
+    <p><b>Grounded answers.</b> Every reply cites the ministry's own manuals and national standards — the government owns the knowledge base.</p>
+    <p><b>Humans in the loop.</b> Uncertain cases escalate to the district engineer (scenario 3). The assistant augments local technicians, never replaces them.</p>
+    <p><b>A sensor for the sector.</b> Every exchange is logged — query patterns show the ministry where breakdowns cluster and which skills gaps persist.</p>
+    <p><b>Works on any phone.</b> WhatsApp today; USSD, SMS and voice channels reuse the same architecture proven by Akvo's AgriConnect in Kenya.</p>
+    <p><b>Rural and urban.</b> One platform serves the pump mechanic, the district officer (grounded in the national WASH MIS) and the utility front line — where every resolved anomaly feeds the non-revenue water dashboard.</p>
+  </div>
+  <p class="mocknote">Mock-up — scripted conversations, no live AI. Akvo, June 2026.</p>
+</div>
+
+<div class="stage">
+  <div class="phone">
+    <div class="screen">
+      <div class="wa-head">
+        <div class="avatar">W</div>
+        <div class="who">
+          <b>WaterConnect <span class="tick">✓</span></b>
+          <small id="statusLine">Ministry of Water · verified service</small>
+        </div>
+      </div>
+      <div class="chat" id="chat"></div>
+      <div class="controls">
+        <button id="nextBtn">Next ▸</button>
+        <button id="resetBtn">Restart</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const scenarios = [
+  {
+    title: "Handpump fault diagnosis",
+    sub: "Pump mechanic · guided repair",
+    steps: [
+      {from:'user', name:'Joseph — pump mechanic', text:"Good morning. Pump at Kambui Primary not giving water. Handle moves but feels light, no resistance.", photo:"📷 Photo: Afridev handpump, head removed"},
+      {from:'bot', text:"Good morning Joseph. Thanks for the photo — that is an Afridev pump.\n\nA handle that moves freely with no resistance usually means the pump rod is no longer lifting the plunger. Quick check: pull the rod up by hand. Does it come up very easily, almost no weight?"},
+      {from:'user', name:'Joseph — pump mechanic', text:"Yes, very light. Came up easy."},
+      {from:'bot', text:"That points to a disconnected or broken pump rod — most often the rod centraliser or a loose rod joint below the first section.\n\nSteps:\n1. Remove rods one by one, checking each hook-and-eye joint\n2. Find the disconnected/broken section — usually shows wear marks\n3. Replace the damaged rod or re-seat the joint\n4. Check the plunger seal while the riser is open (worn seals are the next most common fault)\n\nParts you may need: 11 mm pump rod, plunger seal (Afridev U-seal).", src:"National Handpump O&M Manual, §4.3 — Afridev troubleshooting"},
+      {from:'user', name:'Joseph — pump mechanic', text:"Found it. Third rod joint was open. Reconnected and seal looked ok. Water is flowing now 💧"},
+      {from:'bot', text:"Well done — good repair. 👍\n\nI've logged this repair against water point KMB-014 (Kambui Primary) in the district asset register: fault = rod disconnection, downtime = 1 day, parts = none replaced.\n\nTip: ask the committee to report immediately next time the handle feels light — early repair prevents rod damage."},
+      {from:'system', text:"Repair logged → district asset register · visible on the ministry dashboard"}
+    ]
+  },
+  {
+    title: "Water quality result",
+    sub: "Committee member · chlorination dose",
+    steps: [
+      {from:'user', name:'Mary — water committee', voice:true, text:"🎙 Voice note (0:38) — \"We did the water test on our tank today, I want to know if the water is safe…\""},
+      {from:'user', name:'Mary — water committee', text:"Results: turbidity 4, free chlorine 0.0, coliform test 12 per 100ml. Tank is 10,000 litres."},
+      {from:'bot', text:"Thank you Mary. I'm sorry — this water is NOT safe to drink right now.\n\n• Coliforms 12 / 100 ml → contamination present (standard: 0)\n• Free chlorine 0.0 mg/L → no protection in the system\n• Turbidity 4 NTU → acceptable for chlorination (below 5)\n\nUntil treated: advise households to boil drinking water.", src:"National Drinking Water Quality Standards, Table 2"},
+      {from:'bot', text:"To shock-chlorinate your 10,000 L tank to 2.0 mg/L using HTH 65% granules:\n\n→ Measure 31 g of HTH (about 2 level tablespoons)\n1. Dissolve in a bucket of water, stir well\n2. Pour into the tank inlet, mix\n3. Wait 30 minutes contact time\n4. Re-test free chlorine — target 0.5–2.0 mg/L at the tap\n\nAlso inspect: tank lid sealed? Any pipe leaks near latrines or drains? Contamination usually enters somewhere.", src:"Ministry O&M Guidelines, §7.1 — emergency chlorination"},
+      {from:'user', name:'Mary — water committee', text:"Done. After 30 min the chlorine test shows 1.5. Coliform retest next week."},
+      {from:'bot', text:"1.5 mg/L is in the safe range — good work. ✅\n\nI've scheduled a reminder for your coliform retest next Tuesday and flagged this event to the district water officer. If the retest still shows coliforms, we'll look at the source together."},
+      {from:'system', text:"Water-safety event logged · retest reminder set · district officer notified"}
+    ]
+  },
+  {
+    title: "Scheme prioritisation",
+    sub: "District officer · grounded in the WASH MIS",
+    steps: [
+      {from:'user', name:'Grace — District Water Officer', text:"I have budget to rehabilitate only 3 schemes this quarter. 14 are flagged in my district. Which should I prioritise?"},
+      {from:'bot', text:"Good morning Grace. Based on the district dataset in the national WASH MIS (updated 4 days ago), here is the ranking against the national prioritisation criteria:\n\n1. Nyamira — non-functional 47 days · 3,200 users · serves health centre · no alternative source within 2 km\n2. Mutara — partial service · 2,100 users · E. coli detected at 2 of 3 taps last month\n3. Kibanda — non-functional 31 days · 1,800 users · serves primary school\n\nNext in line: Kagio (4), Lusoi (5).", src:"National WASH MIS · district dataset + National Prioritisation Guideline §2.4"},
+      {from:'user', name:'Grace — District Water Officer', text:"Why Nyamira before Kagio? Kagio has been down longer."},
+      {from:'bot', text:"Fair question. Kagio has been down 63 days — longer, yes. But it serves 800 people who have a functional borehole 400 m away, so service impact is moderate.\n\nNyamira serves 3,200 people including a health centre, with no alternative within 2 km — households there are currently using an unprotected stream. The guideline weights population affected, institutions served and alternative-source distance above downtime alone.\n\nBoth assessments come from the latest MIS field updates — you can tap either scheme ID to see the underlying records."},
+      {from:'user', name:'Grace — District Water Officer', text:"Clear. Prepare a summary I can table at the district committee meeting Thursday."},
+      {from:'bot', text:"Done — one-page prioritisation brief sent to your email and saved to the district folder:\n\n• Ranking of all 14 schemes with criteria scores\n• Cost estimates from the last BoQ database\n• Map of affected villages and institutions\n\nI've also flagged the Mutara water-quality result to the public health officer, per protocol."},
+      {from:'system', text:"Prioritisation brief exported · decision trail logged in the national WASH MIS"}
+    ]
+  },
+  {
+    title: "Meter reading anomaly",
+    sub: "Urban utility · meter reader · NRW",
+    steps: [
+      {from:'user', name:'Amina — meter reader', text:"Meter at account 4471, Mwiki Road reads 0 m³ again this month. Household of 6, they say they use water daily."},
+      {from:'bot', text:"That's the third consecutive zero reading on account 4471 — either a stuck meter or a bypass.\n\nTwo checks while you're there:\n1. Ask them to open a tap inside and watch the dial — does the red pointer move at all?\n2. Look at the coupling before the meter — signs of disturbance, fresh fittings, or a tee before the meter?"},
+      {from:'user', name:'Amina — meter reader', text:"Tap is running, dial completely still. Coupling looks original, no bypass that I can see."},
+      {from:'bot', text:"Then it's a stuck meter, not tampering — good news for the customer relationship.\n\n• Replacement logged: work order #883\n• This month billed as estimate: 14 m³, based on the account's 12-month average\n• The bill is flagged 'estimated' so it can be reconciled once the new meter is in.", src:"Utility Commercial Code §5.2 — estimated billing"},
+      {from:'bot', text:"One more thing while you're on Mwiki Road — account 4472 next door jumped from 9 to 41 m³ this cycle. That pattern usually means a customer-side leak, often a running cistern.\n\nWorth knocking: a warning now saves them a painful bill and a dispute later."},
+      {from:'user', name:'Amina — meter reader', text:"They checked — the toilet was running. Very grateful. Both visits done. ✅"},
+      {from:'system', text:"Meter replacement ordered · estimated bill issued · leak advisory logged → NRW dashboard, zone 4"}
+    ]
+  },
+  {
+    title: "Pipe burst response",
+    sub: "Urban utility · network plumber",
+    steps: [
+      {from:'user', name:'Otieno — network plumber', text:"Burst on the 110mm line along Soko market road, water flooding the street. Need to isolate fast."},
+      {from:'bot', text:"From the network map, that section is fed from two directions.\n\nClose valves V-217 (junction at the mosque) and V-224 (200 m uphill, near the kiosk). That isolates 340 m of line and cuts supply to ~85 connections including the market.\n\nI can send the standard outage SMS to registered customers in that zone now — send it?"},
+      {from:'user', name:'Otieno — network plumber', text:"Yes, send it. Pipe is exposed now — PVC, split lengthwise about 30 cm."},
+      {from:'bot', text:"Outage notice sent to 85 customers. ✉\n\nA 30 cm longitudinal split on PVC can't take a repair clamp — cut out the damaged section and insert a new piece:\n1. Cut back to sound pipe ≥15 cm beyond the split, both sides\n2. Use two 110 mm slip couplings; clean and chamfer the edges\n3. Flush the line before reopening V-224\n4. Restore V-217 slowly to avoid water hammer", src:"Utility Technical Standards §3.7 — PVC pipe repair"},
+      {from:'user', name:'Otieno — network plumber', text:"Done. Pressure restored, no leaks at the couplings."},
+      {from:'bot', text:"Good work — that was a 2h40 outage, well under the service standard for a main repair.\n\nRepair logged with photos to the network map at that location, so the next crew knows there are two couplings there. Restoration SMS sent to affected customers."},
+      {from:'system', text:"Repair + as-built update logged → network GIS · outage stats → service continuity dashboard"}
+    ]
+  },
+  {
+    title: "Escalation to engineer",
+    sub: "Scheme operator · human in the loop",
+    steps: [
+      {from:'user', name:'Daniel — scheme operator', text:"Pressure in zone 2 of the piped scheme has been dropping for 3 days. No visible leaks on the main line. Pump runs normal hours. Tank fills but empties fast at night."},
+      {from:'bot', text:"Thanks Daniel. Night-time emptying with no visible leak suggests either an underground leak in zone 2 or unauthorised connections drawing at night.\n\nQuick check: can you close the zone 2 valve tonight and record the tank level at 22:00 and 05:00?"},
+      {from:'user', name:'Daniel — scheme operator', text:"Did that yesterday. Tank level stayed full with valve closed. So it is inside zone 2. But the zone has 4 km of buried line, I don't know how to find the leak."},
+      {from:'bot', text:"That confirms the loss is inside zone 2 — good diagnostic work.\n\nLocating a leak on 4 km of buried line needs step-testing and listening equipment, and possibly a decision on pipe replacement. This is beyond what I can safely guide remotely, so I'm escalating to your district engineer with a summary of everything we've established."},
+      {from:'system', text:"⤴ Escalated to Eng. Achieng — District Water Office · case #2161\nSummary attached: 3-day pressure drop · zone isolated · est. night loss ~14 m³"},
+      {from:'human', name:'Eng. Achieng — District Water Office', text:"Hello Daniel, I've read the case summary — clear picture, well isolated. I'll come Thursday with the listening rods and we'll step-test the zone together. Please have the valve keys ready and ask the committee to inform zone 2 households about a short shutdown, 09:00–12:00."},
+      {from:'user', name:'Daniel — scheme operator', text:"Thank you Engineer, we will be ready Thursday."},
+      {from:'system', text:"Case #2161 → status: field visit planned · all steps logged for the ministry dashboard"}
+    ]
+  }
+];
+
+let cur = 0, idx = 0, busy = false;
+const chat = document.getElementById('chat');
+const nextBtn = document.getElementById('nextBtn');
+const list = document.getElementById('scenarioList');
+
+scenarios.forEach((s,i)=>{
+  const b = document.createElement('button');
+  b.className = 'scn' + (i===0?' active':'');
+  b.innerHTML = `<span class="num">${i+1}</span><span><b>${s.title}</b><small>${s.sub}</small></span>`;
+  b.onclick = ()=>{ document.querySelectorAll('.scn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); cur=i; reset(); };
+  list.appendChild(b);
+});
+
+function bars(){ let h=''; for(let i=0;i<24;i++){ h+=`<i style="height:${4+Math.round(Math.random()*14)}px"></i>`;} return h; }
+function now(){ const d=new Date(); return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0'); }
+
+function render(m){
+  const div = document.createElement('div');
+  div.className = 'msg from-' + m.from;
+  let h = '';
+  if(m.name) h += `<div class="sender">${m.name}</div>`;
+  if(m.from==='bot') h = `<div class="sender">WaterConnect assistant</div>`;
+  if(m.photo) h += `<div class="photo">${m.photo}</div>`;
+  if(m.voice) h += `<div class="voice"><span class="play">▶</span><span class="bars">${bars()}</span></div>`;
+  h += m.text;
+  if(m.src) h += `<br><span class="src">📖 ${m.src}</span>`;
+  if(m.from!=='system') h += `<div class="time">${now()}</div>`;
+  div.innerHTML = h;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function next(){
+  if(busy) return;
+  const steps = scenarios[cur].steps;
+  if(idx >= steps.length){ return; }
+  const m = steps[idx];
+  if(m.from==='bot' || m.from==='human'){
+    busy = true; nextBtn.disabled = true;
+    const t = document.createElement('div');
+    t.className='typing'; t.innerHTML='<i></i><i></i><i></i>';
+    chat.appendChild(t); chat.scrollTop = chat.scrollHeight;
+    setTimeout(()=>{ t.remove(); render(m); idx++; busy=false; finishCheck(); }, 900);
+  } else {
+    render(m); idx++; finishCheck();
+  }
+}
+function finishCheck(){
+  nextBtn.disabled = idx >= scenarios[cur].steps.length;
+  nextBtn.textContent = nextBtn.disabled ? 'End of scenario ✓' : 'Next ▸';
+}
+function reset(){ chat.innerHTML=''; idx=0; busy=false; nextBtn.disabled=false; nextBtn.textContent='Next ▸';
+  render({from:'system', text:'Scenario: ' + scenarios[cur].title}); }
+nextBtn.onclick = next;
+document.getElementById('resetBtn').onclick = reset;
+reset();
+</script>
+</body>
+</html>
