@@ -61,7 +61,6 @@ streamlit-app/
 ├── WaterConnect_Demo_Mock.html
 └── country-page-poc6.html
 ```
-
 ---
 
 ## Adding a new page
@@ -79,12 +78,3 @@ Open `app.py` and add an entry to the `PAGES` dictionary:
 Then place the HTML file in the same folder as `app.py`.
 
 ---
-
-## Managing the app with Claude Code
-
-[Claude Code](https://docs.anthropic.com/en/docs/claude-code) can manage this app from the terminal — installing packages, editing files, and running commands via plain English instructions.
-
-```bash
-cd /Users/emelinebereziat/streamlit-app/streamlit-app
-claude
-```
