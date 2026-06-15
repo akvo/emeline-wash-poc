@@ -19,6 +19,7 @@ SECTIONS = {
         {"name": "Akvo · Theory of Change",      "file": "akvo_toc_with_assumptions.html"},
         {"name": "Why Akvo's Work Matters in WASH Data", "file": "akvo_mindmap_v3_html.html"},
         {"name": "Investment in Data Infrastructure", "url": "https://claude.ai/public/artifacts/8af6253a-5894-4e26-85e5-45d361d1eea0"},
+        {"name": "ASWA3 baseline dashboard",     "file": "PoC3-ASWA3baseline.html"},
     ],
 }
 
