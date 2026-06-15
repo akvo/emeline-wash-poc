@@ -14,12 +14,12 @@ SECTIONS = {
         {"name": "WASH · Maturity Framework",   "file": "wash_maturity_framework_fr.html"},
     ],
     "Internal tools": [
+        {"name": "ASWA3 baseline dashboard",     "file": "PoC3-ASWA3baseline.html"},
         {"name": "Country Opportunity",          "file": "wash_explorer_map_v3.html"},
         {"name": "Data for WASH · Concept",      "file": "data_for_wash_complete_v4_1.html"},
         {"name": "Akvo · Theory of Change",      "file": "akvo_toc_with_assumptions.html"},
         {"name": "Why Akvo's Work Matters in WASH Data", "file": "akvo_mindmap_v3_html.html"},
         {"name": "Investment in Data Infrastructure", "url": "https://claude.ai/public/artifacts/8af6253a-5894-4e26-85e5-45d361d1eea0"},
-        {"name": "ASWA3 baseline dashboard",     "file": "PoC3-ASWA3baseline.html"},
     ],
 }
 
