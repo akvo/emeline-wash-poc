@@ -12,6 +12,7 @@ SECTIONS = {
         {"name": "WaterConnect · Demo",        "file": "WaterConnect_Demo_Mock.html"},
         {"name": "Contractor Assessment · PoC", "file": "contractor-assessment-poc.html"},
         {"name": "WASH · Maturity Framework",   "file": "wash_maturity_framework_fr.html"},
+        {"name": "Groundwater data",            "url": "https://gw-unicef-poc.akvotest.org"},
     ],
     "Internal tools": [
         {"name": "ASWA3 baseline dashboard",     "file": "PoC3-ASWA3baseline.html"},
