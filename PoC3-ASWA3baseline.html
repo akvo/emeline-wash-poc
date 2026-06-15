@@ -1,0 +1,164 @@
+<!doctype html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "Aswa3 Wash Snapshot",
+  "schemaVersion": 1,
+  "description": "ASWA 3 country snapshot — single-country layout proof for PoC 3. JMP 2024 service ladders + GLAAS 2024/25 institutional indicators + v4 maturity narrative. 8 ASWA 3 countries via dropdown; defaults to Tanzania."
+}
+</script>
+<html lang="en"><head><meta charset="utf-8"><title>ASWA 3 · WASH Country Snapshot</title>
+<style>
+:root{color-scheme:light;--akvo:#4851A4;--ink:#1E1E28;--ink-soft:#4A4A57;--ink-muted:#8A8A96;--rule:#E5E5E8;--bg:#FFF;--bg-tint:#F7F7FA;--pos:#1B6B3A;--warn:#B37516;--neg:#A0431E;--sl-1:#7B2A1F;--sl-2:#C26B43;--sl-3:#D4A93D;--sl-4:#5DCAA5;--sl-5:#1D9E75;--m1:#F1EFE8;--m2:#DEDCEE;--m3:#AFA9EC;--m4:#5DCAA5;--m5:#1D9E75;--m6:#085041;--m1t:#444441;--m2t:#23205A;--m3t:#26215C;--m4t:#04342C;--m5t:#E1F5EE;--m6t:#9FE1CB}
+*{box-sizing:border-box}html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;font-size:14px;line-height:1.45}
+.wrap{max-width:880px;margin:0 auto;padding:24px 28px 60px}
+.topbar{background:var(--akvo);color:#fff;padding:10px 18px;border-radius:6px;display:flex;justify-content:space-between;align-items:center;font-size:12px;letter-spacing:.04em;margin-bottom:18px}
+.topbar strong{font-weight:700;letter-spacing:.06em;text-transform:uppercase}.topbar .vintage{opacity:.8;font-size:11px}
+.selector{display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.selector label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-muted);font-weight:600}
+select{font-family:inherit;font-size:14px;padding:6px 10px;border:1px solid var(--rule);background:#fff;color:var(--ink);border-radius:4px;min-width:180px}
+h1{font-size:34px;font-weight:700;letter-spacing:-.01em;margin:18px 0 4px}
+.subline{color:var(--ink-soft);font-size:13px;margin:0 0 18px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.subline strong{color:var(--ink);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:12px}
+.pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.pill.region{background:var(--bg-tint);color:var(--ink-soft);border:1px solid var(--rule)}
+.pill.aswa{background:#FFF4E0;color:#7E5102;border:1px solid #F0D8A4}
+.glaas-ref{margin-top:10px;padding:12px 14px;border:1px solid var(--rule);border-radius:6px;background:var(--bg-tint)}
+.glaas-ref-title{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:8px}
+.glaas-row{display:grid;grid-template-columns:36px 1fr;gap:10px;padding:6px 0;border-top:1px solid var(--rule)}
+.glaas-row:first-of-type{border-top:none;padding-top:0}
+.glaas-id{font-size:11px;font-weight:800;color:var(--akvo);padding-top:2px}
+.glaas-desc{font-size:12px;color:var(--ink-soft);line-height:1.5}
+h2{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--akvo);margin:24px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--rule)}
+h2 .yr{color:var(--ink-muted);font-weight:600;letter-spacing:.04em;margin-left:8px}
+.ladder{margin:8px 0 4px;display:flex;height:30px;border-radius:3px;overflow:hidden;background:var(--bg-tint)}
+.seg{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#fff;min-width:0;overflow:hidden;white-space:nowrap;padding:0 4px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:6px;font-size:11px;color:var(--ink-soft)}
+.legend span{display:inline-flex;align-items:center;gap:6px}.legend i{width:10px;height:10px;border-radius:2px;display:inline-block}
+.ru-split{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}
+.ru-mini{padding:10px 12px;border:1px solid var(--rule);border-radius:4px;background:var(--bg-tint)}
+.ru-mini .l{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted)}
+.ru-mini .v{font-size:22px;font-weight:700;color:var(--ink);margin-top:2px}.ru-mini .v .pct{font-size:14px;color:var(--ink-soft);font-weight:500}
+.heroes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px}
+.hero{padding:14px 14px;border:1px solid var(--rule);border-radius:6px;background:#fff;border-left:4px solid var(--ink-muted)}
+.hero.yes{border-left-color:var(--pos);background:linear-gradient(180deg,#F4FAF6 0%,#fff 60%)}
+.hero.partial{border-left-color:var(--warn);background:linear-gradient(180deg,#FDF6EA 0%,#fff 60%)}
+.hero.no{border-left-color:var(--neg);background:linear-gradient(180deg,#FBEEE5 0%,#fff 60%)}
+.hero .ix{font-size:10px;font-weight:800;letter-spacing:.12em;color:var(--ink-muted);text-transform:uppercase}
+.hero .lab{font-size:13px;font-weight:700;color:var(--ink);margin:4px 0 8px;line-height:1.3}
+.hero .row{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.hero .stx{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.hero.yes .stx{color:var(--pos)}.hero.partial .stx{color:var(--warn)}.hero.no .stx{color:var(--neg)}
+.hero .sc{font-size:18px;font-weight:800;color:var(--ink)}
+.hero .det{font-size:11px;color:var(--ink-muted);margin-top:6px;line-height:1.4}
+details.misd{margin-top:8px;border:1px solid var(--rule);border-radius:6px;overflow:hidden;background:#fff}
+details.misd summary{cursor:pointer;padding:12px 14px;background:var(--bg-tint);font-size:13px;font-weight:600;color:var(--ink);list-style:none;display:flex;justify-content:space-between;align-items:center}
+details.misd summary::-webkit-details-marker{display:none}
+details.misd summary .chev{font-size:14px;color:var(--ink-muted);transition:transform .15s;display:inline-block}
+details.misd[open] summary .chev{transform:rotate(90deg)}
+details.misd summary .ms{font-size:11px;color:var(--ink-muted);font-weight:500;letter-spacing:.04em}
+.misb{padding:16px 18px;border-top:1px solid var(--rule);display:flex;flex-direction:column;gap:14px}
+.misrow{display:grid;grid-template-columns:140px 1fr;gap:12px;align-items:flex-start}
+.misrow .k{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);padding-top:4px}
+.misrow .v{font-size:13px;color:var(--ink);line-height:1.4}
+.misrow .v.mut, .mut{color:var(--ink-muted);font-style:italic}
+.mislist{margin:0;padding-left:0;list-style:none}
+.mislist li{padding:3px 0;color:var(--ink);font-size:13px}
+.mislist li::before{content:"▸  ";color:var(--ink-muted);font-size:11px}
+.minigrid{display:flex;flex-wrap:wrap;gap:6px}
+.minichip{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:3px;font-size:11px;border:1px solid var(--rule);background:#fff;color:var(--ink)}
+.minichip.on{background:#E1F1E5;color:var(--pos);border-color:#C2DDC9}
+.minichip.off{background:#fff;color:var(--ink-muted);border-color:var(--rule);opacity:.7}
+.minichip .dot{width:6px;height:6px;border-radius:50%;display:inline-block}
+.minichip.on .dot{background:var(--pos)}.minichip.off .dot{background:var(--ink-muted)}
+.narr{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px}
+.narr .box{padding:12px 14px;border-radius:4px;border-left:3px solid var(--ink-muted)}
+.narr .box.signal{background:#EAF4EC;border-left-color:var(--pos)}.narr .box.gap{background:#FAEAE0;border-left-color:var(--neg)}
+.narr .box .h{font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--ink-muted);margin-bottom:4px}
+.narr .box.signal .h{color:var(--pos)}.narr .box.gap .h{color:var(--neg)}.narr .box.draft{background:var(--bg-tint);border-left-color:var(--warn)}
+.note{margin-top:8px;font-size:11px;color:var(--ink-muted);font-style:italic}
+footer{margin-top:34px;padding-top:14px;border-top:1px solid var(--rule);font-size:11px;color:var(--ink-muted);line-height:1.6}
+footer strong{color:var(--ink-soft)}
+@media (max-width:680px){.heroes{grid-template-columns:1fr}.misrow{grid-template-columns:1fr}.misrow .k{padding-top:0}}
+</style></head><body>
+<div class="wrap">
+<div class="topbar"><span style="display:flex;align-items:center;gap:12px"><svg width="58" height="20" viewBox="0 0 58 20" xmlns="http://www.w3.org/2000/svg"><rect width="58" height="20" rx="3" fill="rgba(255,255,255,0.15)"/><text x="8" y="15" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="13" font-weight="800" fill="white" letter-spacing="1">akvo</text></svg><strong>ASWA 3 · WASH country snapshot · v2</strong></span><span class="vintage">JMP 2024 · GLAAS 2024/25</span></div>
+<div class="selector"><label for="cs">Country</label><select id="cs"></select><span id="reg" class="pill region"></span><span class="pill aswa">ASWA 3</span></div>
+<h1 id="cn">—</h1>
+<p class="subline"><span id="iso"></span><span id="pop"></span><span id="urb"></span></p>
+<h2>Drinking water <span class="yr">· 2024</span></h2><div id="wl" class="ladder"></div>
+<div class="legend"><span><i style="background:var(--sl-5)"></i>Safely managed</span><span><i style="background:var(--sl-4)"></i>Basic</span><span><i style="background:var(--sl-3)"></i>Limited</span><span><i style="background:var(--sl-2)"></i>Unimproved</span><span><i style="background:var(--sl-1)"></i>Surface water</span></div>
+<div class="ru-split"><div class="ru-mini"><div class="l">Rural · basic+</div><div class="v" id="wr">—<span class="pct">%</span></div></div><div class="ru-mini"><div class="l">Urban · basic+</div><div class="v" id="wu">—<span class="pct">%</span></div></div></div>
+
+<h2>Sanitation <span class="yr">· 2024</span></h2><div id="sl" class="ladder"></div>
+<div class="legend"><span><i style="background:var(--sl-5)"></i>Safely managed</span><span><i style="background:var(--sl-4)"></i>Basic</span><span><i style="background:var(--sl-3)"></i>Limited (shared)</span><span><i style="background:var(--sl-2)"></i>Unimproved</span><span><i style="background:var(--sl-1)"></i>Open defecation</span></div>
+<div class="ru-split"><div class="ru-mini"><div class="l">Rural · basic+</div><div class="v" id="sr">—<span class="pct">%</span></div></div><div class="ru-mini"><div class="l">Urban · basic+</div><div class="v" id="su">—<span class="pct">%</span></div></div></div>
+
+<h2>Hygiene <span class="yr">· 2024</span></h2><div id="hl" class="ladder"></div>
+<div class="legend"><span><i style="background:var(--sl-4)"></i>Basic handwashing</span><span><i style="background:var(--sl-3)"></i>Limited</span><span><i style="background:var(--sl-2)"></i>No facility</span></div>
+
+<h2>Program indicators <span class="yr">· GLAAS 2024/25</span></h2>
+<div id="heroes" class="heroes"></div>
+<div class="glaas-ref">
+  <div class="glaas-ref-title">GLAAS 2024/25 — source indicators</div>
+  <div class="glaas-row"><div class="glaas-id">2.1</div><div class="glaas-desc"><strong>Costed sector plan (4-subsector composite)</strong> — Does a costed financing plan exist for each of the 4 sub-sectors: urban drinking water, rural drinking water, urban sanitation, rural sanitation? Score = number of sub-sectors with a costed plan (0–4).</div></div>
+  <div class="glaas-row"><div class="glaas-id">2.2</div><div class="glaas-desc"><strong>Multi-source WASH budget reporting</strong> — How many government ministries reported WASH budget data to the national system? Score = count of reporting ministries (GLAAS tracks up to 10).</div></div>
+  <div class="glaas-row"><div class="glaas-id">2.3</div><div class="glaas-desc"><strong>Sustainability in national monitoring (3-component composite)</strong> — (1) National WASH policy explicitly mentions sustainability; (2) National monitoring framework includes sustainability-linked indicators; (3) At least one named MIS is operational. Score = number of components met (0–3).</div></div>
+</div>
+
+<h2>MIS data systems <span class="yr">· GLAAS 2024/25</span></h2>
+<details class="misd" id="misd"><summary><span><span class="chev">▸</span>  Expand MIS deep dive</span><span class="ms" id="misMeta">—</span></summary><div class="misb" id="misBody"></div></details>
+
+<h2>Strengths &amp; gaps <span class="yr">· v4 narrative</span></h2><div id="nr" class="narr"></div>
+
+<p class="note" id="cnote" style="display:none"></p>
+
+<footer><strong>Sources.</strong> JMP 2025 country file (washdata.org, 2024 estimates). GLAAS 2024/25 country dataset (WHO, January 2026). v4 maturity classification (curated synthesis from GLAAS narrative content).<br><strong>Notes.</strong> Hero pills 2.1–2.3 align to your program scaffolding. 2.1 = 4-subsector flat composite (urban/rural × water/sanitation costed plans). 2.2 = count of ministries with reported annual WASH budgets. 2.3 = composite of policy sustainability mention + national monitoring indicators + at least one named MIS. Côte d'Ivoire v4 narrative still to be drafted. Somaliland values reflect Somalia (SOM) reporting.<br><strong>Methodology.</strong> Indicative — for proposal use, not for advocacy without further validation.</footer>
+</div>
+<script id="d" type="application/json">[{"d":"Tanzania","i":"TZA","r":"SSA-E","p":68560,"u":38.1,"w":{"sm":31.3,"b":64.6,"l":12.8,"un":11.6,"sw":11.0,"br":51.3,"bu":86.2},"s":{"sm":28.5,"b":37.2,"l":20.4,"un":35.6,"od":6.8,"br":25.8,"bu":55.8},"h":{"b":17.5,"l":82.5,"nf":0.5},"note":null,"h21":{"l":"Costed WASH financing strategy","s":"yes","d":"4 of 4 subsectors costed","sc":4,"mx":4},"h22":{"l":"Multi-source WASH funding","s":"yes","d":"5 ministries reporting WASH budgets","sc":5,"mx":10},"h23":{"l":"Sustainability in monitoring","s":"yes","d":"3 of 3 sustainability components","sc":3,"mx":3},"mis":{"jsr":1,"jy":2024,"jl":"Ministry of Water (MoW)-JWSR and Ministry of Health (MoH)-JHSR, Ministry of Education, Science and Technology","jf":1,"ni":1,"mn":["Water Utilities Information System (MajIS) and RUWASA Service Delivery and Management System (RSDMS)","National Sanitation Management Information System (NSMIS)","Basic Education Management Information System (BEMIS)"],"sb":[["Drinking water",1],["Sanitation",1],["Hand hygiene",1],["WASH in HCF",1],["WASH in schools",1]],"dt":[["Service quality",1],["Service coverage",1],["Functionality",1],["DW quality",1],["Source water quality",1],["Water use",1],["Wastewater volume/quality",1],["Gov WASH budgets",1],["Provider finances",1],["Tariffs",1],["Non-revenue water",1],["Staffing",1],["WASH-related disease",1],["Donor/NGO programmes",0]],"du":[["Planning / sector reviews",1],["Resource allocation",1],["Standards / regulations",1],["Surveillance",1]],"cr":[["Urban sanitation",0],["Rural sanitation",0],["Urban DW",1],["Rural DW",1],["Hand hygiene",0],["Other",0]]},"v4":{"l":4,"c":"hi","sig":"National MIS; efforts to harmonise indicators; JSRs; data used in sector reviews","gap":"Indicator harmonisation incomplete with JMP; FSM and hygiene absent","r":"SSA-E"}},{"d":"Mozambique","i":"MOZ","r":"SSA-E","p":34632,"u":39.3,"w":{"sm":27.5,"b":66.6,"l":8.6,"un":16.5,"sw":8.2,"br":51.9,"bu":89.4},"s":{"sm":33.9,"b":38.6,"l":5.5,"un":39.9,"od":16.0,"br":22.5,"bu":63.4},"h":{"b":15.8,"l":64.7,"nf":19.5},"note":null,"h21":{"l":"Costed WASH financing strategy","s":"yes","d":"4 of 4 subsectors costed","sc":4,"mx":4},"h22":{"l":"Multi-source WASH funding","s":"partial","d":"1 ministry reporting WASH budget","sc":1,"mx":10},"h23":{"l":"Sustainability in monitoring","s":"yes","d":"3 of 3 sustainability components","sc":3,"mx":3},"mis":{"jsr":1,"jy":2023,"jl":"Ministério de Obras Públicas, Habitação e Recursos Hídricos: Direcção Nacional de Abastecimento de Água e Saneamento","jf":1,"ni":1,"mn":["Sistema de Informação Nacional de Água e Saneamento"],"sb":[["Drinking water",1],["Sanitation",1],["Hand hygiene",0],["WASH in HCF",0],["WASH in schools",0]],"dt":[["Service quality",1],["Service coverage",1],["Functionality",1],["DW quality",1],["Source water quality",0],["Water use",0],["Wastewater volume/quality",0],["Gov WASH budgets",0],["Provider finances",0],["Tariffs",0],["Non-revenue water",1],["Staffing",1],["WASH-related disease",0],["Donor/NGO programmes",0]],"du":[["Planning / sector reviews",0],["Resource allocation",0],["Standards / regulations",0],["Surveillance",0]],"cr":[["Urban sanitation",0],["Rural sanitation",0],["Urban DW",0],["Rural DW",0],["Hand hygiene",0],["Other",0]]},"v4":{"l":4,"c":"mid","sig":"TrackFin WASH accounts; national MIS; JSR processes in place","gap":"Domestic financing gap >46%; human resources severely insufficient","r":"SSA-E"}},{"d":"Nigeria","i":"NGA","r":"SSA-W","p":232679,"u":55.0,"w":{"sm":29.9,"b":82.2,"l":3.9,"un":10.0,"sw":3.8,"br":66.6,"bu":95.1},"s":{"sm":32.2,"b":47.9,"l":15.9,"un":18.3,"od":18.0,"br":34.2,"bu":59.1},"h":{"b":31.3,"l":30.6,"nf":38.1},"note":null,"h21":{"l":"Costed WASH financing strategy","s":"yes","d":"4 of 4 subsectors costed","sc":4,"mx":4},"h22":{"l":"Multi-source WASH funding","s":"yes","d":"8 ministries reporting WASH budgets","sc":8,"mx":10},"h23":{"l":"Sustainability in monitoring","s":"yes","d":"3 of 3 sustainability components","sc":3,"mx":3},"mis":{"jsr":1,"jy":2024,"jl":"Ministry of Water Resources and Sanitation","jf":1,"ni":1,"mn":["Water Sanitation and Hygiene Information Management System (WASHIMS)","National Water Information System (NAWIS)","Surveillance Outbreak Response Management System (SORMAS)"],"sb":[["Drinking water",1],["Sanitation",1],["Hand hygiene",1],["WASH in HCF",1],["WASH in schools",1]],"dt":[["Service quality",1],["Service coverage",1],["Functionality",1],["DW quality",1],["Source water quality",1],["Water use",1],["Wastewater volume/quality",0],["Gov WASH budgets",1],["Provider finances",1],["Tariffs",0],["Non-revenue water",0],["Staffing",1],["WASH-related disease",1],["Donor/NGO programmes",0]],"du":[["Planning / sector reviews",0],["Resource allocation",0],["Standards / regulations",0],["Surveillance",0]],"cr":[["Urban sanitation",0],["Rural sanitation",0],["Urban DW",0],["Rural DW",0],["Hand hygiene",0],["Other",0]]},"v4":{"l":3,"c":"hi","sig":"WASHNorm dedicated WASH survey; JSRs; some KPI monitoring at federal level","gap":"No national compilation; 36-state fragmentation; MIS absent at national level","r":"SSA-W"}},{"d":"Mali","i":"MLI","r":"SSA-W","p":24479,"u":46.9,"w":{"sm":null,"b":86.4,"l":4.7,"un":8.6,"sw":0.5,"br":80.0,"bu":93.5},"s":{"sm":20.0,"b":47.8,"l":19.9,"un":28.5,"od":3.9,"br":38.7,"bu":58.0},"h":{},"note":null,"h21":{"l":"Costed WASH financing strategy","s":"yes","d":"4 of 4 subsectors costed","sc":4,"mx":4},"h22":{"l":"Multi-source WASH funding","s":"no","d":"0 ministries reporting WASH budgets","sc":0,"mx":10},"h23":{"l":"Sustainability in monitoring","s":"yes","d":"3 of 3 sustainability components","sc":3,"mx":3},"mis":{"jsr":1,"jy":2023,"jl":"Ministère de l'Environnement, de l'Assainissement et du Développement Durable; Ministère de la santé et du Developpement social","jf":1,"ni":1,"mn":["Base de Données Malisanya","Base de données SIGMA","DHIS2"],"sb":[["Drinking water",1],["Sanitation",1],["Hand hygiene",1],["WASH in HCF",1],["WASH in schools",1]],"dt":[["Service quality",1],["Service coverage",1],["Functionality",1],["DW quality",1],["Source water quality",1],["Water use",1],["Wastewater volume/quality",1],["Gov WASH budgets",1],["Provider finances",1],["Tariffs",1],["Non-revenue water",0],["Staffing",1],["WASH-related disease",1],["Donor/NGO programmes",0]],"du":[["Planning / sector reviews",0],["Resource allocation",0],["Standards / regulations",0],["Surveillance",1]],"cr":[["Urban sanitation",0],["Rural sanitation",0],["Urban DW",0],["Rural DW",0],["Hand hygiene",0],["Other",0]]},"v4":{"l":3,"c":"mid","sig":"Some sub-systems (rural water MIS); JSRs with dev partners","gap":"No indicator harmonisation; institutional fragmentation; financing gap severe","r":"SSA-W"}},{"d":"Burkina Faso","i":"BFA","r":"SSA-W","p":23549,"u":33.2,"w":{"sm":null,"b":50.0,"l":31.8,"un":18.2,"sw":0.5,"br":34.4,"bu":81.5},"s":{"sm":24.7,"b":31.8,"l":31.2,"un":7.1,"od":29.9,"br":23.5,"bu":48.4},"h":{"b":25.9,"l":33.2,"nf":40.9},"note":null,"h21":{"l":"Costed WASH financing strategy","s":"yes","d":"4 of 4 subsectors costed","sc":4,"mx":4},"h22":{"l":"Multi-source WASH funding","s":"partial","d":"1 ministry reporting WASH budget","sc":1,"mx":10},"h23":{"l":"Sustainability in monitoring","s":"yes","d":"3 of 3 sustainability components","sc":3,"mx":3},"mis":{"jsr":1,"jy":2024,"jl":"Ministère de l'environnement, eau et assainissement","jf":1,"ni":1,"mn":["Inventaire national des ouvrages hydrauliques (INO)","Dispositif intégré de suivi évaluation (DISE)","Inventaire national des ouvrages d'assainissement (INOA)"],"sb":[["Drinking water",1],["Sanitation",1],["Hand hygiene",1],["WASH in HCF",1],["WASH in schools",1]],"dt":[["Service quality",1],["Service coverage",1],["Functionality",1],["DW quality",1],["Source water quality",1],["Water use",1],["Wastewater volume/quality",1],["Gov WASH budgets",1],["Provider finances",1],["Tariffs",1],["Non-revenue water",1],["Staffing",1],["WASH-related disease",0],["Donor/NGO programmes",1]],"du":[["Planning / sector reviews",1],["Resource allocation",1],["Standards / regulations",1],["Surveillance",1]],"cr":[["Urban sanitation",1],["Rural sanitation",0],["Urban DW",1],["Rural DW",0],["Hand hygiene",0],["Other",0]]},"v4":{"l":3,"c":"mid","sig":"TrackFin WASH accounts; some indicator tracking; JSRs","gap":"No MIS; indicators not harmonised; severe HR and financing gaps","r":"SSA-W"}},{"d":"Niger","i":"NER","r":"SSA-W","p":27032,"u":17.2,"w":{"sm":null,"b":53.4,"l":16.7,"un":28.0,"sw":1.8,"br":46.4,"bu":87.3},"s":{"sm":9.1,"b":16.3,"l":10.2,"un":7.5,"od":66.0,"br":8.7,"bu":53.1},"h":{"b":21.5,"l":53.0,"nf":25.5},"note":null,"h21":{"l":"Costed WASH financing strategy","s":"partial","d":"3 of 4 subsectors costed","sc":3,"mx":4},"h22":{"l":"Multi-source WASH funding","s":"no","d":"0 ministries reporting WASH budgets","sc":0,"mx":10},"h23":{"l":"Sustainability in monitoring","s":"yes","d":"3 of 3 sustainability components","sc":3,"mx":3},"mis":{"jsr":1,"jy":2021,"jl":"Ministère de l'Hydraulique et de l'Assainissement","jf":1,"ni":1,"mn":["IRH SIGNER","SISNA","SINEA VERSION DEMONSTRATION"],"sb":[["Drinking water",1],["Sanitation",1],["Hand hygiene",1],["WASH in HCF",1],["WASH in schools",1]],"dt":[["Service quality",0],["Service coverage",1],["Functionality",1],["DW quality",1],["Source water quality",1],["Water use",1],["Wastewater volume/quality",0],["Gov WASH budgets",1],["Provider finances",1],["Tariffs",0],["Non-revenue water",0],["Staffing",0],["WASH-related disease",0],["Donor/NGO programmes",1]],"du":[["Planning / sector reviews",1],["Resource allocation",1],["Standards / regulations",1],["Surveillance",0]],"cr":[["Urban sanitation",0],["Rural sanitation",0],["Urban DW",0],["Rural DW",0],["Hand hygiene",0],["Other",0]]},"v4":{"l":2,"c":"lo","sig":"Sub-systems fragmented; national targets set but not monitored","gap":"No MIS; indicators undefined; no JSR regularity; financing gap >60%","r":"SSA-W"}},{"d":"Côte d'Ivoire","i":"CIV","r":"SSA-W","p":31934,"u":53.6,"w":{"sm":36.4,"b":77.2,"l":7.0,"un":12.8,"sw":3.0,"br":63.9,"bu":88.7},"s":{"sm":27.1,"b":40.4,"l":28.4,"un":14.5,"od":16.7,"br":24.3,"bu":54.3},"h":{"b":22.0,"l":45.0,"nf":33.0},"note":null,"h21":{"l":"Costed WASH financing strategy","s":"yes","d":"4 of 4 subsectors costed","sc":4,"mx":4},"h22":{"l":"Multi-source WASH funding","s":"no","d":"0 ministries reporting WASH budgets","sc":0,"mx":10},"h23":{"l":"Sustainability in monitoring","s":"partial","d":"1 of 3 sustainability components","sc":1,"mx":3},"mis":{"jsr":1,"jy":2024,"jl":"Ministère de l'Hydraulique, de l'Assainissement et de la Salubrité","jf":1,"ni":1,"mn":[],"sb":[["Drinking water",0],["Sanitation",0],["Hand hygiene",0],["WASH in HCF",0],["WASH in schools",0]],"dt":[["Service quality",0],["Service coverage",0],["Functionality",0],["DW quality",0],["Source water quality",0],["Water use",0],["Wastewater volume/quality",0],["Gov WASH budgets",0],["Provider finances",0],["Tariffs",0],["Non-revenue water",0],["Staffing",0],["WASH-related disease",0],["Donor/NGO programmes",0]],"du":[["Planning / sector reviews",1],["Resource allocation",1],["Standards / regulations",1],["Surveillance",0]],"cr":[["Urban sanitation",0],["Rural sanitation",0],["Urban DW",0],["Rural DW",0],["Hand hygiene",0],["Other",0]]},"v4":null},{"d":"Somaliland","i":"SOM","r":"SSA-E","p":19009,"u":48.5,"w":{"sm":null,"b":75.3,"l":7.6,"un":13.7,"sw":3.4,"br":67.5,"bu":83.6},"s":{"sm":16.4,"b":44.5,"l":19.4,"un":21.7,"od":14.4,"br":35.4,"bu":54.0},"h":{"b":16.5,"l":14.4,"nf":69.1},"note":"Somaliland-specific data not separately reported; values shown are for Somalia (SOM)","h21":{"l":"Costed WASH financing strategy","s":"yes","d":"4 of 4 subsectors costed","sc":4,"mx":4},"h22":{"l":"Multi-source WASH funding","s":"no","d":"0 ministries reporting WASH budgets","sc":0,"mx":10},"h23":{"l":"Sustainability in monitoring","s":"partial","d":"2 of 3 sustainability components","sc":2,"mx":3},"mis":{"jsr":1,"jy":2021,"jl":"Ministry of Energy and Water Resources","jf":1,"ni":1,"mn":[],"sb":[["Drinking water",0],["Sanitation",0],["Hand hygiene",0],["WASH in HCF",0],["WASH in schools",0]],"dt":[["Service quality",0],["Service coverage",0],["Functionality",0],["DW quality",0],["Source water quality",0],["Water use",0],["Wastewater volume/quality",0],["Gov WASH budgets",0],["Provider finances",0],["Tariffs",0],["Non-revenue water",0],["Staffing",0],["WASH-related disease",0],["Donor/NGO programmes",0]],"du":[["Planning / sector reviews",0],["Resource allocation",0],["Standards / regulations",0],["Surveillance",0]],"cr":[["Urban sanitation",0],["Rural sanitation",0],["Urban DW",0],["Rural DW",0],["Hand hygiene",0],["Other",0]]},"v4":{"l":1,"c":"lo","sig":"SWALIM/FAO data partially covers water points; no national system","gap":"No government mandate; no sub-systems; no compilation possible","r":"SSA-E"}}]</script>
+<script>
+const D=JSON.parse(document.getElementById('d').textContent);
+const SEL=document.getElementById('cs');D.forEach((c,i)=>{const o=document.createElement('option');o.value=i;o.textContent=c.d;SEL.appendChild(o)});
+const FREQ={1:'Annually',2:'Biennially',3:'Every 3 years',4:'Less often',5:'No fixed cycle'};
+function n(v){return (v===null||v===undefined)?null:(typeof v==='number'?v:parseFloat(v))}
+function fm(v){const x=n(v);return x===null?'—':x.toFixed(0)}
+function bar(el,segs){el.innerHTML='';const t=segs.reduce((a,s)=>a+(n(s.v)||0),0)||100;segs.forEach(s=>{const x=n(s.v);if(x===null||x<=0)return;const w=(x/t)*100;const e=document.createElement('div');e.className='seg';e.style.width=w+'%';e.style.background=s.c;if(w>9)e.textContent=x.toFixed(0)+'%';e.title=s.l+': '+x.toFixed(1)+'%';el.appendChild(e)})}
+function chip(label,on){return '<span class="minichip '+(on?'on':'off')+'"><span class="dot"></span>'+label+'</span>'}
+function statusTxt(s){return s==='yes'?'✓ Yes':(s==='partial'?'◐ Partial':(s==='no'?'✗ No':'—'))}
+function heroCard(ix,h){return '<div class="hero '+h.s+'"><div class="ix">'+ix+'</div><div class="lab">'+h.l+'</div><div class="row"><span class="stx">'+statusTxt(h.s)+'</span><span class="sc">'+h.sc+'<span style="font-size:11px;color:var(--ink-muted);font-weight:600">/'+h.mx+'</span></span></div><div class="det">'+h.d+'</div></div>'}
+function R(i){
+  const c=D[i];
+  document.getElementById('cn').textContent=c.d;
+  document.getElementById('iso').innerHTML='<strong>'+c.i+'</strong> · '+c.r;
+  document.getElementById('reg').textContent=c.r;
+  document.getElementById('pop').textContent=(c.p/1000).toFixed(1)+'M people';
+  document.getElementById('urb').textContent=c.u.toFixed(0)+'% urban';
+  const cn=document.getElementById('cnote');if(c.note){cn.style.display='block';cn.textContent='Note — '+c.note}else cn.style.display='none';
+  const w=c.w;bar(document.getElementById('wl'),[{v:w.sm,c:'var(--sl-5)',l:'Safely managed'},{v:(w.b!=null&&w.sm!=null)?(w.b-w.sm):w.b,c:'var(--sl-4)',l:'Basic'},{v:w.l,c:'var(--sl-3)',l:'Limited'},{v:w.un,c:'var(--sl-2)',l:'Unimproved'},{v:w.sw,c:'var(--sl-1)',l:'Surface water'}]);
+  document.getElementById('wr').innerHTML=fm(w.br)+'<span class="pct">%</span>';document.getElementById('wu').innerHTML=fm(w.bu)+'<span class="pct">%</span>';
+  const s=c.s;bar(document.getElementById('sl'),[{v:s.sm,c:'var(--sl-5)',l:'Safely managed'},{v:(s.b!=null&&s.sm!=null)?(s.b-s.sm):s.b,c:'var(--sl-4)',l:'Basic'},{v:s.l,c:'var(--sl-3)',l:'Limited'},{v:s.un,c:'var(--sl-2)',l:'Unimproved'},{v:s.od,c:'var(--sl-1)',l:'Open defecation'}]);
+  document.getElementById('sr').innerHTML=fm(s.br)+'<span class="pct">%</span>';document.getElementById('su').innerHTML=fm(s.bu)+'<span class="pct">%</span>';
+  const h=c.h||{};bar(document.getElementById('hl'),[{v:h.b,c:'var(--sl-4)',l:'Basic'},{v:h.l,c:'var(--sl-3)',l:'Limited'},{v:h.nf,c:'var(--sl-2)',l:'No facility'}]);
+  document.getElementById('heroes').innerHTML = heroCard('2.1',c.h21)+heroCard('2.2',c.h22)+heroCard('2.3',c.h23);
+  const m=c.mis;
+  const nSub = m.sb.filter(x=>x[1]===1).length;
+  const nDt  = m.dt.filter(x=>x[1]===1).length;
+  const nUse = m.du.filter(x=>x[1]===1).length;
+  document.getElementById('misMeta').textContent = m.mn.length+' named MIS · '+nSub+'/5 subsectors · '+nDt+'/14 data types · '+nUse+'/4 uses';
+  const jsr = m.jsr===1 ? 'Yes — last '+(m.jy||'—')+(m.jf?(', '+(FREQ[m.jf]||'')):'') : 'No';
+  const jlead = m.jl || '<span class="mut">not reported</span>';
+  const misList = m.mn.length ? '<ul class="mislist">'+m.mn.map(nm=>'<li>'+nm+'</li>').join('')+'</ul>' : '<span class="mut">No named MIS reported in GLAAS 2024/25.</span>';
+  document.getElementById('misBody').innerHTML =
+    '<div class="misrow"><div class="k">Joint Sector Reviews</div><div class="v">'+jsr+'<br><span style="color:var(--ink-muted);font-size:12px">Lead: '+jlead+'</span></div></div>'+
+    '<div class="misrow"><div class="k">National indicators</div><div class="v">'+(m.ni===1?'Defined':'Not defined')+'</div></div>'+
+    '<div class="misrow"><div class="k">Named MIS systems</div><div class="v">'+misList+'</div></div>'+
+    '<div class="misrow"><div class="k">Subsectors in MIS</div><div class="v"><div class="minigrid">'+m.sb.map(x=>chip(x[0],x[1]===1)).join('')+'</div></div></div>'+
+    '<div class="misrow"><div class="k">Data types reported</div><div class="v"><div class="minigrid">'+m.dt.map(x=>chip(x[0],x[1]===1)).join('')+'</div></div></div>'+
+    '<div class="misrow"><div class="k">Data use</div><div class="v"><div class="minigrid">'+m.du.map(x=>chip(x[0],x[1]===1)).join('')+'</div></div></div>'+
+    '<div class="misrow"><div class="k">Climate-resilient WASH indicators</div><div class="v"><div class="minigrid">'+m.cr.map(x=>chip(x[0],x[1]===1)).join('')+'</div></div></div>';
+  const nr=document.getElementById('nr');nr.innerHTML='';
+  if(c.v4){nr.innerHTML='<div class="box signal"><div class="h">+ Key signal</div><div>'+c.v4.sig+'</div></div><div class="box gap"><div class="h">– Main gap</div><div>'+c.v4.gap+'</div></div>'}
+  else{nr.innerHTML='<div class="box draft" style="grid-column:1/3"><div class="h">Draft pending</div><div>v4 narrative entry not yet written for '+c.d+'. Auto-inferred placeholder pending Emeline review.</div></div>'}
+}
+SEL.addEventListener('change',e=>R(parseInt(e.target.value)));R(0);
+</script>
+</body></html>
