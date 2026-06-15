@@ -25,7 +25,15 @@ SECTIONS = {
 ALL_PAGES = {p["name"]: p for section in SECTIONS.values() for p in section}
 
 if "selected_page" not in st.session_state:
-    st.session_state.selected_page = SECTIONS["PoC"][0]["name"]
+    default_page = SECTIONS["PoC"][0]["name"]
+    requested = st.query_params.get("page", None)
+    if requested:
+        requested_lower = requested.lower()
+        for name in ALL_PAGES:
+            if requested_lower in name.lower():
+                default_page = name
+                break
+    st.session_state.selected_page = default_page
 
 st.markdown("""
 <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
