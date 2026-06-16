@@ -57,7 +57,8 @@ st.markdown("""
         padding-left: 0 !important;
         padding-right: 0 !important;
     }
-    /* Hide Streamlit's rainbow decoration bar */
+    /* Hide Streamlit's header bar and rainbow decoration */
+    [data-testid="stHeader"] { display: none !important; }
     [data-testid="stDecoration"] { display: none !important; }
     /* Remove gap above iframe */
     [data-testid="stVerticalBlockBorderWrapper"] { padding: 0 !important; }
