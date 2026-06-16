@@ -1,5 +1,9 @@
 import streamlit as st
 import os
+import requests
+import datetime
+
+FEEDBACK_URL = "https://script.google.com/macros/s/AKfycbyirsa7ztOBWtS6dxJNHnzmL0RMfLbqcFeciAd4AOGHYW5JOwH42puc0T3hhFrJLWtG4A/exec"
 
 st.set_page_config(
     page_title="Akvo · Water project PoC",
@@ -129,9 +133,58 @@ with st.sidebar:
                 st.session_state.selected_page = page["name"]
                 st.rerun()
 
+    # ── Feedback widget ───────────────────────────────────────────────────────
     st.markdown("""
-    <div style="padding: 24px 16px 16px 16px; margin-top: 8px;
-                border-top: 1px solid #e0ebe7;">
+    <div style="padding: 20px 14px 8px 14px; margin-top: 8px; border-top: 1px solid #e0ebe7;">
+        <div style="font-family:'Assistant',sans-serif; font-size:11px; font-weight:700;
+                    color:#6b7c76; margin-bottom:8px;">Was this page useful?</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    fb_key = f"fb_{st.session_state.selected_page}"
+    if fb_key not in st.session_state:
+        st.session_state[fb_key] = {"vote": None, "submitted": False}
+
+    fb = st.session_state[fb_key]
+
+    if fb["submitted"]:
+        st.markdown("""
+        <div style="padding: 0 14px 8px 14px; font-family:'Assistant',sans-serif;
+                    font-size:12px; color:#03AD8C; font-weight:600;">
+            ✓ Thanks for your feedback!
+        </div>""", unsafe_allow_html=True)
+    else:
+        col_up, col_down = st.columns(2)
+        with col_up:
+            up_type = "primary" if fb["vote"] == "👍" else "secondary"
+            if st.button("👍", key=f"up_{fb_key}", type=up_type, use_container_width=True):
+                st.session_state[fb_key]["vote"] = "👍"
+                st.rerun()
+        with col_down:
+            down_type = "primary" if fb["vote"] == "👎" else "secondary"
+            if st.button("👎", key=f"dn_{fb_key}", type=down_type, use_container_width=True):
+                st.session_state[fb_key]["vote"] = "👎"
+                st.rerun()
+
+        comment = st.text_area("Comment (optional)", key=f"cm_{fb_key}",
+                               placeholder="What worked, what's missing…",
+                               label_visibility="collapsed", height=68)
+
+        if fb["vote"] and st.button("Submit", key=f"sb_{fb_key}", type="primary", use_container_width=True):
+            try:
+                requests.post(FEEDBACK_URL, json={
+                    "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
+                    "page": st.session_state.selected_page,
+                    "vote": fb["vote"],
+                    "comment": comment or "",
+                }, timeout=5)
+            except Exception:
+                pass
+            st.session_state[fb_key]["submitted"] = True
+            st.rerun()
+
+    st.markdown("""
+    <div style="padding: 12px 14px 16px 14px;">
         <span style="font-family:'Assistant',sans-serif; font-size:11px; color:#9ab0aa;">
             akvo.org
         </span>
