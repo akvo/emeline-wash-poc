@@ -5,6 +5,7 @@ st.set_page_config(
     page_title="Akvo · Water project PoC",
     page_icon="💧",
     layout="wide",
+    initial_sidebar_state="expanded",
 )
 
 SECTIONS = {
@@ -45,21 +46,20 @@ st.markdown("""
     html, body, [class*="css"] {
         font-family: 'Assistant', system-ui, sans-serif;
     }
-    /* Remove all top padding from main content area */
+    /* Keep side padding zero; restore top padding to sit below the header */
     .block-container {
-        padding-top: 0 !important;
+        padding-top: 3.5rem !important;
         padding-bottom: 0 !important;
         padding-left: 0 !important;
         padding-right: 0 !important;
     }
     [data-testid="stMainBlockContainer"] {
-        padding-top: 0 !important;
+        padding-top: 3.5rem !important;
         padding-bottom: 0 !important;
         padding-left: 0 !important;
         padding-right: 0 !important;
     }
-    /* Hide Streamlit's header bar and rainbow decoration */
-    [data-testid="stHeader"] { display: none !important; }
+    /* Hide only the decoration bar; leave the header intact for sidebar toggle */
     [data-testid="stDecoration"] { display: none !important; }
     /* Remove gap above iframe */
     [data-testid="stVerticalBlockBorderWrapper"] { padding: 0 !important; }
