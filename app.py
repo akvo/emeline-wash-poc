@@ -10,6 +10,7 @@ st.set_page_config(
 SECTIONS = {
     "PoC": [
         {"name": "Unique WASH ID · PoC",        "file": "unique_wash_id.html"},
+        {"name": "Future explorer WASH",         "file": "country-page-poc6.html"},
         {"name": "WaterConnect · Demo",        "file": "WaterConnect_Demo_Mock.html"},
         {"name": "Contractor Assessment · PoC", "file": "contractor-assessment-poc.html"},
         {"name": "WASH · Maturity Framework",   "file": "wash_maturity_framework_fr.html"},
