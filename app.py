@@ -44,6 +44,24 @@ st.markdown("""
     html, body, [class*="css"] {
         font-family: 'Assistant', system-ui, sans-serif;
     }
+    /* Remove all top padding from main content area */
+    .block-container {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+    [data-testid="stMainBlockContainer"] {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+    /* Hide Streamlit's rainbow decoration bar */
+    [data-testid="stDecoration"] { display: none !important; }
+    /* Remove gap above iframe */
+    [data-testid="stVerticalBlockBorderWrapper"] { padding: 0 !important; }
+    iframe { display: block; }
     section[data-testid="stSidebar"] > div {
         padding-top: 0 !important;
     }
@@ -143,4 +161,18 @@ else:
     else:
         with open(html_file, "r", encoding="utf-8") as f:
             html_content = f.read()
-        st.components.v1.html(html_content, height=900, scrolling=True)
+        # Inject a script that resizes the Streamlit iframe to fit the viewport
+        resize_script = """
+<script>
+(function() {
+  function setHeight() {
+    var h = window.innerHeight || document.documentElement.clientHeight || 900;
+    // Tell the parent Streamlit frame to resize this iframe
+    window.parent.postMessage({isStreamlitMessage: true, type: 'streamlit:setFrameHeight', height: h}, '*');
+  }
+  setHeight();
+  window.addEventListener('resize', setHeight);
+})();
+</script>"""
+        html_with_resize = html_content.replace('</body>', resize_script + '\n</body>')
+        st.components.v1.html(html_with_resize, height=1100, scrolling=True)
