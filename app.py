@@ -167,7 +167,7 @@ with st.sidebar:
                 st.rerun()
 
         comment = st.text_area("Comment (optional)", key=f"cm_{fb_key}",
-                               placeholder="What worked, what's missing…",
+                               placeholder="What worked, what's missing… Give your name if you want a follow-up exchange on your ideas!",
                                label_visibility="collapsed", height=68)
 
         if fb["vote"] and st.button("Submit", key=f"sb_{fb_key}", type="primary", use_container_width=True):
