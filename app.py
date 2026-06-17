@@ -18,7 +18,6 @@ SECTIONS = {
         {"name": "Future explorer WASH",         "file": "country-page-poc6.html"},
         {"name": "WaterConnect · Demo",        "file": "WaterConnect_Demo_Mock.html"},
         {"name": "Contractor Assessment · PoC", "file": "contractor-assessment-poc.html"},
-        {"name": "WASH · Maturity Framework",   "file": "wash_maturity_framework_fr.html"},
         {"name": "Groundwater data",            "file": "groundwater_connector.html"},
     ],
     "Internal tools": [
@@ -28,6 +27,7 @@ SECTIONS = {
         {"name": "Akvo · Theory of Change",      "file": "akvo_toc_with_assumptions.html"},
         {"name": "Why Akvo's Work Matters in WASH Data", "file": "akvo_mindmap_v3_html.html"},
         {"name": "Investment in Data Infrastructure", "url": "https://claude.ai/public/artifacts/8af6253a-5894-4e26-85e5-45d361d1eea0"},
+        {"name": "WASH · Maturity Framework",   "file": "wash_maturity_framework_fr.html"},
     ],
 }
 
