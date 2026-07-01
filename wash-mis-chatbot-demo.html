@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Water Chat — WASH MIS Assistant · Akvo PoC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* ── Akvo core brand ── */
+    --akvo:        #4851A4;
+    --akvo-dark:   #3B4289;
+    --akvo-deep:   #2B2E6B;
+    /* ── Surfaces ── */
+    --bg:          #EBECEE;
+    --bg-tint:     #F2F2F4;
+    --card:        #FFFFFF;
+    /* ── Text ── */
+    --ink:         #1E1E28;
+    --ink-soft:    #4A4A57;
+    --ink-muted:   #8A8A96;
+    /* ── Borders ── */
+    --rule:        rgba(30,30,40,0.09);
+    --rule-mid:    rgba(30,30,40,0.18);
+    /* ── System-layer colours (status mapping) ── */
+    --water:       #1B6B3A;  --water-deep:  #104025;   /* functional */
+    --community:   #A0431E;  --comm-deep:   #6C2D10;   /* non-functional */
+    /* ── Assumption amber (partial / caveats) ── */
+    --assumption:  #B37516;
+    --assume-bg:   rgba(240,169,42,0.16);
+    --assume-line: #B37516;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:"Mulish",-apple-system,sans-serif;
+    background:var(--bg); color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    display:flex; flex-direction:column; overflow:hidden;
+    font-size:13px; line-height:1.6;
+  }
+  .mono{font-family:"IBM Plex Mono",monospace}
+
+  /* ===== Nav bar ===== */
+  nav{
+    height:52px; background:var(--akvo); flex-shrink:0;
+    display:flex; align-items:center; gap:16px; padding:0 32px;
+    border-bottom:1px solid rgba(255,255,255,0.15);
+  }
+  .akvo-logo{display:flex;align-items:center;padding-right:14px;border-right:1px solid rgba(255,255,255,.25)}
+  .akvo-logo svg{display:block}
+  .brand{color:#fff;font-weight:900;font-size:15px;letter-spacing:-.01em;display:flex;align-items:center;gap:10px}
+  .nav-sub{color:rgba(255,255,255,.72);font-size:11px;font-weight:500}
+  nav .spacer{flex:1}
+  .nav-meta{font-family:"IBM Plex Mono",monospace;font-size:9.5px;color:rgba(255,255,255,.72);letter-spacing:.14em;text-transform:uppercase}
+  .tag-poc{background:var(--akvo-deep);color:#fff;padding:3px 6px 2px;font-weight:800;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase}
+  .lang-toggle{display:flex;gap:0;border:1.5px solid rgba(255,255,255,.75);border-radius:3px;overflow:hidden}
+  .lang-toggle button{
+    background:transparent;color:#fff;border:none;padding:5px 14px;
+    font-family:"Mulish";font-weight:700;font-size:12px;cursor:pointer;transition:150ms;
+  }
+  .lang-toggle button.active{background:#fff;color:var(--akvo)}
+
+  /* ===== Mock-data notice ===== */
+  .notice{
+    margin:14px 28px 0; padding:10px 14px;
+    background:var(--assume-bg); border:0.9px solid var(--assume-line); border-radius:4px;
+    font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--assumption); line-height:1.55;
+    flex-shrink:0;
+  }
+  .notice b{font-weight:700;font-size:9px;letter-spacing:.14em;text-transform:uppercase;opacity:.75;margin-right:8px}
+
+  /* ===== Layout ===== */
+  main{flex:1;display:flex;gap:20px;padding:14px 28px 18px;overflow:hidden}
+  #dash{flex:0 0 44%;display:flex;flex-direction:column;gap:12px;overflow-y:auto;min-width:0;padding-right:2px}
+  #chatCol{flex:1 1 auto;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--rule);border-radius:2px;min-width:0;overflow:hidden}
+
+  /* ===== Panels with stamp headers ===== */
+  .panel{background:var(--card);border:1px solid var(--rule);border-radius:2px}
+  .stamp-row{display:flex;align-items:stretch;border-bottom:1px solid var(--rule)}
+  .stamp{background:var(--akvo);color:#fff;padding:8px 14px 7px;font-weight:900;font-size:12px;display:flex;flex-direction:column;justify-content:center}
+  .stamp .num{font-size:9px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;opacity:.82;font-family:"IBM Plex Mono",monospace}
+  .stamp-sub{font-style:italic;font-size:11.5px;color:var(--ink-soft);border-left:1px solid var(--rule);padding:8px 14px;display:flex;align-items:center}
+  .panel-body{padding:14px 16px}
+
+  /* KPIs */
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .kpi{background:var(--card);border:1px solid var(--rule);border-radius:2px;padding:12px 14px}
+  .kpi .v{font-size:24px;font-weight:800;letter-spacing:-.02em}
+  .kpi .l{font-family:"IBM Plex Mono",monospace;font-size:8.5px;color:var(--ink-muted);letter-spacing:.12em;text-transform:uppercase;margin-top:4px;line-height:1.5}
+  .kpi.good .v{color:var(--water)} .kpi.bad .v{color:var(--community)} .kpi.warn .v{color:var(--assumption)}
+
+  /* Bars */
+  .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:12px}
+  .bar-row .name{width:88px;flex-shrink:0;color:var(--ink-soft);font-weight:700;font-size:11.5px}
+  .bar-track{flex:1;background:var(--bg-tint);border:0.5px solid var(--rule);height:16px;overflow:hidden;display:flex;border-radius:2px}
+  .seg{height:100%}
+  .seg.f{background:var(--water)} .seg.p{background:var(--assumption)} .seg.n{background:var(--community)}
+  .bar-row .pct{width:42px;text-align:right;font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:11px}
+  .legend{display:flex;gap:16px;font-family:"IBM Plex Mono",monospace;font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-top:10px}
+  .dot{display:inline-block;width:9px;height:9px;margin-right:5px;border-radius:2px;vertical-align:-1px}
+
+  /* Tables */
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  th{text-align:left;font-family:"IBM Plex Mono",monospace;color:var(--ink-muted);font-weight:700;padding:5px 7px;border-bottom:1px solid var(--rule-mid);font-size:9px;letter-spacing:.12em;text-transform:uppercase}
+  td{padding:6px 7px;border-bottom:0.5px solid var(--rule);color:var(--ink-soft)}
+  td:first-child{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;color:var(--ink)}
+  tr:nth-child(even) td{background:var(--bg-tint)}
+  .tag{padding:2px 6px 1px;font-weight:800;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#fff;white-space:nowrap}
+  .tag-n{background:var(--community)} .tag-p{background:var(--assumption)} .tag-f{background:var(--water)}
+
+  /* ===== Chat ===== */
+  .chat-head{display:flex;align-items:stretch;border-bottom:1px solid var(--rule);flex-shrink:0}
+  .chat-head .stamp{font-size:13px}
+  .chat-status{margin-left:auto;display:flex;align-items:center;padding:0 14px;font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--water)}
+  #msgs{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px;background:var(--bg-tint)}
+  .msg{max-width:90%;padding:10px 14px;font-size:13px;line-height:1.55;border-radius:2px}
+  .msg.user{align-self:flex-end;background:var(--akvo);color:#fff;border:1px solid var(--akvo-deep)}
+  .msg.bot{align-self:flex-start;background:var(--card);border:1px solid var(--rule-mid);color:var(--ink-soft)}
+  .msg.bot b{color:var(--akvo-deep);font-weight:800}
+  .msg.sys{align-self:center;background:transparent;color:var(--ink-muted);font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;padding:2px}
+  .msg .mini-bars{margin-top:10px}
+  .msg .bar-row .name{width:78px}
+  .msg table{margin-top:10px;background:var(--card)}
+  .msg .src{display:block;margin-top:10px;font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.08em;color:var(--ink-muted);text-transform:uppercase;border-top:0.5px solid var(--rule);padding-top:7px}
+  .msg .hint{display:block;margin-top:8px;padding:8px 10px;background:var(--assume-bg);border:0.9px solid var(--assume-line);border-radius:4px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--assumption)}
+  #chips{padding:10px 16px;display:flex;flex-wrap:wrap;gap:6px;border-top:1px solid var(--rule);flex-shrink:0}
+  .chip{
+    background:transparent;color:var(--ink-soft);border:0.5px solid var(--rule-mid);border-radius:3px;
+    padding:5px 12px;font-family:"Mulish";font-weight:700;font-size:11.5px;cursor:pointer;transition:150ms;
+  }
+  .chip:hover{background:var(--akvo);color:#fff;border-color:var(--akvo)}
+  .input-row{display:flex;gap:8px;padding:12px 16px 14px;flex-shrink:0;border-top:1px solid var(--rule)}
+  #inp{
+    flex:1;border:1px solid var(--rule-mid);border-radius:3px;padding:10px 14px;
+    font-family:"Mulish";font-size:13px;outline:none;background:var(--card);color:var(--ink);
+  }
+  #inp:focus{border-color:var(--akvo)}
+  #send{
+    background:var(--akvo);color:#fff;border:none;border-radius:3px;padding:9px 18px;
+    font-family:"Mulish";font-weight:700;font-size:12px;cursor:pointer;transition:150ms;
+  }
+  #send:hover{background:var(--akvo-dark)}
+  .typing span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--ink-muted);margin:0 1.5px;animation:blink 1s infinite}
+  .typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
+  @keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+
+  /* ===== Footer ===== */
+  footer{
+    background:var(--akvo-deep);color:rgba(255,255,255,.65);flex-shrink:0;
+    font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.08em;
+    padding:12px 32px;display:flex;gap:8px;flex-wrap:wrap;
+  }
+  footer strong{color:rgba(255,255,255,.9);font-weight:600}
+
+  @media (max-width:900px){
+    body{overflow:auto}
+    main{flex-direction:column;overflow:visible}
+    #dash{flex:none}
+    #chatCol{min-height:500px}
+    .kpis{grid-template-columns:repeat(2,1fr)}
+    nav{padding:0 16px}.nav-sub{display:none}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="akvo-logo" title="Akvo" aria-label="Akvo">
+    <svg viewBox="0 0 96 32" height="30" xmlns="http://www.w3.org/2000/svg" role="img">
+      <rect x="0" y="0" width="96" height="32" rx="2" fill="#fff"/>
+      <text x="10" y="24" font-family="Mulish, sans-serif" font-size="21" font-weight="900" fill="#0C1013" letter-spacing="-0.5">Akvo</text>
+      <circle cx="82" cy="22" r="4.5" fill="#4155A5"/>
+    </svg>
+  </a>
+  <div class="brand"><span id="hTitle">Water Chat · WASH MIS Assistant</span></div>
+  <span class="nav-sub" id="hSub">Rural Water Point MIS · Tessala Region</span>
+  <div class="spacer"></div>
+  <span class="nav-meta" id="lastSync">Last sync · 06:12</span>
+  <span class="tag-poc">PoC</span>
+  <div class="lang-toggle">
+    <button id="btnEN" class="active" onclick="setLang('en')">EN</button>
+    <button id="btnFR" onclick="setLang('fr')">FR</button>
+  </div>
+</nav>
+
+<div class="notice" id="notice"></div>
+
+<main>
+  <!-- ============ DASHBOARD ============ -->
+  <section id="dash">
+    <div class="kpis" id="kpis"></div>
+
+    <div class="panel">
+      <div class="stamp-row">
+        <div class="stamp"><span class="num">01 · MIS</span><span id="chartTitle">Functionality by district</span></div>
+        <div class="stamp-sub" id="chartSub">status of rural water points</div>
+      </div>
+      <div class="panel-body">
+        <div id="districtBars"></div>
+        <div class="legend" id="legend"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="stamp-row">
+        <div class="stamp"><span class="num">02 · Alerts</span><span id="tblTitle">Priority alerts</span></div>
+        <div class="stamp-sub" id="tblSub">non-functional · longest down first</div>
+      </div>
+      <div class="panel-body">
+        <table>
+          <thead id="tblHead"></thead>
+          <tbody id="tblBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHAT ============ -->
+  <section id="chatCol">
+    <div class="chat-head">
+      <div class="stamp"><span class="num">03 · Assistant</span><span>Water Chat</span></div>
+      <div class="stamp-sub" id="chatSub">ask questions in plain language</div>
+      <div class="chat-status" id="botStatus">● online</div>
+    </div>
+    <div id="msgs"></div>
+    <div id="chips"></div>
+    <div class="input-row">
+      <input id="inp" type="text">
+      <button id="send" onclick="handleSend()">➤</button>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <strong>Akvo</strong> · Water Chat PoC · <span id="footNote">chat-with-your-MIS concept · all data synthetic</span> · v0.1 · 2026-07
+</footer>
+
+<script>
+/* ================= MOCK DATASET =================
+   Fictional rural water points, Tessala Region (4 districts).
+   status: F = functional, P = partially functional, N = non-functional */
+const WP = [
+ // id, district, type, status, popServed, installYear, daysSinceVisit, brokenDays, committee
+ ["WP-001","Kambara","handpump","F",420,2014,32,0,true],
+ ["WP-002","Kambara","handpump","N",380,2011,140,86,false],
+ ["WP-003","Kambara","borehole_solar","F",1150,2020,18,0,true],
+ ["WP-004","Kambara","handpump","P",510,2013,55,0,true],
+ ["WP-005","Kambara","protected_spring","F",260,2016,61,0,false],
+ ["WP-006","Kambara","handpump","F",340,2018,25,0,true],
+ ["WP-007","Kambara","standpipe","F",900,2019,25,0,true],
+ ["WP-008","Kambara","handpump","N",450,2009,190,112,false],
+ ["WP-009","Kambara","handpump","F",395,2017,40,0,true],
+ ["WP-010","Kambara","borehole_solar","F",1300,2021,12,0,true],
+ ["WP-011","Kambara","handpump","P",470,2012,88,0,false],
+ ["WP-012","Kambara","handpump","F",310,2015,47,0,true],
+
+ ["WP-013","Moribaya","handpump","N",520,2008,210,145,false],
+ ["WP-014","Moribaya","handpump","N",430,2010,175,98,true],
+ ["WP-015","Moribaya","handpump","P",480,2012,95,0,false],
+ ["WP-016","Moribaya","borehole_solar","F",1200,2019,22,0,true],
+ ["WP-017","Moribaya","handpump","N",390,2007,230,160,false],
+ ["WP-018","Moribaya","protected_spring","P",240,2013,120,0,false],
+ ["WP-019","Moribaya","handpump","F",410,2016,38,0,true],
+ ["WP-020","Moribaya","handpump","N",360,2009,200,60,false],
+ ["WP-021","Moribaya","standpipe","F",850,2020,20,0,true],
+ ["WP-022","Moribaya","handpump","P",440,2011,105,0,false],
+
+ ["WP-023","Zanfara","handpump","F",400,2015,30,0,true],
+ ["WP-024","Zanfara","handpump","F",370,2016,35,0,true],
+ ["WP-025","Zanfara","borehole_solar","F",1400,2022,10,0,true],
+ ["WP-026","Zanfara","handpump","P",490,2013,70,0,true],
+ ["WP-027","Zanfara","handpump","F",330,2017,28,0,true],
+ ["WP-028","Zanfara","protected_spring","F",280,2014,58,0,true],
+ ["WP-029","Zanfara","handpump","N",410,2010,160,42,true],
+ ["WP-030","Zanfara","standpipe","F",950,2021,15,0,true],
+ ["WP-031","Zanfara","handpump","F",360,2018,26,0,true],
+ ["WP-032","Zanfara","handpump","F",345,2019,24,0,true],
+ ["WP-033","Zanfara","borehole_solar","P",1100,2018,45,0,true],
+
+ ["WP-034","Souroumba","handpump","N",470,2006,240,130,false],
+ ["WP-035","Souroumba","handpump","P",430,2010,110,0,false],
+ ["WP-036","Souroumba","handpump","F",390,2015,42,0,true],
+ ["WP-037","Souroumba","handpump","N",350,2008,220,75,false],
+ ["WP-038","Souroumba","protected_spring","F",250,2012,65,0,false],
+ ["WP-039","Souroumba","handpump","P",460,2011,100,0,true],
+ ["WP-040","Souroumba","borehole_solar","F",1250,2020,19,0,true],
+ ["WP-041","Souroumba","handpump","N",420,2009,205,95,false],
+ ["WP-042","Souroumba","handpump","F",380,2014,44,0,true],
+ ["WP-043","Souroumba","standpipe","P",880,2017,90,0,false],
+ ["WP-044","Souroumba","handpump","F",340,2016,36,0,true],
+ ["WP-045","Souroumba","handpump","N",405,2007,215,58,false],
+].map(r=>({id:r[0],district:r[1],type:r[2],status:r[3],pop:r[4],year:r[5],visitDays:r[6],brokenDays:r[7],committee:r[8]}));
+
+const DISTRICTS=[...new Set(WP.map(w=>w.district))];
+
+/* ================= I18N ================= */
+const T={
+ en:{
+  hTitle:"Water Chat · WASH MIS Assistant",
+  hSub:"Rural Water Point MIS · Tessala Region",
+  lastSync:"Last sync · today 06:12",
+  notice:"<b>Template / Mock Data</b>All water points, districts and metrics on this page are synthetic — generated to demonstrate the chat-with-your-MIS concept. Replace with live MIS data via API.",
+  chartTitle:"Functionality by district",
+  chartSub:"status of rural water points",
+  tblTitle:"Priority alerts",
+  tblSub:"non-functional · longest down first",
+  chatSub:"ask questions in plain language",
+  footNote:"chat-with-your-MIS concept · all data synthetic",
+  botStatus:"● online",
+  inputPh:"Ask about your water points…",
+  kpi:{total:"water points",func:"functionality rate",pop:"people served · functional",down:"non-functional"},
+  legend:{f:"Functional",p:"Partial",n:"Non-functional"},
+  th:["ID","District","Type","Days down","Pop."],
+  types:{handpump:"Handpump",borehole_solar:"Solar borehole",protected_spring:"Protected spring",standpipe:"Standpipe"},
+  chips:["What's the functionality rate?","Which district is worst off?","List broken water points","How many people are affected?","What should we repair first?","Help"],
+  langSwitched:"— language switched to English —",
+  welcome:"Hello 👋 I'm <b>Water Chat</b>, your assistant for the Tessala Region water point MIS.<br>Ask me things like <i>“which district is worst off?”</i> or <i>“what should we repair first?”</i> — or tap a suggestion below.",
+  src:"Source: Water Point MIS · last sync today 06:12",
+  fallback:"I'm not sure I understood. In this PoC I can answer questions about: <b>functionality rates</b>, <b>district comparisons</b>, <b>broken water points</b>, <b>affected population</b>, <b>repair priorities</b>, <b>pump types</b>, <b>water committees</b> and <b>infrastructure age</b>. Try one of the suggestions below!",
+  help:"Here's what I can do in this demo 👇<br>• <b>Functionality</b> — “what's the functionality rate?”<br>• <b>Compare districts</b> — “which district is worst off?”<br>• <b>Breakdowns</b> — “broken points in Moribaya”<br>• <b>Population</b> — “how many people are affected?”<br>• <b>Priorities</b> — “what should we repair first?”<br>• <b>Assets</b> — “breakdown by pump type”, “oldest water points”<br>• <b>Governance</b> — “which points have no water committee?”<br>In a full version I'd query the live MIS and understand free-form questions.",
+ },
+ fr:{
+  hTitle:"Water Chat · Assistant SIG-EAH",
+  hSub:"SIG des points d'eau ruraux · Région de Tessala",
+  lastSync:"Dernière synchro · 06:12",
+  notice:"<b>Maquette / Données fictives</b>Tous les points d'eau, districts et indicateurs de cette page sont synthétiques — générés pour démontrer le concept « dialoguer avec son SIG ». À remplacer par les données réelles du SIG via API.",
+  chartTitle:"Fonctionnalité par district",
+  chartSub:"état des points d'eau ruraux",
+  tblTitle:"Alertes prioritaires",
+  tblSub:"non fonctionnels · plus longue panne d'abord",
+  chatSub:"posez vos questions en langage courant",
+  footNote:"concept « dialoguer avec son SIG » · données synthétiques",
+  botStatus:"● en ligne",
+  inputPh:"Posez une question sur vos points d'eau…",
+  kpi:{total:"points d'eau",func:"taux de fonctionnalité",pop:"personnes desservies · fonctionnels",down:"non fonctionnels"},
+  legend:{f:"Fonctionnel",p:"Partiel",n:"Non fonctionnel"},
+  th:["ID","District","Type","Jours en panne","Pop."],
+  types:{handpump:"Pompe manuelle",borehole_solar:"Forage solaire",protected_spring:"Source aménagée",standpipe:"Borne-fontaine"},
+  chips:["Quel est le taux de fonctionnalité ?","Quel district est le plus touché ?","Liste des points en panne","Combien de personnes sont affectées ?","Que réparer en priorité ?","Aide"],
+  langSwitched:"— langue changée en français —",
+  welcome:"Bonjour 👋 Je suis <b>Water Chat</b>, votre assistant pour le SIG des points d'eau de la région de Tessala.<br>Demandez-moi par exemple <i>« quel district est le plus touché ? »</i> ou <i>« que réparer en priorité ? »</i> — ou touchez une suggestion ci-dessous.",
+  src:"Source : SIG des points d'eau · dernière synchro aujourd'hui 06:12",
+  fallback:"Je ne suis pas sûr d'avoir compris. Dans cette maquette, je peux répondre sur : le <b>taux de fonctionnalité</b>, la <b>comparaison des districts</b>, les <b>points en panne</b>, la <b>population affectée</b>, les <b>priorités de réparation</b>, les <b>types de pompes</b>, les <b>comités de gestion</b> et l'<b>âge des ouvrages</b>. Essayez une suggestion ci-dessous !",
+  help:"Voici ce que je sais faire dans cette démo 👇<br>• <b>Fonctionnalité</b> — « quel est le taux de fonctionnalité ? »<br>• <b>Comparer les districts</b> — « quel district est le plus touché ? »<br>• <b>Détails</b> — « points en panne à Moribaya »<br>• <b>Population</b> — « combien de personnes sont affectées ? »<br>• <b>Priorités</b> — « que réparer en priorité ? »<br>• <b>Ouvrages</b> — « répartition par type de pompe », « points d'eau les plus anciens »<br>• <b>Gouvernance</b> — « quels points n'ont pas de comité de gestion ? »<br>Dans une version complète, j'interrogerais le SIG en direct et comprendrais des questions libres.",
+ }
+};
+let lang='en';
+
+/* ================= STATS HELPERS ================= */
+const inD=(d)=>WP.filter(w=>w.district===d);
+const count=(arr,s)=>arr.filter(w=>w.status===s).length;
+const pct=(n,d)=>d?Math.round(n/d*100):0;
+function districtStats(d){
+  const a=inD(d);
+  return {d,total:a.length,f:count(a,"F"),p:count(a,"P"),n:count(a,"N"),
+    rate:pct(count(a,"F"),a.length),
+    popDown:a.filter(w=>w.status==="N").reduce((s,w)=>s+w.pop,0)};
+}
+const ALL={total:WP.length,f:count(WP,"F"),p:count(WP,"P"),n:count(WP,"N")};
+ALL.rate=pct(ALL.f,ALL.total);
+ALL.popF=WP.filter(w=>w.status==="F").reduce((s,w)=>s+w.pop,0);
+ALL.popN=WP.filter(w=>w.status==="N").reduce((s,w)=>s+w.pop,0);
+ALL.popP=WP.filter(w=>w.status==="P").reduce((s,w)=>s+w.pop,0);
+const fmt=(n)=>n.toLocaleString(lang==='fr'?'fr-FR':'en-US');
+
+/* ================= DASHBOARD RENDER ================= */
+function renderDash(){
+  const t=T[lang];
+  const setTxt=(id,v)=>document.getElementById(id).textContent=v;
+  setTxt('hTitle',t.hTitle); setTxt('hSub',t.hSub); setTxt('lastSync',t.lastSync);
+  setTxt('chartTitle',t.chartTitle); setTxt('chartSub',t.chartSub);
+  setTxt('tblTitle',t.tblTitle); setTxt('tblSub',t.tblSub);
+  setTxt('chatSub',t.chatSub); setTxt('footNote',t.footNote); setTxt('botStatus',t.botStatus);
+  document.getElementById('notice').innerHTML=t.notice;
+  document.getElementById('inp').placeholder=t.inputPh;
+
+  document.getElementById('kpis').innerHTML=`
+    <div class="kpi"><div class="v">${ALL.total}</div><div class="l">${t.kpi.total}</div></div>
+    <div class="kpi ${ALL.rate>=80?'good':ALL.rate>=60?'warn':'bad'}"><div class="v">${ALL.rate}%</div><div class="l">${t.kpi.func}</div></div>
+    <div class="kpi good"><div class="v">${fmt(ALL.popF)}</div><div class="l">${t.kpi.pop}</div></div>
+    <div class="kpi bad"><div class="v">${ALL.n}</div><div class="l">${t.kpi.down}</div></div>`;
+
+  document.getElementById('districtBars').innerHTML=DISTRICTS.map(d=>{
+    const s=districtStats(d);
+    return `<div class="bar-row"><span class="name">${d}</span>
+      <div class="bar-track">
+        <div class="seg f" style="width:${pct(s.f,s.total)}%"></div>
+        <div class="seg p" style="width:${pct(s.p,s.total)}%"></div>
+        <div class="seg n" style="width:${pct(s.n,s.total)}%"></div>
+      </div><span class="pct">${s.rate}%</span></div>`;
+  }).join('');
+
+  document.getElementById('legend').innerHTML=
+    `<span><span class="dot" style="background:var(--water)"></span>${t.legend.f}</span>
+     <span><span class="dot" style="background:var(--assumption)"></span>${t.legend.p}</span>
+     <span><span class="dot" style="background:var(--community)"></span>${t.legend.n}</span>`;
+
+  document.getElementById('tblHead').innerHTML='<tr>'+t.th.map(h=>`<th>${h}</th>`).join('')+'</tr>';
+  const down=WP.filter(w=>w.status==="N").sort((a,b)=>b.brokenDays-a.brokenDays).slice(0,6);
+  document.getElementById('tblBody').innerHTML=down.map(w=>
+    `<tr><td>${w.id}</td><td>${w.district}</td><td>${t.types[w.type]}</td>
+     <td><span class="tag tag-n">${w.brokenDays} ${lang==='en'?'d':'j'}</span></td><td>${fmt(w.pop)}</td></tr>`).join('');
+
+  document.getElementById('chips').innerHTML=t.chips.map(c=>
+    `<button class="chip" onclick="askChip(this.textContent)">${c}</button>`).join('');
+}
+
+/* ================= CHAT ================= */
+const msgs=document.getElementById('msgs');
+function addMsg(html,who){
+  const d=document.createElement('div');
+  d.className='msg '+who; d.innerHTML=html;
+  msgs.appendChild(d); msgs.scrollTop=msgs.scrollHeight;
+  return d;
+}
+function botReply(html,withSrc=true){
+  const typing=addMsg('<span class="typing"><span></span><span></span><span></span></span>','bot');
+  setTimeout(()=>{
+    typing.innerHTML=html+(withSrc?`<span class="src">${T[lang].src}</span>`:'');
+    msgs.scrollTop=msgs.scrollHeight;
+  },600+Math.random()*500);
+}
+function askChip(q){ document.getElementById('inp').value=q; handleSend(); }
+function handleSend(){
+  const inp=document.getElementById('inp');
+  const q=inp.value.trim(); if(!q)return;
+  addMsg(escapeHtml(q),'user'); inp.value='';
+  setTimeout(()=>botReply(...answer(q)),200);
+}
+document.getElementById('inp').addEventListener('keydown',e=>{if(e.key==='Enter')handleSend();});
+const escapeHtml=s=>s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* chart + table builders for chat bubbles */
+function miniDistrictBars(){
+  return `<div class="mini-bars">`+DISTRICTS.map(d=>{
+    const s=districtStats(d);
+    return `<div class="bar-row"><span class="name">${d}</span>
+      <div class="bar-track">
+        <div class="seg f" style="width:${pct(s.f,s.total)}%"></div>
+        <div class="seg p" style="width:${pct(s.p,s.total)}%"></div>
+        <div class="seg n" style="width:${pct(s.n,s.total)}%"></div>
+      </div><span class="pct">${s.rate}%</span></div>`;}).join('')+`</div>`;
+}
+function wpTable(list,cols){
+  const t=T[lang];
+  const head={id:"ID",district:"District",type:"Type",days:lang==='en'?"Days down":"Jours en panne",pop:"Pop.",year:lang==='en'?"Installed":"Installé"};
+  return `<table><tr>${cols.map(c=>`<th>${head[c]}</th>`).join('')}</tr>`+
+    list.map(w=>`<tr>${cols.map(c=>{
+      if(c==='id')return `<td>${w.id}</td>`;
+      if(c==='district')return `<td>${w.district}</td>`;
+      if(c==='type')return `<td>${t.types[w.type]}</td>`;
+      if(c==='days')return `<td>${w.brokenDays}</td>`;
+      if(c==='pop')return `<td>${fmt(w.pop)}</td>`;
+      if(c==='year')return `<td>${w.year}</td>`;
+    }).join('')}</tr>`).join('')+`</table>`;
+}
+const hint=(txt)=>`<span class="hint">💡 ${txt}</span>`;
+
+/* ================= INTENT ENGINE ================= */
+function detectDistrict(q){
+  return DISTRICTS.find(d=>q.includes(d.toLowerCase()))||null;
+}
+function answer(raw){
+  const q=raw.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,""); // strip accents
+  const en=lang==='en';
+  const dist=detectDistrict(q);
+  const has=(...words)=>words.some(w=>q.includes(w));
+
+  // HELP
+  if(has("help","aide","what can","que peux","que sais"))
+    return [T[lang].help,false];
+
+  // WORST DISTRICT / COMPARISON
+  if(has("worst","pire","plus touche","compare","comparer","which district","quel district","par district","by district")){
+    const stats=DISTRICTS.map(districtStats).sort((a,b)=>a.rate-b.rate);
+    const w=stats[0];
+    const txt=en
+      ?`<b>${w.d}</b> is the worst-off district: only <b>${w.rate}%</b> of its ${w.total} water points are functional (${w.n} down, affecting ~<b>${fmt(w.popDown)} people</b>). Here's the full comparison:`
+      :`<b>${w.d}</b> est le district le plus touché : seulement <b>${w.rate}%</b> de ses ${w.total} points d'eau sont fonctionnels (${w.n} en panne, ~<b>${fmt(w.popDown)} personnes</b> affectées). Voici la comparaison complète :`;
+    return [txt+miniDistrictBars()];
+  }
+
+  // FUNCTIONALITY RATE
+  if(has("functionality","functional rate","taux","fonctionnalite","fonctionnel")){
+    if(dist){
+      const s=districtStats(dist);
+      const txt=en
+        ?`In <b>${dist}</b>, the functionality rate is <b>${s.rate}%</b> — ${s.f} functional, ${s.p} partial and ${s.n} non-functional out of ${s.total} water points.`
+        :`À <b>${dist}</b>, le taux de fonctionnalité est de <b>${s.rate}%</b> — ${s.f} fonctionnels, ${s.p} partiels et ${s.n} non fonctionnels sur ${s.total} points d'eau.`;
+      return [txt];
+    }
+    const txt=en
+      ?`The region-wide functionality rate is <b>${ALL.rate}%</b>: ${ALL.f} functional, ${ALL.p} partially functional and ${ALL.n} non-functional out of ${ALL.total} water points. Breakdown by district:`
+      :`Le taux de fonctionnalité régional est de <b>${ALL.rate}%</b> : ${ALL.f} fonctionnels, ${ALL.p} partiellement fonctionnels et ${ALL.n} non fonctionnels sur ${ALL.total} points d'eau. Détail par district :`;
+    return [txt+miniDistrictBars()];
+  }
+
+  // BROKEN / NON-FUNCTIONAL LIST
+  if(has("broken","non-functional","not working","panne","hors service","ne fonctionne","casse","list","liste")||/\bdown\b/.test(q)){
+    let list=WP.filter(w=>w.status==="N");
+    let where=en?"across the region":"dans la région";
+    if(dist){list=list.filter(w=>w.district===dist);where=en?`in ${dist}`:`à ${dist}`;}
+    list.sort((a,b)=>b.brokenDays-a.brokenDays);
+    const pop=list.reduce((s,w)=>s+w.pop,0);
+    const txt=en
+      ?`There are <b>${list.length} non-functional water points</b> ${where}, together affecting ~<b>${fmt(pop)} people</b>:`
+      :`Il y a <b>${list.length} points d'eau non fonctionnels</b> ${where}, affectant ensemble ~<b>${fmt(pop)} personnes</b> :`;
+    return [txt+wpTable(list,["id","district","type","days","pop"])];
+  }
+
+  // POPULATION AFFECTED
+  if(has("people","population","personnes","affected","affecte","desservi","served","combien de gens")){
+    const top5=fmt(WP.filter(w=>w.status==="N").sort((a,b)=>b.pop-a.pop).slice(0,5).reduce((s,w)=>s+w.pop,0));
+    const txt=en
+      ?`Currently <b>${fmt(ALL.popN)} people</b> depend on the ${ALL.n} non-functional water points, and another <b>${fmt(ALL.popP)}</b> rely on partially functional ones. <b>${fmt(ALL.popF)} people</b> are served by fully functional points.`
+       +hint(`Restoring just the 5 largest broken points would restore access for ${top5} people.`)
+      :`Actuellement, <b>${fmt(ALL.popN)} personnes</b> dépendent des ${ALL.n} points d'eau non fonctionnels, et <b>${fmt(ALL.popP)}</b> autres de points partiellement fonctionnels. <b>${fmt(ALL.popF)} personnes</b> sont desservies par des points pleinement fonctionnels.`
+       +hint(`Réparer seulement les 5 plus gros points en panne rétablirait l'accès pour ${top5} personnes.`);
+    return [txt];
+  }
+
+  // REPAIR PRIORITY
+  if(has("repair","fix","priorit","reparer","reparation","first","d'abord")){
+    const ranked=WP.filter(w=>w.status==="N")
+      .map(w=>({...w,score:w.pop*0.6+w.brokenDays*2}))
+      .sort((a,b)=>b.score-a.score).slice(0,5);
+    const txt=en
+      ?`Based on <b>population served</b> and <b>days out of service</b>, here are the top 5 repair priorities:`
+      :`Selon la <b>population desservie</b> et le <b>nombre de jours en panne</b>, voici les 5 priorités de réparation :`;
+    const note=en
+      ?hint(`In a full version, this ranking could also weigh spare-part availability, distance to alternative sources, and mechanic schedules.`)
+      :hint(`Dans une version complète, ce classement pourrait aussi intégrer la disponibilité des pièces, la distance aux sources alternatives et le planning des artisans réparateurs.`);
+    return [txt+wpTable(ranked,["id","district","type","days","pop"])+note];
+  }
+
+  // TYPE BREAKDOWN
+  if(has("type","pump","pompe","forage","borehole","spring","source","kiosk","standpipe","borne")){
+    const t=T[lang];
+    const types=[...new Set(WP.map(w=>w.type))];
+    const rows=types.map(ty=>{
+      const a=WP.filter(w=>w.type===ty);
+      const r=pct(a.filter(w=>w.status==="F").length,a.length);
+      return {ty,n:a.length,r};
+    }).sort((a,b)=>a.r-b.r);
+    const worst=rows[0];
+    const txt=en
+      ?`Asset breakdown: ${rows.map(r=>`<b>${t.types[r.ty]}</b> ×${r.n} (${r.r}% functional)`).join(' · ')}.`
+       +hint(`${t.types[worst.ty]}s have the lowest functionality (${worst.r}%) — mostly older installations.`)
+      :`Répartition des ouvrages : ${rows.map(r=>`<b>${t.types[r.ty]}</b> ×${r.n} (${r.r}% fonctionnels)`).join(' · ')}.`
+       +hint(`Les ${t.types[worst.ty].toLowerCase()}s ont la fonctionnalité la plus faible (${worst.r}%) — surtout des installations anciennes.`);
+    return [txt];
+  }
+
+  // COMMITTEE
+  if(has("committee","comite","gestion","governance","gouvernance")){
+    const no=WP.filter(w=>!w.committee);
+    const noDown=no.filter(w=>w.status==="N").length;
+    const withC=WP.filter(w=>w.committee);
+    const rateWith=pct(withC.filter(w=>w.status==="F").length,withC.length);
+    const rateNo=pct(no.filter(w=>w.status==="F").length,no.length);
+    const txt=en
+      ?`<b>${no.length} of ${ALL.total}</b> water points have no active water committee. Functionality is <b>${rateWith}%</b> where a committee exists vs <b>${rateNo}%</b> where none does — ${noDown} of the broken points have no committee.`
+       +hint(`A strong argument for pairing repairs with committee (re)activation.`)
+      :`<b>${no.length} des ${ALL.total}</b> points d'eau n'ont pas de comité de gestion actif. La fonctionnalité est de <b>${rateWith}%</b> avec comité contre <b>${rateNo}%</b> sans — ${noDown} des points en panne n'ont pas de comité.`
+       +hint(`Un bon argument pour coupler les réparations avec la (ré)activation des comités.`);
+    return [txt];
+  }
+
+  // AGE
+  if(has("old","age","anciens","annee","install","year","vieux")){
+    const oldest=[...WP].sort((a,b)=>a.year-b.year).slice(0,5);
+    const pre2012=WP.filter(w=>w.year<2012);
+    const rOld=pct(pre2012.filter(w=>w.status==="F").length,pre2012.length);
+    const txt=en
+      ?`<b>${pre2012.length}</b> water points were installed before 2012, with only <b>${rOld}%</b> functionality. The 5 oldest:`
+      :`<b>${pre2012.length}</b> points d'eau ont été installés avant 2012, avec seulement <b>${rOld}%</b> de fonctionnalité. Les 5 plus anciens :`;
+    return [txt+wpTable(oldest,["id","district","type","year","pop"])];
+  }
+
+  // GREETING
+  if(has("hello","hi ","bonjour","salut")&&q.length<25)
+    return [T[lang].welcome,false];
+
+  return [T[lang].fallback,false];
+}
+
+/* ================= LANGUAGE ================= */
+function setLang(l){
+  if(l===lang)return;
+  lang=l;
+  document.getElementById('btnEN').classList.toggle('active',l==='en');
+  document.getElementById('btnFR').classList.toggle('active',l==='fr');
+  renderDash();
+  addMsg(T[lang].langSwitched,'sys');
+}
+
+/* ================= INIT ================= */
+renderDash();
+addMsg(T[lang].welcome,'bot');
+</script>
+</body>
+</html>

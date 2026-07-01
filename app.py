@@ -19,6 +19,7 @@ SECTIONS = {
         {"name": "WaterConnect · Demo",        "file": "WaterConnect_Demo_Mock.html"},
         {"name": "Contractor Assessment · PoC", "file": "contractor-assessment-poc.html"},
         {"name": "Groundwater data",            "file": "groundwater_connector.html"},
+        {"name": "Water Chat · MIS assistant",  "file": "wash-mis-chatbot-demo.html"},
     ],
     "Internal tools": [
         {"name": "ASWA3 baseline dashboard",     "file": "PoC3-ASWA3baseline.html"},
