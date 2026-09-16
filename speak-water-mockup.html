@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPEAK-Water · Interactive Concept Mockup · Akvo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --akvo:#4851A4; --akvo-dark:#3B4289; --akvo-deep:#2B2E6B;
+  --bg:#EBECEE; --bg-tint:#F2F2F4; --card:#FFFFFF;
+  --ink:#1E1E28; --ink-soft:#4A4A57; --ink-muted:#8A8A96;
+  --rule:rgba(30,30,40,0.09); --rule-mid:rgba(30,30,40,0.18);
+  --policy:#3D5A80; --policy-deep:#253A5A;
+  --system:#3A3580; --system-deep:#23205A;
+  --service:#3D7F84; --service-deep:#1E5055;
+  --community:#A0431E; --comm-deep:#6C2D10;
+  --water:#1B6B3A; --water-deep:#104025;
+  --compile:#5C3D6B; --compile-deep:#3A2244;
+  --assumption:#B37516; --assume-bg:rgba(240,169,42,0.16); --assume-line:#B37516;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Mulish",-apple-system,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;font-size:13px;line-height:1.6}
+.mono{font-family:"IBM Plex Mono",monospace}
+
+/* ── Nav ── */
+nav{height:52px;background:var(--akvo);padding:0 32px;border-bottom:1px solid rgba(255,255,255,.15);display:flex;align-items:stretch;gap:4px;position:sticky;top:0;z-index:100}
+.nav-brand{display:flex;align-items:center;color:#fff;font-weight:900;font-size:15px;letter-spacing:-.01em;margin-right:28px}
+.nav-brand span{opacity:.65;font-weight:600;margin-left:8px;font-size:12px}
+.nav-tab{background:none;border:none;cursor:pointer;color:rgba(255,255,255,.72);border-bottom:2px solid transparent;font-family:"Mulish";font-weight:700;font-size:12px;letter-spacing:.02em;padding:0 14px}
+.nav-tab.active{color:#fff;border-bottom-color:#fff}
+.nav-tab:hover{color:#fff}
+.nav-note{margin-left:auto;display:flex;align-items:center;color:rgba(255,255,255,.6);font-family:"IBM Plex Mono";font-size:9.5px;letter-spacing:.14em;text-transform:uppercase}
+
+.wrap{max-width:1160px;margin:0 auto;padding:28px 28px 56px}
+section{display:none}
+section.visible{display:block}
+
+/* ── Section headers ── */
+.sec-head{display:flex;align-items:baseline;gap:14px;margin:18px 0 6px}
+.sec-num{font-family:"IBM Plex Mono";font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-muted)}
+.sec-title{font-size:20px;font-weight:800;letter-spacing:-.01em}
+.sec-sub{font-size:13px;font-style:italic;color:var(--ink-soft);margin-left:auto}
+.sec-intro{color:var(--ink-soft);max-width:820px;margin-bottom:20px}
+
+/* ── Panels ── */
+.panel{background:var(--card);border:1px solid var(--rule);border-radius:2px;margin-bottom:22px;overflow:hidden}
+.panel-head{display:flex;align-items:stretch;border-bottom:1px solid var(--rule)}
+.stamp{background:var(--akvo);color:#fff;padding:10px 14px 9px;font-weight:900;font-size:13px;white-space:nowrap}
+.stamp small{display:block;font-size:9px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;opacity:.82}
+.panel-sub{font-style:italic;font-size:12px;color:var(--ink-soft);border-left:1px solid var(--rule);padding:10px 14px;display:flex;align-items:center}
+.panel-meta{font-family:"IBM Plex Mono";font-size:9.5px;color:var(--ink-muted);letter-spacing:.14em;text-transform:uppercase;margin-left:auto;display:flex;align-items:center;padding:0 14px}
+.panel-body{padding:20px}
+
+/* ── Tags & pills ── */
+.tag{display:inline-block;background:var(--akvo);color:#fff;padding:3px 6px 2px;font-weight:800;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase}
+.tag-service{background:var(--service-deep)}.tag-comm{background:var(--comm-deep)}.tag-water{background:var(--water-deep)}.tag-policy{background:var(--policy-deep)}.tag-compile{background:var(--compile-deep)}
+.pill{display:inline-block;border-radius:3px;padding:3px 8px;font-size:10.5px;font-weight:700}
+.pill-akvo{background:rgba(72,81,164,.10);color:var(--akvo-deep);border:.5px solid rgba(72,81,164,.28)}
+.pill-amber{background:var(--assume-bg);color:var(--assumption);border:.5px solid var(--assume-line)}
+.pill-water{background:rgba(27,107,58,.10);color:var(--water-deep);border:.5px solid rgba(27,107,58,.28)}
+.pill-red{background:rgba(160,67,30,.10);color:var(--comm-deep);border:.5px solid rgba(160,67,30,.3)}
+
+.assume{background:var(--assume-bg);border:.9px solid var(--assume-line);border-radius:4px;padding:12px 14px;font-family:"IBM Plex Mono";font-size:11px;color:var(--assumption);line-height:1.55;margin-bottom:22px}
+.assume b{font-weight:700;font-size:9px;letter-spacing:.14em;text-transform:uppercase;opacity:.75;display:block;margin-bottom:3px}
+
+/* ── Concept: stack cards ── */
+.stack-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px}
+.stack-card{border-radius:6px;padding:22px 18px 18px;color:#fff;min-height:150px;display:flex;flex-direction:column;justify-content:flex-end}
+.stack-card .ic{font-size:26px;margin-bottom:auto}
+.stack-card h3{font-size:15px;font-weight:800;line-height:1.3}
+.stack-card p{font-size:11px;opacity:.85;line-height:1.45;margin-top:4px}
+.stack-card small{font-family:"IBM Plex Mono";font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;opacity:.7;margin-top:8px;display:block}
+.stack-base{border-radius:6px;padding:16px 18px;color:#fff;background:var(--akvo-deep);display:flex;align-items:center;gap:14px;margin-bottom:6px}
+.stack-base h3{font-size:15px;font-weight:800}
+.stack-base p{font-size:11px;opacity:.85;flex:1}
+.stack-base .hl{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);border-radius:4px;padding:3px 10px;font-family:"IBM Plex Mono";font-size:9px;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}
+
+/* how it works */
+.steps{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.step{background:var(--bg-tint);border:.5px solid var(--rule-mid);border-radius:4px;padding:16px}
+.step .n{font-family:"IBM Plex Mono";font-weight:700;font-size:10px;color:var(--akvo);letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px}
+.step h4{font-size:13px;font-weight:800;margin-bottom:4px}
+.step p{font-size:11.5px;color:var(--ink-soft);line-height:1.55}
+
+/* ── Phone mockup ── */
+.phone-wrap{display:flex;gap:28px;align-items:flex-start;flex-wrap:wrap}
+.phone{width:320px;flex:0 0 320px;background:#0B141A;border-radius:22px;padding:10px;box-shadow:0 8px 28px rgba(30,30,40,.25)}
+.phone-screen{background:#E5DDD5;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;height:560px}
+.wa-head{background:var(--akvo);color:#fff;padding:11px 14px;display:flex;align-items:center;gap:10px}
+.wa-avatar{width:32px;height:32px;border-radius:50%;background:#fff;color:var(--akvo);font-weight:900;display:flex;align-items:center;justify-content:center;font-size:13px}
+.wa-head .t{font-weight:800;font-size:13px;line-height:1.2}
+.wa-head .s{font-size:9.5px;opacity:.8}
+.wa-body{flex:1;overflow-y:auto;padding:12px 10px;display:flex;flex-direction:column;gap:8px}
+.msg{max-width:82%;border-radius:8px;padding:8px 10px;font-size:11.5px;line-height:1.45;position:relative}
+.msg .time{display:block;font-size:8.5px;color:rgba(0,0,0,.4);text-align:right;margin-top:3px;font-family:"IBM Plex Mono"}
+.msg-in{background:#fff;align-self:flex-start;border-top-left-radius:2px}
+.msg-out{background:#D7F0C8;align-self:flex-end;border-top-right-radius:2px}
+.voice{display:flex;align-items:center;gap:8px;min-width:180px}
+.voice .play{width:26px;height:26px;border-radius:50%;background:var(--akvo);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;flex:0 0 26px}
+.voice .bars{display:flex;align-items:center;gap:2px;flex:1;height:22px}
+.voice .bars i{display:block;width:2.5px;background:#9AA0A6;border-radius:2px}
+.voice .dur{font-family:"IBM Plex Mono";font-size:9px;color:var(--ink-muted)}
+.rec-card{border-left:3px solid var(--akvo);background:var(--bg-tint);border-radius:4px;padding:8px 10px;margin-top:6px}
+.rec-card .rc-t{font-family:"IBM Plex Mono";font-size:8.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--akvo);margin-bottom:4px}
+.rec-row{display:flex;justify-content:space-between;font-size:11px;padding:1.5px 0}
+.rec-row b{font-weight:700}
+.phone-cap{font-family:"IBM Plex Mono";font-size:9.5px;color:var(--ink-muted);letter-spacing:.1em;text-transform:uppercase;text-align:center;margin-top:10px}
+.flow-notes{flex:1;min-width:280px}
+.flow-note{background:var(--card);border:1px solid var(--rule);border-left:3px solid var(--akvo);border-radius:2px;padding:14px 16px;margin-bottom:12px}
+.flow-note h4{font-size:12.5px;font-weight:800;margin-bottom:3px}
+.flow-note p{font-size:11.5px;color:var(--ink-soft)}
+.flow-note .mono-l{font-family:"IBM Plex Mono";font-size:8.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-muted)}
+
+/* ── Tables ── */
+table{width:100%;border-collapse:collapse;font-size:11.5px}
+th{font-family:"IBM Plex Mono";font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-muted);text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule-mid);background:var(--bg-tint)}
+td{padding:8px 10px;border-bottom:.5px solid var(--rule);vertical-align:middle}
+tr:hover td{background:var(--bg-tint)}
+td.num,th.num{text-align:right;font-family:"IBM Plex Mono";font-size:11px}
+.pos{color:var(--water-deep);font-weight:700}
+.neg{color:var(--comm-deep);font-weight:700}
+
+/* ── Ledger summary strip ── */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.kpi{background:var(--card);border:1px solid var(--rule);border-radius:2px;padding:14px 16px}
+.kpi .l{font-family:"IBM Plex Mono";font-size:8.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-muted)}
+.kpi .v{font-size:24px;font-weight:800;letter-spacing:-.02em;margin:2px 0}
+.kpi .d{font-size:10.5px;color:var(--ink-soft)}
+.kpi.accent{border-top:3px solid var(--akvo)}
+.kpi.good{border-top:3px solid var(--water)}
+.kpi.warn{border-top:3px solid var(--assumption)}
+.kpi.bad{border-top:3px solid var(--community)}
+
+/* score */
+.score-wrap{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.score-ring{width:120px;height:120px;flex:0 0 120px}
+.score-detail{flex:1;min-width:240px}
+.score-bar{display:flex;align-items:center;gap:10px;margin:7px 0}
+.score-bar .sl{width:170px;font-size:11px;font-weight:700}
+.score-bar .track{flex:1;height:7px;background:var(--bg-tint);border-radius:4px;overflow:hidden}
+.score-bar .fill{height:100%;background:var(--akvo);border-radius:4px}
+.score-bar .sv{font-family:"IBM Plex Mono";font-size:10px;width:34px;text-align:right}
+
+/* ── Dashboard ── */
+.dash-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:22px}
+.bar-chart{display:flex;align-items:flex-end;gap:10px;height:150px;padding:6px 4px 0}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%;justify-content:flex-end}
+.bar-col .bar{width:100%;max-width:44px;background:var(--akvo);border-radius:2px 2px 0 0}
+.bar-col .bar.low{background:var(--community)}
+.bar-col .bl{font-family:"IBM Plex Mono";font-size:8.5px;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.06em}
+.bar-col .bv{font-family:"IBM Plex Mono";font-size:9.5px;font-weight:700;color:var(--ink-soft)}
+.alert{display:flex;gap:10px;padding:10px 12px;border-bottom:.5px solid var(--rule);align-items:flex-start}
+.alert:last-child{border-bottom:none}
+.alert .dot{width:9px;height:9px;border-radius:50%;margin-top:4px;flex:0 0 9px}
+.dot-red{background:var(--community)}.dot-amber{background:var(--assumption)}.dot-green{background:var(--water)}
+.alert .at{font-weight:800;font-size:11.5px}
+.alert .ad{font-size:10.5px;color:var(--ink-soft)}
+.alert .am{font-family:"IBM Plex Mono";font-size:8.5px;color:var(--ink-muted);margin-left:auto;white-space:nowrap}
+
+/* ── Finance ── */
+.grade{display:inline-flex;align-items:center;justify-content:center;width:30px;height:22px;border-radius:3px;font-family:"IBM Plex Mono";font-weight:700;font-size:10.5px}
+.gA{background:#1D9E75;color:#E1F5EE}.gB{background:#5DCAA5;color:#04342C}.gC{background:#DEDCEE;color:#23205A}.gD{background:#F1EFE8;color:#444441}
+
+/* footer */
+footer{background:var(--akvo-deep);color:rgba(255,255,255,.65);font-family:"IBM Plex Mono";font-size:11px;letter-spacing:.08em;padding:20px 32px;line-height:1.7}
+footer strong{color:rgba(255,255,255,.9);font-weight:600}
+
+@media(max-width:900px){
+  .stack-grid,.steps,.kpis{grid-template-columns:1fr 1fr}
+  .dash-grid{grid-template-columns:1fr}
+  .nav-note{display:none}
+}
+@media(max-width:600px){
+  .stack-grid,.steps,.kpis{grid-template-columns:1fr}
+  .wrap{padding:16px 14px 40px}
+  nav{padding:0 14px;overflow-x:auto}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">Akvo<span>SPEAK-Water</span></div>
+  <button class="nav-tab active" data-tab="concept">Concept</button>
+  <button class="nav-tab" data-tab="caretaker">Caretaker</button>
+  <button class="nav-tab" data-tab="ledger">Committee Ledger</button>
+  <button class="nav-tab" data-tab="district">District Dashboard</button>
+  <button class="nav-tab" data-tab="finance">Finance View</button>
+  <button class="nav-tab" data-tab="sanitation">Sanitation</button>
+  <div class="nav-note">Concept mockup · v1.1 · Jul 2026</div>
+</nav>
+
+<div class="wrap">
+
+<div class="assume"><b>Illustrative prototype</b>All names, figures, and locations in this mockup are illustrative. Built to demonstrate the SPEAK-Water concept (voice-based record keeping for rural water service providers) — see companion concept note.</div>
+
+<!-- ══════════ CONCEPT ══════════ -->
+<section id="concept" class="visible">
+  <div class="sec-head"><span class="sec-num">01 · The Water-Stack</span><span class="sec-title">From Agri-Stack to Water-Stack</span><span class="sec-sub">professionalising rural water service providers</span></div>
+  <p class="sec-intro">The Akvo Water-Stack mirrors the Agri-Stack: it professionalises the frontline actors of rural water services — water point committees, caretakers, and area mechanics — by turning their daily activity into reliable data, connecting stakeholders and unlocking maintenance finance.</p>
+
+  <div class="stack-grid">
+    <div class="stack-card" style="background:var(--akvo)">
+      <div class="ic">💬</div>
+      <h3>WaterConnect</h3>
+      <p>AI assistant for frontline water workers — repair guidance, water quality interpretation, human escalation.</p>
+      <small>Mirror of Agriconnect · in funding pipeline</small>
+    </div>
+    <div class="stack-card" style="background:var(--service)">
+      <div class="ic">🛠️</div>
+      <h3>Service Provider Platform</h3>
+      <p>Committees, mechanics and district officers coordinating around shared performance records.</p>
+      <small>Mirror of Farmer Cooperative Platform</small>
+    </div>
+    <div class="stack-card" style="background:var(--community)">
+      <div class="ic">📈</div>
+      <h3>Maintenance Finance Platform</h3>
+      <p>Ledger-backed credit scoring, repair loans and results-based maintenance contracts.</p>
+      <small>Mirror of Living Income Platform</small>
+    </div>
+  </div>
+  <div class="stack-base">
+    <h3>🎙️ SPEAK-Water · AI voice-based record keeping</h3>
+    <p>The foundational data layer: caretakers and treasurers speak; AI builds professional digital ledgers.</p>
+    <span class="hl">This concept</span>
+  </div>
+
+  <div style="height:26px"></div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div class="stamp"><small>02</small>How it works</div>
+      <div class="panel-sub">the SPEAK pipeline, adapted to the water domain</div>
+      <div class="panel-meta">voice → ledger → finance</div>
+    </div>
+    <div class="panel-body">
+      <div class="steps">
+        <div class="step">
+          <div class="n">Step 1 — Speak</div>
+          <h4>Caretakers &amp; treasurers speak</h4>
+          <p>After fee collection, a breakdown, or a repair, they send a voice note in their own language via WhatsApp or Viber. No forms, no literacy barrier, no new hardware.</p>
+        </div>
+        <div class="step">
+          <div class="n">Step 2 — Structure</div>
+          <h4>AI structures the data</h4>
+          <p>An NLP engine extracts amounts, dates, and events into standardised digital ledgers. Area mechanics and district officers verify flagged entries — human-in-the-loop.</p>
+        </div>
+        <div class="step">
+          <div class="n">Step 3 — Serve</div>
+          <h4>Insights are delivered</h4>
+          <p>Committees get simple monthly voice/visual summaries; districts get live functionality &amp; revenue dashboards; lenders get verified service reliability records.</p>
+        </div>
+      </div>
+      <div style="height:16px"></div>
+      <div style="background:var(--bg-tint);border:.5px solid var(--rule-mid);border-radius:4px;padding:10px 14px;font-size:11.5px;color:var(--ink-soft)">
+        <span class="pill pill-water">PROOF POINT</span>&ensp;In Uganda, structured record keeping turned smallholder farmers into bankable borrowers — <b>99% loan approval, 3% default</b> vs. ~20% regional baseline. SPEAK-Water applies the same de-risking logic to the rural water maintenance gap (~25% of handpumps non-functional at any time).
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ CARETAKER ══════════ -->
+<section id="caretaker">
+  <div class="sec-head"><span class="sec-num">03 · Voice flow</span><span class="sec-title">The caretaker experience</span><span class="sec-sub">a 30-second voice note replaces the exercise book</span></div>
+  <p class="sec-intro">Mariama is treasurer of the Sanoyah water point committee. After Sunday fee collection she sends one voice note. SPEAK-Water replies with the structured record for confirmation — in her language, by voice and text.</p>
+
+  <div class="phone-wrap">
+    <div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="wa-head">
+            <div class="wa-avatar">S</div>
+            <div><div class="t">SPEAK-Water</div><div class="s">Akvo · verified service</div></div>
+          </div>
+          <div class="wa-body">
+            <div class="msg msg-out">
+              <div class="voice"><div class="play">▶</div><div class="bars" data-bars></div><span class="dur">0:27</span></div>
+              <span class="time">08:42 ✓✓</span>
+            </div>
+            <div class="msg msg-in">
+              <em style="font-size:10.5px;color:var(--ink-muted)">"This week I collected 24,500 francs from 49 households. I paid the mechanic 6,000 for the new valve, and bought a padlock for 1,500. The pump at the school is making noise again…"</em>
+              <div class="rec-card">
+                <div class="rc-t">✓ Record understood — please confirm</div>
+                <div class="rec-row"><span>Fees collected</span><b>24 500 FCFA · 49 hh</b></div>
+                <div class="rec-row"><span>Repair: valve (mechanic)</span><b>− 6 000 FCFA</b></div>
+                <div class="rec-row"><span>Materials: padlock</span><b>− 1 500 FCFA</b></div>
+                <div class="rec-row"><span>⚠ Issue flagged</span><b>School pump — noise</b></div>
+              </div>
+              <span class="time">08:42</span>
+            </div>
+            <div class="msg msg-out" style="font-weight:700">1 ✓ Confirm<span class="time">08:44 ✓✓</span></div>
+            <div class="msg msg-in">
+              ✅ Saved to the Sanoyah ledger.<br>
+              💧 Your balance this month: <b>+41 300 FCFA</b><br>
+              🔧 The school pump issue was sent to mechanic <b>Ibrahim K.</b> and the district office.
+              <span class="time">08:44</span>
+            </div>
+            <div class="msg msg-in">
+              <div class="voice"><div class="play">▶</div><div class="bars" data-bars></div><span class="dur">0:41</span></div>
+              <div style="font-size:10px;color:var(--ink-muted);margin-top:3px">Monthly summary — spoken, in Susu</div>
+              <span class="time">08:45</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-cap">Illustrative WhatsApp flow · works on any language layer</div>
+    </div>
+
+    <div class="flow-notes">
+      <div class="flow-note">
+        <span class="mono-l">Design principle</span>
+        <h4>Voice-first, zero friction</h4>
+        <p>No app to install, no forms, no literacy requirement. Structured audio prompts guide complete entries — the same approach piloted with farmer cohorts in SPEAK.</p>
+      </div>
+      <div class="flow-note">
+        <span class="mono-l">Data quality</span>
+        <h4>Confirm-back loop</h4>
+        <p>The AI reads back what it understood before saving. Uncertain entries are flagged for the area mechanic or district officer to verify — human-in-the-loop, like extension agents in the agri pilot.</p>
+      </div>
+      <div class="flow-note">
+        <span class="mono-l">Immediate value</span>
+        <h4>The farmer gets insight; so does the treasurer</h4>
+        <p>Monthly balance, savings-toward-repairs progress, and comparison to similar committees — delivered as voice notes and simple visuals, so record keeping pays back immediately.</p>
+      </div>
+      <div class="flow-note" style="border-left-color:var(--water)">
+        <span class="mono-l">Side effect</span>
+        <h4>Breakdowns become tickets</h4>
+        <p>Any issue mentioned in a voice note automatically notifies the mechanic network and appears on the district dashboard — cutting downtime without a separate reporting channel.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ LEDGER ══════════ -->
+<section id="ledger">
+  <div class="sec-head"><span class="sec-num">04 · Digital ledger</span><span class="sec-title">Sanoyah committee ledger</span><span class="sec-sub">what the voice notes become</span></div>
+  <p class="sec-intro">Every confirmed voice note lands in an audit-ready ledger. This is the committee's financial track record — the asset that unlocks repair finance.</p>
+
+  <div class="kpis">
+    <div class="kpi accent"><div class="l">Balance (Jun 2026)</div><div class="v">184 700</div><div class="d">FCFA · savings for repairs</div></div>
+    <div class="kpi good"><div class="l">Collection rate</div><div class="v">87%</div><div class="d">49 of 56 households paying</div></div>
+    <div class="kpi warn"><div class="l">Downtime YTD</div><div class="v">6 days</div><div class="d">2 breakdowns, both repaired &lt; 4 days</div></div>
+    <div class="kpi accent"><div class="l">Reporting streak</div><div class="v">11 mo</div><div class="d">consecutive months of complete records</div></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div class="stamp"><small>Ledger</small>June 2026</div>
+      <div class="panel-sub">entries created from voice notes · verified by area mechanic</div>
+      <div class="panel-meta">18 entries · 0 gaps</div>
+    </div>
+    <div class="panel-body" style="padding:0">
+      <table>
+        <thead><tr><th>Date</th><th>Entry</th><th>Source</th><th class="num">In (FCFA)</th><th class="num">Out (FCFA)</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">28 Jun</td><td>Weekly fee collection — 49 households</td><td><span class="pill pill-akvo">🎙 voice 0:27</span></td><td class="num pos">24 500</td><td class="num">—</td><td><span class="pill pill-water">verified</span></td></tr>
+          <tr><td class="mono">28 Jun</td><td>Repair — valve replacement, mechanic Ibrahim K.</td><td><span class="pill pill-akvo">🎙 voice 0:27</span></td><td class="num">—</td><td class="num neg">6 000</td><td><span class="pill pill-water">verified</span></td></tr>
+          <tr><td class="mono">28 Jun</td><td>Materials — padlock for pump housing</td><td><span class="pill pill-akvo">🎙 voice 0:27</span></td><td class="num">—</td><td class="num neg">1 500</td><td><span class="pill pill-water">verified</span></td></tr>
+          <tr><td class="mono">21 Jun</td><td>Weekly fee collection — 47 households</td><td><span class="pill pill-akvo">🎙 voice 0:31</span></td><td class="num pos">23 500</td><td class="num">—</td><td><span class="pill pill-water">verified</span></td></tr>
+          <tr><td class="mono">17 Jun</td><td>Breakdown — handle bearing failure · <b>downtime 2 days</b></td><td><span class="pill pill-akvo">🎙 voice 0:22</span></td><td class="num">—</td><td class="num">—</td><td><span class="pill pill-red">event</span></td></tr>
+          <tr><td class="mono">19 Jun</td><td>Repair — bearing set + labour, mechanic Ibrahim K.</td><td><span class="pill pill-akvo">🎙 voice 0:35</span></td><td class="num">—</td><td class="num neg">14 000</td><td><span class="pill pill-water">verified</span></td></tr>
+          <tr><td class="mono">14 Jun</td><td>Weekly fee collection — 48 households</td><td><span class="pill pill-akvo">🎙 voice 0:24</span></td><td class="num pos">24 000</td><td class="num">—</td><td><span class="pill pill-water">verified</span></td></tr>
+          <tr><td class="mono">08 Jun</td><td>Committee meeting — tariff confirmed at 500/hh</td><td><span class="pill pill-akvo">🎙 voice 0:52</span></td><td class="num">—</td><td class="num">—</td><td><span class="pill pill-akvo">minutes</span></td></tr>
+          <tr><td class="mono">07 Jun</td><td>Weekly fee collection — 46 households</td><td><span class="pill pill-akvo">🎙 voice 0:29</span></td><td class="num pos">23 000</td><td class="num">—</td><td><span class="pill pill-water">verified</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div class="stamp" style="background:var(--water)"><small>Score</small>Service reliability record</div>
+      <div class="panel-sub">the committee's "credit history" — computed from the ledger</div>
+      <div class="panel-meta">Shared with lender on committee consent</div>
+    </div>
+    <div class="panel-body">
+      <div class="score-wrap">
+        <svg class="score-ring" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="50" fill="none" stroke="#EBECEE" stroke-width="12"/>
+          <circle cx="60" cy="60" r="50" fill="none" stroke="#1B6B3A" stroke-width="12" stroke-linecap="round" stroke-dasharray="245 314" transform="rotate(-90 60 60)"/>
+          <text x="60" y="57" text-anchor="middle" font-family="Mulish" font-weight="800" font-size="26" fill="#1E1E28">B+</text>
+          <text x="60" y="76" text-anchor="middle" font-family="IBM Plex Mono" font-size="8.5" fill="#8A8A96">FINANCE-READY</text>
+        </svg>
+        <div class="score-detail">
+          <div class="score-bar"><span class="sl">Record completeness</span><div class="track"><div class="fill" style="width:92%"></div></div><span class="sv">92</span></div>
+          <div class="score-bar"><span class="sl">Revenue consistency</span><div class="track"><div class="fill" style="width:85%"></div></div><span class="sv">85</span></div>
+          <div class="score-bar"><span class="sl">Savings discipline</span><div class="track"><div class="fill" style="width:74%"></div></div><span class="sv">74</span></div>
+          <div class="score-bar"><span class="sl">Repair responsiveness</span><div class="track"><div class="fill" style="width:88%"></div></div><span class="sv">88</span></div>
+          <p style="font-size:11px;color:var(--ink-soft);margin-top:8px">Eligible for a repair loan up to <b>150 000 FCFA</b> or a results-based maintenance contract. Score improves with every complete month.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ DISTRICT ══════════ -->
+<section id="district">
+  <div class="sec-head"><span class="sec-num">05 · District view</span><span class="sec-title">Forécariah district dashboard</span><span class="sec-sub">live, not last year's survey</span></div>
+  <p class="sec-intro">Aggregated voice-note data gives the district a continuous view of functionality, revenue, and open issues — replacing asset inventories that go stale between survey rounds, and feeding the national WASH MIS.</p>
+
+  <div class="kpis">
+    <div class="kpi good"><div class="l">Functionality</div><div class="v">88%</div><div class="d">132 / 150 water points working today</div></div>
+    <div class="kpi accent"><div class="l">Committees reporting</div><div class="v">124</div><div class="d">of 150 · ≥1 complete record this month</div></div>
+    <div class="kpi warn"><div class="l">Open breakdowns</div><div class="v">18</div><div class="d">7 &gt; 5 days · mechanics notified</div></div>
+    <div class="kpi accent"><div class="l">Mean downtime</div><div class="v">3.4 d</div><div class="d">↓ from 9.1 days at baseline</div></div>
+  </div>
+
+  <div class="dash-grid">
+    <div class="panel" style="margin-bottom:0">
+      <div class="panel-head">
+        <div class="stamp"><small>Revenue</small>Fee collection rate by sub-district</div>
+        <div class="panel-sub">June 2026</div>
+        <div class="panel-meta">source: voice ledgers</div>
+      </div>
+      <div class="panel-body">
+        <div class="bar-chart">
+          <div class="bar-col"><span class="bv">91%</span><div class="bar" style="height:91%"></div><span class="bl">Sanoyah</span></div>
+          <div class="bar-col"><span class="bv">84%</span><div class="bar" style="height:84%"></div><span class="bl">Kaback</span></div>
+          <div class="bar-col"><span class="bv">78%</span><div class="bar" style="height:78%"></div><span class="bl">Moussaya</span></div>
+          <div class="bar-col"><span class="bv">69%</span><div class="bar" style="height:69%"></div><span class="bl">Benty</span></div>
+          <div class="bar-col"><span class="bv">52%</span><div class="bar low" style="height:52%"></div><span class="bl">Farmoréah</span></div>
+          <div class="bar-col"><span class="bv">88%</span><div class="bar" style="height:88%"></div><span class="bl">Kallia</span></div>
+        </div>
+        <div style="background:var(--bg-tint);border:.5px solid var(--rule-mid);border-radius:4px;padding:9px 12px;font-size:11px;color:var(--ink-soft);margin-top:12px">
+          <b>Farmoréah</b> collection rate dropped 21 pts in two months — voice notes cite a tariff dispute. Flagged for district facilitation visit.
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-bottom:0">
+      <div class="panel-head">
+        <div class="stamp" style="background:var(--community)"><small>Alerts</small>Issue feed</div>
+        <div class="panel-sub">from voice notes</div>
+        <div class="panel-meta">live</div>
+      </div>
+      <div class="panel-body" style="padding:6px 8px">
+        <div class="alert"><span class="dot dot-red"></span><div><div class="at">Benty II — pump down 8 days</div><div class="ad">Awaiting cylinder part · mechanic assigned · committee balance insufficient — <b>loan pre-approved</b></div></div><span class="am">2h ago</span></div>
+        <div class="alert"><span class="dot dot-amber"></span><div><div class="at">Sanoyah school pump — abnormal noise</div><div class="ad">Preventive check scheduled with Ibrahim K.</div></div><span class="am">1d ago</span></div>
+        <div class="alert"><span class="dot dot-amber"></span><div><div class="at">Moussaya — treasurer changed</div><div class="ad">Handover recorded by voice · onboarding prompts sent to new treasurer</div></div><span class="am">2d ago</span></div>
+        <div class="alert"><span class="dot dot-green"></span><div><div class="at">Kaback centre — repair completed</div><div class="ad">Downtime 2 days · cost 14 000 FCFA · ledger verified</div></div><span class="am">3d ago</span></div>
+        <div class="alert"><span class="dot dot-green"></span><div><div class="at">Kallia — 12-month complete record streak</div><div class="ad">Committee now finance-ready (score B)</div></div><span class="am">4d ago</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:22px"></div>
+  <div style="background:var(--bg-tint);border:.5px solid var(--rule-mid);border-radius:4px;padding:10px 14px;font-size:11.5px;color:var(--ink-soft)">
+    <span class="pill pill-akvo">MIS LINK</span>&ensp;District indicators flow automatically into the <b>national WASH MIS</b> — the systems Akvo built with ministries in Benin, Mali, Ghana, Sierra Leone and Liberia — turning annual inventory updates into a continuous data channel for SDG 6.1 monitoring.
+  </div>
+</section>
+
+<!-- ══════════ FINANCE ══════════ -->
+<section id="finance">
+  <div class="sec-head"><span class="sec-num">06 · Finance view</span><span class="sec-title">Lender portfolio — de-risked by data</span><span class="sec-sub">the agrifinance playbook, applied to water</span></div>
+  <p class="sec-intro">A microfinance institution or maintenance fund sees a vetted pipeline of committees with verified ledgers — replacing physical document inspection with digital voice validation, exactly as the Uganda agrifinance model did for smallholder loans.</p>
+
+  <div class="kpis">
+    <div class="kpi accent"><div class="l">Finance-ready committees</div><div class="v">38</div><div class="d">score B or above · ≥6 months records</div></div>
+    <div class="kpi good"><div class="l">Active repair loans</div><div class="v">15</div><div class="d">avg. 120 000 FCFA · 6-month term</div></div>
+    <div class="kpi good"><div class="l">Repayment on time</div><div class="v">96%</div><div class="d">repayments deducted from verified fee revenue</div></div>
+    <div class="kpi warn"><div class="l">Watchlist</div><div class="v">3</div><div class="d">collection rate falling · early-warning from ledger</div></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div class="stamp" style="background:var(--water)"><small>Pipeline</small>Credit-assessed committees</div>
+      <div class="panel-sub">verified service reliability records · committee consent on file</div>
+      <div class="panel-meta">illustrative data</div>
+    </div>
+    <div class="panel-body" style="padding:0">
+      <table>
+        <thead><tr><th>Committee</th><th>Record history</th><th class="num">Monthly revenue</th><th class="num">Collection</th><th>Score</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td><b>Kallia</b></td><td class="mono">12 mo complete</td><td class="num">96 000</td><td class="num">88%</td><td><span class="grade gA">A−</span></td><td><span class="pill pill-water">loan active · on schedule</span></td></tr>
+          <tr><td><b>Sanoyah</b></td><td class="mono">11 mo complete</td><td class="num">95 000</td><td class="num">87%</td><td><span class="grade gB">B+</span></td><td><span class="pill pill-akvo">eligible · 150k FCFA</span></td></tr>
+          <tr><td><b>Kaback centre</b></td><td class="mono">9 mo complete</td><td class="num">88 000</td><td class="num">84%</td><td><span class="grade gB">B</span></td><td><span class="pill pill-water">loan active · on schedule</span></td></tr>
+          <tr><td><b>Benty II</b></td><td class="mono">8 mo complete</td><td class="num">74 000</td><td class="num">69%</td><td><span class="grade gC">C+</span></td><td><span class="pill pill-akvo">emergency repair loan pre-approved</span></td></tr>
+          <tr><td><b>Farmoréah</b></td><td class="mono">7 mo · 1 gap</td><td class="num">51 000</td><td class="num">52%</td><td><span class="grade gD">C−</span></td><td><span class="pill pill-amber">watchlist · tariff dispute flagged</span></td></tr>
+          <tr><td><b>Moussaya</b></td><td class="mono">6 mo complete</td><td class="num">69 000</td><td class="num">78%</td><td><span class="grade gC">B−</span></td><td><span class="pill pill-akvo">assessment in progress</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div class="stamp"><small>07</small>The bigger picture</div>
+      <div class="panel-sub">who else the data serves</div>
+      <div class="panel-meta">macro-water ecosystem</div>
+    </div>
+    <div class="panel-body">
+      <div class="steps">
+        <div class="step" style="border-top:3px solid var(--water)">
+          <div class="n">Banks &amp; maintenance funds</div>
+          <h4>Scalable de-risking</h4>
+          <p>Expand rural water lending without field inspection costs; results-based funders (Uptime-type) get the verification layer they pay against.</p>
+        </div>
+        <div class="step" style="border-top:3px solid var(--policy)">
+          <div class="n">Government &amp; ministries</div>
+          <h4>Evidence-based policy</h4>
+          <p>A micro–macro lens on rural service delivery: continuous SDG 6.1 data, subsidy targeting, and early warning of failing schemes — flowing into the national WASH MIS.</p>
+        </div>
+        <div class="step" style="border-top:3px solid var(--service)">
+          <div class="n">Mechanics &amp; suppliers</div>
+          <h4>A functioning spare-parts market</h4>
+          <p>Demand signals from breakdown data let mechanic networks and parts suppliers plan stock and routes — the "input company" analogue of the agri model.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ SANITATION ══════════ -->
+<section id="sanitation">
+  <div class="sec-head"><span class="sec-num">08 · Extension module</span><span class="sec-title">SPEAK-Sanitation — voice ledgers for sanitation entrepreneurs</span><span class="sec-sub">the cleanest agrifinance mirror</span></div>
+  <p class="sec-intro">Pit emptiers, FSM truck operators and toilet masons are genuine micro-businesses — but informal, unlicensed and record-less. Same SPEAK architecture, new domain layer: each voice-logged job doubles as a <b>verified safe-disposal event</b>, the data unit cities and results-based funders lack.</p>
+
+  <div class="kpis">
+    <div class="kpi accent"><div class="l">Jobs logged (Jun)</div><div class="v">214</div><div class="d">by 23 emptying operators · voice only</div></div>
+    <div class="kpi good"><div class="l">Verified safe disposal</div><div class="v">78%</div><div class="d">geostamp + plant intake confirmed</div></div>
+    <div class="kpi warn"><div class="l">Unverified loads</div><div class="v">31</div><div class="d">clustered near river — flagged to city</div></div>
+    <div class="kpi accent"><div class="l">Finance-ready operators</div><div class="v">9</div><div class="d">≥6 months complete business records</div></div>
+  </div>
+
+  <div class="phone-wrap">
+    <div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="wa-head">
+            <div class="wa-avatar">S</div>
+            <div><div class="t">SPEAK-Sanitation</div><div class="s">Akvo · verified service</div></div>
+          </div>
+          <div class="wa-body">
+            <div class="msg msg-out">
+              <div class="voice"><div class="play">▶</div><div class="bars" data-bars></div><span class="dur">0:24</span></div>
+              <span class="time">16:10 ✓✓</span>
+            </div>
+            <div class="msg msg-in">
+              <em style="font-size:10.5px;color:var(--ink-muted)">"Finished at Madame Diallo's compound in Benty — three gulper trips. Charged 25,000. Paid 4,000 disposal at the Forécariah plant, fuel 3,500…"</em>
+              <div class="rec-card">
+                <div class="rc-t">✓ Job understood — please confirm</div>
+                <div class="rec-row"><span>Emptying job — Benty</span><b>3 loads · 25 000 FCFA</b></div>
+                <div class="rec-row"><span>Disposal fee (Forécariah FSTP)</span><b>− 4 000 FCFA</b></div>
+                <div class="rec-row"><span>Fuel</span><b>− 3 500 FCFA</b></div>
+                <div class="rec-row"><span>📍 Disposal check</span><b>geostamp ✓ plant intake ✓</b></div>
+              </div>
+              <span class="time">16:10</span>
+            </div>
+            <div class="msg msg-out" style="font-weight:700">1 ✓ Confirm<span class="time">16:11 ✓✓</span></div>
+            <div class="msg msg-in">
+              ✅ Saved. Safe-disposal receipt <b>#FK-2026-0614</b> issued.<br>
+              💰 Your margin this job: <b>+17 500 FCFA</b><br>
+              📈 4 more verified months to qualify for the <b>motorised gulper loan (850 000 FCFA)</b>.
+              <span class="time">16:11</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-cap">Illustrative flow · operator: mechanical pit emptier</div>
+    </div>
+
+    <div class="flow-notes">
+      <div class="flow-note">
+        <span class="mono-l">The twist vs. SPEAK-Water</span>
+        <h4>Every job is a disposal receipt</h4>
+        <p>Geostamped voice note + treatment-plant intake confirmation turn each load into a verified safe-disposal event — the SDG 6.3 data unit that results-based funders can pay against (and an emerging methane/carbon angle).</p>
+      </div>
+      <div class="flow-note">
+        <span class="mono-l">One voice note, three buyers</span>
+        <h4>Entrepreneur · City · Funder</h4>
+        <p>The operator builds a credit record toward equipment loans and a municipal licence; the city gets emptying coverage and illegal-dumping hotspots for CWIS planning; funders get verifiable service units.</p>
+      </div>
+      <div class="flow-note" style="border-left-color:var(--water)">
+        <span class="mono-l">Positioning discipline</span>
+        <h4>Generation ≠ verification</h4>
+        <p>The operator writes their own books. Plant receipts, geostamps and spot audits are the independent validation layer — ledger cohorts create demand for verification services rather than replacing them.</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:22px"></div>
+
+  <div class="dash-grid">
+    <div class="panel" style="margin-bottom:0">
+      <div class="panel-head">
+        <div class="stamp" style="background:var(--compile)"><small>Ledger</small>Operator: A. Camara · June 2026</div>
+        <div class="panel-sub">mechanical emptier · 5 mo record</div>
+        <div class="panel-meta">score B− · rising</div>
+      </div>
+      <div class="panel-body" style="padding:0">
+        <table>
+          <thead><tr><th>Date</th><th>Job</th><th class="num">Net (FCFA)</th><th>Disposal</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">14 Jun</td><td>Benty — household pit, 3 loads</td><td class="num pos">+17 500</td><td><span class="pill pill-water">verified ✓</span></td></tr>
+            <tr><td class="mono">11 Jun</td><td>Kaback — school latrine block, 5 loads</td><td class="num pos">+29 000</td><td><span class="pill pill-water">verified ✓</span></td></tr>
+            <tr><td class="mono">08 Jun</td><td>Benty — household pit, 2 loads</td><td class="num pos">+11 000</td><td><span class="pill pill-amber">declared · no plant match</span></td></tr>
+            <tr><td class="mono">05 Jun</td><td>Equipment — gulper seal replacement</td><td class="num neg">− 8 500</td><td><span class="pill pill-akvo">expense</span></td></tr>
+            <tr><td class="mono">02 Jun</td><td>Farmoréah — compound, 4 loads</td><td class="num pos">+22 000</td><td><span class="pill pill-water">verified ✓</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-bottom:0">
+      <div class="panel-head">
+        <div class="stamp" style="background:var(--community)"><small>City view</small>FSM compliance feed</div>
+        <div class="panel-sub">CWIS planning</div>
+        <div class="panel-meta">live</div>
+      </div>
+      <div class="panel-body" style="padding:6px 8px">
+        <div class="alert"><span class="dot dot-red"></span><div><div class="at">Unverified disposal cluster — river zone</div><div class="ad">31 loads declared, no plant match · enforcement + siting case for a transfer station</div></div><span class="am">this wk</span></div>
+        <div class="alert"><span class="dot dot-amber"></span><div><div class="at">Benty ward — emptying demand up 40%</div><div class="ad">Rainy season onset · pre-position operators</div></div><span class="am">3d ago</span></div>
+        <div class="alert"><span class="dot dot-green"></span><div><div class="at">A. Camara — 6-month record reached</div><div class="ad">Eligible for municipal licence + MFI equipment loan assessment</div></div><span class="am">today</span></div>
+        <div class="alert"><span class="dot dot-green"></span><div><div class="at">Forécariah FSTP intake +18% vs May</div><div class="ad">Verified loads rising as ledger cohort grows</div></div><span class="am">1w ago</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:22px"></div>
+  <div style="background:var(--bg-tint);border:.5px solid var(--rule-mid);border-radius:4px;padding:10px 14px;font-size:11.5px;color:var(--ink-soft)">
+    <span class="pill pill-akvo">SEE ALSO</span>&ensp;Companion idea brief: <b>ideas-briefings/speak-sanitation-entrepreneurs.md</b> — logic, donor entry points (BMGF CWIS, Water.org MFI networks, ADB), and pilot preconditions.
+  </div>
+</section>
+
+</div>
+
+<footer>
+  <strong>SPEAK-Water</strong> · Voice-based record keeping for rural water service providers · Akvo concept mockup v1 · July 2026<br>
+  Companion note: Concept Notes Bank / concept-notes / speak-water-voice-ledgers.md · All data illustrative
+</footer>
+
+<script>
+// Tabs
+document.querySelectorAll('.nav-tab').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.nav-tab').forEach(function(b){b.classList.remove('active')});
+    document.querySelectorAll('section').forEach(function(s){s.classList.remove('visible')});
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('visible');
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+});
+// Voice-note waveforms
+document.querySelectorAll('[data-bars]').forEach(function(el){
+  for(var i=0;i<26;i++){
+    var b=document.createElement('i');
+    b.style.height=(4+Math.abs(Math.sin(i*1.7))*14+Math.random()*4)+'px';
+    el.appendChild(b);
+  }
+});
+</script>
+</body>
+</html>

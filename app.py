@@ -21,6 +21,7 @@ SECTIONS = {
         {"name": "Groundwater data",            "file": "groundwater_connector.html"},
         {"name": "Water Chat · MIS assistant",  "file": "wash-mis-chatbot-demo.html"},
         {"name": "Verified Results Ledger · PoC", "file": "verified-results-ledger-pocA.html"},
+        {"name": "SPEAK-WASH",                  "file": "speak-water-mockup.html"},
     ],
     "Internal tools": [
         {"name": "ASWA3 baseline dashboard",     "file": "PoC3-ASWA3baseline.html"},
