@@ -13,7 +13,7 @@ st.set_page_config(
 )
 
 SECTIONS = {
-    "IA PoC": [
+    "AI innovation": [
         {"name": "WaterConnect · Demo",        "file": "WaterConnect_Demo_Mock.html"},
         {"name": "SPEAK-WASH",                  "file": "speak-water-mockup.html"},
         {"name": "Water Chat · MIS assistant",  "file": "wash-mis-chatbot-demo.html"},
@@ -40,7 +40,7 @@ SECTIONS = {
 ALL_PAGES = {p["name"]: p for section in SECTIONS.values() for p in section}
 
 if "selected_page" not in st.session_state:
-    default_page = SECTIONS["IA PoC"][0]["name"]
+    default_page = SECTIONS["AI innovation"][0]["name"]
     requested = st.query_params.get("page", None)
     if requested:
         requested_lower = requested.lower()
