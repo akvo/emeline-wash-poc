@@ -13,17 +13,19 @@ st.set_page_config(
 )
 
 SECTIONS = {
-    "PoC": [
+    "IA PoC": [
+        {"name": "WaterConnect · Demo",        "file": "WaterConnect_Demo_Mock.html"},
+        {"name": "SPEAK-WASH",                  "file": "speak-water-mockup.html"},
+        {"name": "Water Chat · MIS assistant",  "file": "wash-mis-chatbot-demo.html"},
+    ],
+    "External Demo": [
         {"name": "Unique WASH ID · PoC",        "file": "unique_wash_id.html"},
         {"name": "Future explorer WASH",         "file": "country-page-poc6.html"},
-        {"name": "WaterConnect · Demo",        "file": "WaterConnect_Demo_Mock.html"},
         {"name": "Contractor Assessment · PoC", "file": "contractor-assessment-poc.html"},
         {"name": "Groundwater data",            "file": "groundwater_connector.html"},
-        {"name": "Water Chat · MIS assistant",  "file": "wash-mis-chatbot-demo.html"},
         {"name": "Verified Results Ledger · PoC", "file": "verified-results-ledger-pocA.html"},
-        {"name": "SPEAK-WASH",                  "file": "speak-water-mockup.html"},
     ],
-    "Internal tools": [
+    "internal tools": [
         {"name": "ASWA3 baseline dashboard",     "file": "PoC3-ASWA3baseline.html"},
         {"name": "Country Opportunity",          "file": "wash_explorer_map_v3.html"},
         {"name": "Data for WASH · Concept",      "file": "data_for_wash_complete_v4_1.html"},
@@ -38,7 +40,7 @@ SECTIONS = {
 ALL_PAGES = {p["name"]: p for section in SECTIONS.values() for p in section}
 
 if "selected_page" not in st.session_state:
-    default_page = SECTIONS["PoC"][0]["name"]
+    default_page = SECTIONS["IA PoC"][0]["name"]
     requested = st.query_params.get("page", None)
     if requested:
         requested_lower = requested.lower()
