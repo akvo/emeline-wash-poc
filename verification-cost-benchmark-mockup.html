@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Akvo · Verification Cost Benchmark (Mockup)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --akvo:#4851A4; --akvo-dark:#3B4289; --akvo-deep:#2B2E6B;
+  --bg:#EBECEE; --bg-tint:#F2F2F4; --card:#FFFFFF;
+  --ink:#1E1E28; --ink-soft:#4A4A57; --ink-muted:#8A8A96;
+  --rule:rgba(30,30,40,0.09); --rule-mid:rgba(30,30,40,0.18);
+  --water:#1B6B3A; --water-deep:#104025;
+  --assumption:#B37516; --assume-bg:rgba(240,169,42,0.16); --assume-line:#B37516;
+  --consult:#A0431E; --clem:#1D9E75; --eo:#3D5A80;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Mulish",sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+.nav{height:52px;background:var(--akvo);display:flex;align-items:center;padding:0 32px;border-bottom:1px solid rgba(255,255,255,.15);position:sticky;top:0;z-index:100}
+.nav .brand{color:#fff;font-weight:900;font-size:15px}
+.nav .divider{width:1px;height:22px;background:rgba(255,255,255,.3);margin:0 16px}
+.nav .doc{color:rgba(255,255,255,.85);font-weight:700;font-size:12px}
+.nav .mock{margin-left:auto;background:var(--assumption);color:#fff;padding:4px 10px 3px;font-weight:800;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;border-radius:2px}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 28px 48px}
+.kicker{font-family:"IBM Plex Mono";font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:6px}
+h1{font-size:26px;font-weight:800;letter-spacing:-.02em;margin-bottom:10px}
+.lede{font-size:13.5px;color:var(--ink-soft);line-height:1.6;max-width:840px}
+.lede strong{color:var(--ink)}
+.assume{background:var(--assume-bg);border:.9px solid var(--assume-line);border-radius:4px;padding:12px 14px;font-family:"IBM Plex Mono";font-size:11px;color:var(--assumption);line-height:1.55;margin:18px 0 26px;max-width:840px}
+.assume b{font-weight:700;font-size:9px;letter-spacing:.14em;text-transform:uppercase;opacity:.75;display:block;margin-bottom:4px}
+.controls{background:var(--card);border:1px solid var(--rule);border-radius:2px;padding:18px 22px;display:flex;gap:36px;flex-wrap:wrap;margin-bottom:22px;align-items:flex-end}
+.ctrl{flex:1 1 220px}
+.ctrl label{display:block;font-weight:800;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:8px}
+.ctrl .val{font-family:"IBM Plex Mono";font-weight:600;font-size:13px;color:var(--akvo);margin-left:8px}
+input[type=range]{width:100%;accent-color:var(--akvo)}
+.seg{display:flex;gap:0;border:1px solid var(--rule-mid);border-radius:3px;overflow:hidden;width:fit-content}
+.seg button{border:none;background:transparent;padding:8px 16px;font-family:"Mulish";font-weight:700;font-size:11.5px;color:var(--ink-soft);cursor:pointer}
+.seg button.on{background:var(--akvo);color:#fff}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:22px}
+.mcard{background:var(--card);border:1px solid var(--rule);border-radius:2px;overflow:hidden;display:flex;flex-direction:column}
+.mcard .head{padding:12px 16px 10px;color:#fff}
+.mcard .head .t{font-weight:900;font-size:13.5px}
+.mcard .head .s{font-family:"IBM Plex Mono";font-size:9px;letter-spacing:.12em;text-transform:uppercase;opacity:.85;margin-top:2px}
+.mcard.consult .head{background:var(--consult)}
+.mcard.clem .head{background:var(--clem)} .mcard.clem .head .t,.mcard.clem .head .s{color:#04342C}
+.mcard.eo .head{background:var(--eo)}
+.mcard .big{padding:16px 16px 4px}
+.mcard .big .n{font-family:"IBM Plex Mono";font-weight:600;font-size:26px;letter-spacing:-.01em}
+.mcard .big .u{font-size:10.5px;color:var(--ink-muted);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.mcard .persite{padding:2px 16px 10px;font-family:"IBM Plex Mono";font-size:11px;color:var(--ink-soft)}
+.mcard ul{list-style:none;padding:10px 16px 14px;border-top:1px solid var(--rule);margin-top:auto}
+.mcard li{font-size:11.5px;color:var(--ink-soft);line-height:1.5;padding:3px 0 3px 14px;position:relative}
+.mcard li::before{content:"·";position:absolute;left:2px;font-weight:900}
+.mcard li.neg{color:#6C2D10}
+.mcard li.pos{color:var(--water-deep)}
+.bars{background:var(--card);border:1px solid var(--rule);border-radius:2px;padding:18px 22px;margin-bottom:22px}
+.bars h3{font-size:13px;font-weight:800;margin-bottom:4px}
+.bars .note{font-size:11px;color:var(--ink-muted);margin-bottom:14px}
+.brow{display:grid;grid-template-columns:150px 1fr 110px;gap:12px;align-items:center;margin-bottom:10px}
+.brow .bl{font-weight:800;font-size:11.5px}
+.btrack{height:22px;background:var(--bg-tint);border:1px solid var(--rule);border-radius:2px;overflow:hidden}
+.bfill{height:100%;border-radius:1px;transition:width 300ms ease}
+.brow .bval{font-family:"IBM Plex Mono";font-size:11px;font-weight:600;text-align:right}
+.dims{display:grid;grid-template-columns:repeat(3,1fr);gap:0;background:var(--card);border:1px solid var(--rule);border-radius:2px;margin-bottom:26px;overflow:hidden}
+.dim{padding:14px 18px;border-right:1px solid var(--rule)}
+.dim:last-child{border-right:none}
+.dim .dt{font-family:"IBM Plex Mono";font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:6px}
+.dim .dv{font-size:12px;color:var(--ink-soft);line-height:1.5}
+.src{background:var(--bg-tint);border:.5px solid var(--rule-mid);border-radius:4px;padding:10px 14px;font-size:11.5px;color:var(--ink-soft);line-height:1.5}
+.src .tag-src{background:rgba(27,107,58,.12);color:#104025;border:.5px solid rgba(27,107,58,.3);border-radius:3px;font-family:"IBM Plex Mono";font-size:10px;padding:2px 7px;margin-right:6px}
+.footer{background:var(--akvo-deep);color:rgba(255,255,255,.65);font-family:"IBM Plex Mono";font-size:11px;letter-spacing:.08em;padding:20px 32px;margin-top:36px}
+.footer strong{color:rgba(255,255,255,.9)}
+@media(max-width:900px){.cards{grid-template-columns:1fr}.dims{grid-template-columns:1fr}.dim{border-right:none;border-bottom:1px solid var(--rule)}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <span class="brand">akvo</span>
+  <span class="divider"></span>
+  <span class="doc">Verification Cost Benchmark</span>
+  <span class="mock">Mockup · Illustrative Data</span>
+</nav>
+
+<div class="wrap">
+  <div class="kicker">Benchmark Concept · July 2026</div>
+  <h1>What does verification actually cost — per site, per year?</h1>
+  <p class="lede">The OECD (2026, <em>Financing Water Security</em>) names verification cost as the main barrier to scaling results-based finance — and notes that <strong>almost no cost data is published</strong>. This benchmark compares the three verification approaches available to funders and RBF facilities. Adjust the programme parameters; the model recalculates annual verification cost, cost per site, and what each approach leaves behind.</p>
+
+  <div class="assume"><b>Assumption · read first</b>All unit costs are ILLUSTRATIVE placeholders pending consolidation of Akvo's actual programme cost data (Tiipaalga, NBD, GIZ Kenya, ASWA) and published sector figures. The model structure is the product; the numbers are for discussion. Not for external circulation with these values.</div>
+
+  <div class="controls">
+    <div class="ctrl">
+      <label>Monitoring sites <span class="val" id="v-sites">400</span></label>
+      <input type="range" id="sites" min="50" max="2000" step="50" value="400">
+    </div>
+    <div class="ctrl">
+      <label>Verification cycles / year <span class="val" id="v-cycles">2</span></label>
+      <input type="range" id="cycles" min="1" max="4" step="1" value="2">
+    </div>
+    <div class="ctrl">
+      <label>Context</label>
+      <div class="seg">
+        <button data-ctx="1" class="on">Accessible</button>
+        <button data-ctx="1.45">Remote / fragile</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="mcard consult">
+      <div class="head"><div class="t">Consultant study</div><div class="s">External firm · site visits · report</div></div>
+      <div class="big"><span class="n" id="c-consult">—</span> <span class="u">/ year</span></div>
+      <div class="persite" id="p-consult">— per site / year</div>
+      <ul>
+        <li class="neg">Snapshot evidence — valid only at visit date</li>
+        <li class="neg">No local capacity left behind</li>
+        <li class="neg">Cost scales linearly with sites &amp; cycles</li>
+        <li>Familiar to funders; low methodological risk</li>
+      </ul>
+    </div>
+    <div class="mcard clem">
+      <div class="head"><div class="t">CLEM stack</div><div class="s">Community monitors + satellite + human firewall</div></div>
+      <div class="big"><span class="n" id="c-clem">—</span> <span class="u">/ year</span></div>
+      <div class="persite" id="p-clem">— per site / year</div>
+      <ul>
+        <li class="pos">Continuous evidence, audit-ready (registry-grade)</li>
+        <li class="pos">Standing local capability after year 1</li>
+        <li class="pos">Marginal cost per extra site is low</li>
+        <li class="neg">Setup year costs more than one consultant study</li>
+      </ul>
+    </div>
+    <div class="mcard eo">
+      <div class="head"><div class="t">EO-only</div><div class="s">Satellite + automated anomaly detection</div></div>
+      <div class="big"><span class="n" id="c-eo">—</span> <span class="u">/ year</span></div>
+      <div class="persite" id="p-eo">— per site / year</div>
+      <ul>
+        <li class="pos">Cheapest at scale; works where ground access fails</li>
+        <li class="pos">Objective, continuous, tamper-proof</li>
+        <li class="neg">Limited parameters (no water quality, no revenue data)</li>
+        <li class="neg">Needs periodic ground-truth to stay credible</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="bars">
+    <h3>5-year total cost of verification <span style="font-weight:400;font-size:11px;color:var(--ink-muted)">— setup + operations, same programme</span></h3>
+    <div class="note">The crossover argument: consultant costs repeat forever; CLEM front-loads, then flattens. Year-1 setup included.</div>
+    <div class="brow"><span class="bl" style="color:var(--consult)">Consultant</span><div class="btrack"><div class="bfill" id="b-consult" style="background:var(--consult)"></div></div><span class="bval" id="t-consult">—</span></div>
+    <div class="brow"><span class="bl" style="color:#0E7A57">CLEM stack</span><div class="btrack"><div class="bfill" id="b-clem" style="background:var(--clem)"></div></div><span class="bval" id="t-clem">—</span></div>
+    <div class="brow"><span class="bl" style="color:var(--eo)">EO-only</span><div class="btrack"><div class="bfill" id="b-eo" style="background:var(--eo)"></div></div><span class="bval" id="t-eo">—</span></div>
+  </div>
+
+  <div class="dims">
+    <div class="dim"><div class="dt">Evidence continuity</div><div class="dv">Consultant: point-in-time. CLEM: continuous with quarterly validation. EO: continuous, parameter-limited. RBF payers disburse quarterly — snapshot evidence forces payment on stale data.</div></div>
+    <div class="dim"><div class="dt">Capacity legacy</div><div class="dv">Only CLEM leaves trained community monitors and a functioning local data chain after the contract — the OECD's "required capacity" gap. Consultant and EO-only approaches leave nothing behind.</div></div>
+    <div class="dim"><div class="dt">Best fit</div><div class="dv">Consultant: one-off endline evaluations. CLEM: NbS/carbon claims, RBF portfolios with community presence. EO-only: fragile contexts, water-body scale results, measurement recovery.</div></div>
+  </div>
+
+  <div class="src">
+    <span class="tag-src">SOURCES</span>
+    OECD (2026) <em>Financing Water Security</em> ch. 4 &amp; Box 4.7 (verification cost as RBF barrier; EO not mainstreamed) · Akvo CLEM methodology (JfW/NBD) · cost placeholders to be replaced with Akvo programme actuals + published RBF facility data.
+  </div>
+</div>
+
+<footer class="footer">
+  <strong>Akvo Foundation</strong> · Verification Cost Benchmark — concept mockup v1 · July 2026 · Illustrative unit costs — internal discussion only
+</footer>
+
+<script>
+// Illustrative unit-cost model (EUR). Placeholders — replace with actuals.
+const M = {
+  consult: { perSiteVisit: 90, fixedPerCycle: 18000 },            // firm mobilisation + per-site sampling
+  clem:    { setup: 45000, perSiteYear: 22, audit: 12000 },        // yr-1 setup amortised over 5y in totals; audit annual
+  eo:      { setup: 25000, perSiteYear: 6, groundTruthPerCycle: 4000 }
+};
+let ctx = 1;
+const $ = id => document.getElementById(id);
+const fmt = n => "€" + Math.round(n).toLocaleString("en").replace(/,/g," ");
+
+function calc(){
+  const s = +$("sites").value, c = +$("cycles").value;
+  $("v-sites").textContent = s; $("v-cycles").textContent = c;
+
+  const consultY = (M.consult.fixedPerCycle + s * M.consult.perSiteVisit) * c * ctx;
+  const clemY    = s * M.clem.perSiteYear * ctx + M.clem.audit;             // steady-state year
+  const eoY      = s * M.eo.perSiteYear + M.eo.groundTruthPerCycle * c * ctx;
+
+  $("c-consult").textContent = fmt(consultY);
+  $("c-clem").textContent    = fmt(clemY);
+  $("c-eo").textContent      = fmt(eoY);
+  $("p-consult").textContent = fmt(consultY/s) + " per site / year";
+  $("p-clem").textContent    = fmt(clemY/s) + " per site / year";
+  $("p-eo").textContent      = fmt(eoY/s) + " per site / year";
+
+  const consult5 = consultY * 5;
+  const clem5    = M.clem.setup * ctx + clemY * 5;
+  const eo5      = M.eo.setup + eoY * 5;
+  const max = Math.max(consult5, clem5, eo5);
+  $("b-consult").style.width = (consult5/max*100) + "%";
+  $("b-clem").style.width    = (clem5/max*100) + "%";
+  $("b-eo").style.width      = (eo5/max*100) + "%";
+  $("t-consult").textContent = fmt(consult5);
+  $("t-clem").textContent    = fmt(clem5);
+  $("t-eo").textContent      = fmt(eo5);
+}
+$("sites").addEventListener("input", calc);
+$("cycles").addEventListener("input", calc);
+document.querySelectorAll(".seg button").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll(".seg button").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on"); ctx = +b.dataset.ctx; calc();
+}));
+calc();
+</script>
+</body>
+</html>

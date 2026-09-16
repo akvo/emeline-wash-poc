@@ -20,6 +20,7 @@ SECTIONS = {
         {"name": "Contractor Assessment · PoC", "file": "contractor-assessment-poc.html"},
         {"name": "Groundwater data",            "file": "groundwater_connector.html"},
         {"name": "Water Chat · MIS assistant",  "file": "wash-mis-chatbot-demo.html"},
+        {"name": "Verified Results Ledger · PoC", "file": "verified-results-ledger-pocA.html"},
     ],
     "Internal tools": [
         {"name": "ASWA3 baseline dashboard",     "file": "PoC3-ASWA3baseline.html"},
@@ -29,6 +30,7 @@ SECTIONS = {
         {"name": "Why Akvo's Work Matters in WASH Data", "file": "akvo_mindmap_v3_html.html"},
         {"name": "Investment in Data Infrastructure", "url": "https://claude.ai/public/artifacts/8af6253a-5894-4e26-85e5-45d361d1eea0"},
         {"name": "WASH · Maturity Framework",   "file": "wash_maturity_framework_fr.html"},
+        {"name": "Verification Cost Benchmark", "file": "verification-cost-benchmark-mockup.html"},
     ],
 }
 
