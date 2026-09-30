@@ -82,12 +82,13 @@
   <div class="points">
     <h3>What to point out while demoing</h3>
     <p><b>Grounded answers.</b> Every reply cites the ministry's own manuals and national standards — the government owns the knowledge base.</p>
-    <p><b>Humans in the loop.</b> Uncertain cases escalate to the district engineer (scenario 3). The assistant augments local technicians, never replaces them.</p>
+    <p><b>Humans in the loop.</b> Uncertain cases escalate to the district engineer (scenario 6). The assistant augments local technicians, never replaces them.</p>
     <p><b>A sensor for the sector.</b> Every exchange is logged — query patterns show the ministry where breakdowns cluster and which skills gaps persist.</p>
     <p><b>Works on any phone.</b> WhatsApp today; USSD, SMS and voice channels reuse the same architecture proven by Akvo's AgriConnect in Kenya.</p>
+    <p><b>Feedback without the return trip.</b> A community leader relays the village's questions in writing and gets validated answers plus a line to share back (scenario 7). The assistant never talks to households directly, and a person reads every answer first.</p>
     <p><b>Rural and urban.</b> One platform serves the pump mechanic, the district officer (grounded in the national WASH MIS) and the utility front line — where every resolved anomaly feeds the non-revenue water dashboard.</p>
   </div>
-  <p class="mocknote">Mock-up — scripted conversations, no live AI. Akvo, June 2026.</p>
+  <p class="mocknote">Mock-up — scripted conversations, no live AI. Akvo, June 2026 · scenario 7 added September 2026.</p>
 </div>
 
 <div class="stage">
@@ -125,7 +126,7 @@ const scenarios = [
     ]
   },
   {
-    title: "Water quality result",
+    title: "Water quality testing & dosing",
     sub: "Committee member · chlorination dose",
     steps: [
       {from:'user', name:'Mary — water committee', voice:true, text:"🎙 Voice note (0:38) — \"We did the water test on our tank today, I want to know if the water is safe…\""},
@@ -189,6 +190,22 @@ const scenarios = [
       {from:'user', name:'Daniel — scheme operator', text:"Thank you Engineer, we will be ready Thursday."},
       {from:'system', text:"Case #2161 → status: field visit planned · all steps logged for the ministry dashboard"}
     ]
+  },
+  {
+    title: "Water quality feedback",
+    sub: "Community leader · results back to the village",
+    status: "Aquaya guidance · verified service",
+    steps: [
+      {from:'user', name:'Esther — community leader', text:"Results for Kabiru borehole are in: E. coli detected. What do I tell people?"},
+      {from:'bot', text:"Thank you Esther. This water is NOT safe to drink as it is.\n\nWhat the result means: E. coli comes from faeces. It is a sign that germs are getting into the water.\n\nWhat to do now:\n1. Boil drinking water for one minute, or treat it with a chlorine tablet\n2. Keep treated water in a clean, covered container\n\nA message you can share:\n“The Kabiru borehole water is not safe to drink as it is. Boil it for one minute, or add a chlorine tablet, before drinking. Keep it in a covered container. We will tell you when it is safe again.”", src:"Aquaya community feedback guidance · National Drinking Water Quality Standards"},
+      {from:'user', name:'Esther — community leader', text:"Thank you. People at the meeting asked three things:\n1. Is boiling enough?\n2. When will it be safe again?\n3. Why does it look clear if it is dirty?"},
+      {from:'bot', text:"Good questions. One by one, each with a line to share:\n\n1. Is boiling enough? Yes. One minute at a rolling boil kills the germs. Let it cool in a covered container.\n→ “Boil for one minute, then let it cool with a lid on.”\n\n2. When is it safe again? When a new test comes back clean. I have asked the testing team to schedule a retest, and I will send you the result the same way.\n→ “The water will be tested again. Until we hear, treat it.”\n\n3. Why does it look clear? Germs are too small to see. Clear water can still make people sick.\n→ “Clear water is not always clean water.”", src:"Aquaya community feedback guidance · WHO drinking-water guidelines"},
+      {from:'user', name:'Esther — community leader', text:"One more. A mother says her baby has had diarrhoea since yesterday."},
+      {from:'bot', text:"Thank you for telling me. This needs a health worker today. Please do not wait for the retest.\n\nFor now: give the baby only boiled water and keep feeding as normal.\n\nNearest clinic: Kabiru Health Centre. Please ask the mother to go now. I have alerted the district health promoter, and she will follow up with you."},
+      {from:'system', text:"⤴ Escalated to District Health Office promoter · case #2174\nSummary attached: E. coli result · Kabiru borehole · infant with diarrhoea"},
+      {from:'user', name:'Esther — community leader', text:"Thank you. She is on her way to the clinic now."},
+      {from:'system', text:"Feedback session logged: 3 questions answered · 1 case escalated · question themes → messaging dashboard"}
+    ]
   }
 ];
 
@@ -244,6 +261,7 @@ function finishCheck(){
   nextBtn.textContent = nextBtn.disabled ? 'End of scenario ✓' : 'Next ▸';
 }
 function reset(){ chat.innerHTML=''; idx=0; busy=false; nextBtn.disabled=false; nextBtn.textContent='Next ▸';
+  document.getElementById('statusLine').textContent = scenarios[cur].status || 'Ministry of Water · verified service';
   render({from:'system', text:'Scenario: ' + scenarios[cur].title}); }
 nextBtn.onclick = next;
 document.getElementById('resetBtn').onclick = reset;
